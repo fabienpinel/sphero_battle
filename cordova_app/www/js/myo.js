@@ -1,6 +1,9 @@
 /**
  * Created by fabien on 11/12/15.
  */
+var myMyo = null;
+var MyoApi = null;
+var lastMac = null;
 
 function checkBluetooth(btOnCallback){
     MyoApi.isBluetoothEnabled(function(isBtOn){
@@ -50,24 +53,32 @@ function initMyo(){
         return;
     }
 
-    var MyoApi = cordova.plugins.MyoApi;
-    var lastMac = localStorage["lastUsedMyoMac"];
+    MyoApi = cordova.plugins.MyoApi;
+    lastMac = localStorage["lastUsedMyoMac"];
     if(lastMac){
         MyoApi.attachByMacAddress(lastMac);
     }else{
-        window.alert("Place the Myo very close to the mobile device");
-        MyoApi.attachToAdjacentMyo();
+        //window.alert("Place the Myo very close to the mobile device");
+
+        //console.log("mac adr connect");
+
+
+       /*
+
+        */
+
     }
 
     MyoApi.init(function(){
-        console.log("Myo Hub initialized successfully");
+        console.log("Myo Hub API initialized successfully");
     }, function(err){
         console.log("Error initializing Myo Hub: " + err);
     });
 //...
-    var myMyo = null;
+
     MyoApi
         .on("connect", function(ev){
+            console.log("CONNECT EVENT");
             myMyo = ev.myo;
             window.alert(myMyo.name + " is  connected");
             localStorage["lastUsedMyoMac"] = myMyo.macAddress;
@@ -80,6 +91,24 @@ function initMyo(){
         })
         .on("pose", function(ev){
             window.alert("Pose detected: " + ev.pose);
+        })
+        .on("attach", function(ev){
+            console.log("ATTACH EVENT");
+            logMyoEvent(ev);
+            console.log("ev.myo", ev.myo);
+            myMyo = ev.myo;
+            localStorage["lastUsedMyoMac"] = ev.myo.macAddress;
+            console.log("Myo MAC address stored for easier future connection: " + localStorage["lastUsedMyoMac"]);
+        })
+        .on("detach", function(ev) {
+            if (myMyo) {
+                window.alert(myMyo.name + " has detached");
+            } else {
+                window.alert("Received detach event from unknown Myo");
+            }
+            myMyo = null;
+            logMyoEvent(ev);
+            showUiState("initial");
         });
 
     MyoApi
@@ -91,9 +120,36 @@ function initMyo(){
             console.log("ERROR: onPose: " + err);
         })
         .on("rssi", logMyoEvent);
-//...
+
+
 
 //Alternatively, for testing purposes, we could use MyoApi.openScanDialog()
 //to connect to a device manually
+}
 
+function connect_myo(){
+   console.log("adjacent search");
+    MyoApi.attachToAdjacentMyo(function(s){
+        console.log("Connecting with adjacent Myo success", s);
+    }, function(err){
+        console.log("connecting with adjacent Myo error", err);
+    });
+}
+
+function vibrateMyo(){
+    console.log("Clicked on vibrate myo button");
+    if(myMyo){
+        myMyo.vibrate(MyoApi.VibrationType.MEDIUM, function(){
+            console.log("Vibration sent successfully");
+        }, function(err){
+            console.log("ERROR: couldn't send vibration: " + err);
+        });
+    }else{
+        window.alert("There are no Myos connected at the moment");
+    }
+}
+
+function showMyo(){
+    console.log("Clicked on show myo button");
+    window.alert("Current connected Myo: " + JSON.stringify(myMyo));
 }

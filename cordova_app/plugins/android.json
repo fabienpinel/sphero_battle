@@ -33,7 +33,7 @@
                     ],
                     "/manifest/application": [
                         {
-                            "xml": "<activity android:label=\"Choose a Myo\" android:name=\"com.thalmic.myo.scanner.ScanActivity\" android:theme=\"@style/android:Theme.Holo.Light\" />",
+                            "xml": "<activity android:label=\"Choose a Myo\" android:name=\"com.thalmic.myo.scanner.ScanActivity\" android:theme=\"@android:style/Theme.Dialog\" />",
                             "count": 1
                         }
                     ]
