@@ -6,6 +6,8 @@ var MyoApi = null;
 var lastMac = null;
 var NUM_PREC = 3;
 var i = 0;
+var IP = "134.59.214.67";
+var PORT="8080";
 function checkBluetooth(btOnCallback){
     MyoApi.isBluetoothEnabled(function(isBtOn){
         console.log("The bluetooth adater is " + (isBtOn ? "ON" : "OFF") );
@@ -165,8 +167,10 @@ function orientationDataHandler(ev){
         + " Yaw: " + d.yaw.toFixed(NUM_PREC)
         + " Angle: " + d.angle.toFixed(NUM_PREC)
         + " NORME: " + d.norme.toFixed(NUM_PREC);
+    setTimeout(sendCommand(d.angle.toFixed(NUM_PREC), d.norme.toFixed(NUM_PREC)*1000), 50);
     if(i==0){
         console.log(txt);
+        sendCommand(d.angle.toFixed(NUM_PREC), d.norme.toFixed(NUM_PREC)*1000);
         i++;
     }
 }
@@ -191,4 +195,24 @@ function detachMyo(){
 }
 function displayData(){
     i=0;
+}
+function sendCommand(angle, distance){
+    var dataMyo = {"angle":angle,"distance":distance};
+
+    var http = getAjax();
+    http.open('POST', "http://"+IP+":"+PORT+"/move/"+dataMyo.angle+"/"+dataMyo.distance, true);
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    http.send();
+}
+
+
+function getAjax () {
+    if (window.XMLHttpRequest)
+    {// code for IE7+, Firefox, Chrome, Opera, Safari
+        return xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {// code for IE6, IE5
+        return xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
 }
