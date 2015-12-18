@@ -1,0 +1,20 @@
+{
+  "name": "main-dashboard",
+  "version": "0.0.0",
+  "homepage": "https://github.com/fabienpinel/sphero_battle",
+  "authors": [
+    "Jean-Yves Delmotte <jean-yves.delmotte@greencom-networks.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.8",
+    "angular-route": "~1.4.8"
+  }
+}
