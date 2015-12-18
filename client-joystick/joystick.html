@@ -1,10 +1,178 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            overflow	: hidden;
+            padding		: 0;
+            margin		: 0;
+            background-color: #BBB;
+        }
+        #info {
+            position	: absolute;
+            top		: 0px;
+            width		: 100%;
+            padding		: 5px;
+            text-align	: center;
+        }
+        #info a {
+            color		: #66F;
+            text-decoration	: none;
+        }
+        #info a:hover {
+            text-decoration	: underline;
+        }
+        #container {
+            width		: 100%;
+            height		: 100%;
+            overflow	: hidden;
+            padding		: 0;
+            margin		: 0;
+            -webkit-user-select	: none;
+            -moz-user-select	: none;
+        }
+    </style>
 </head>
 <body>
+<div id="container"></div>
+<script src="./virtualjoystick.js"></script>
 
+<script>
+    var departureAngle = 0;
+    var begin = true;
+
+    function go (angle, distance) {
+        if (begin) {
+            var http = getAjax();
+            http.open('POST', 'http://134.59.214.67:8080/move/' + parseInt(angle + departureAngle) + '/' + parseInt(distance * 2), true);
+            xmlhttp.setRequestHeader("Content-type","application/json");
+            http.send();
+        }
+    }
+
+    function stop() {
+        if (begin) {
+            var http = getAjax();
+            http.open('POST', 'http://134.59.214.67:8080/move/0/0', true);
+            xmlhttp.setRequestHeader("Content-type","application/json");
+            http.send();
+        }
+    }
+
+    function getAjax () {
+        if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+            return xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {// code for IE6, IE5
+            return xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+    }
+
+
+
+
+    var joystick	= new VirtualJoystick({
+        container	: document.getElementById('container'),
+        mouseSupport	: true
+    });
+
+    var clicked = false;
+    var originalPoint = null;
+    var actualPoint = null;
+
+    document.addEventListener('mousedown', function (e) { clicked = true; originalPoint = {x: e.clientX,y: e.clientY }; });
+    document.addEventListener('mouseup', function () {
+        clicked = false;actualPoint = null;originalPoint = null;
+        stop();
+    });
+    document.addEventListener('mousemove', function (e) { if (clicked) actualPoint = {x: e.clientX, y: e.clientY}; });
+
+    document.addEventListener('touchstart', function (e) { clicked = true; originalPoint = {x: e.touches[0].clientX,y: e.touches[0].clientY }; });
+    document.addEventListener('touchend', function () { clicked = false;actualPoint = null;originalPoint = null; stop(); });
+    document.addEventListener('touchmove', function (e) { if (clicked) actualPoint = {x: e.touches[0].clientX, y: e.touches[0].clientY}; });
+
+    setInterval(function(){
+        //var angle = (57.2958 * Math.atan((joystick.deltaY()) / (joystick.deltaX())));
+        //console.log(angle, joystick.deltaX(), joystick.deltaY());
+        if (actualPoint && originalPoint) {
+            //console.log('calculate');
+
+            var centerX = -originalPoint.x;
+            var centerY = originalPoint.y;
+            var pointerX = -actualPoint.x;
+            var pointerY = actualPoint.y;
+
+            var angle = (57.2958 * Math.atan((pointerY - centerY) / (pointerX - centerX)));
+            var distance = Math.sqrt((pointerX - centerX)*(pointerX - centerX) + (pointerY - centerY)*(pointerY - centerY));
+
+            if (pointerX > centerX && pointerY < centerY) {
+                //console.log('// en haut à droite', Math.abs(angle));
+                angle =  Math.abs(angle);
+            } else if (pointerX > centerX && pointerY > centerY) {
+                //console.log('// en bas à droite', 360 - Math.abs(angle));
+                angle = 360 - Math.abs(angle);
+            } else if (pointerX < centerX && pointerY < centerY) {
+                //console.log('// en haut à gauche', 180 - angle);
+                angle =  180 - angle;
+            } else if (pointerX < centerX && pointerY > centerY) {
+                //console.log('// en bas à droite', 180 + Math.abs(angle));
+                angle = 180 + Math.abs(angle)
+            }
+            console.log(/*Math.abs(angle), */distance);
+            go(Math.abs(angle), distance);
+        }
+    }, 100);
+
+</script>
+
+
+
+
+<script>
+
+     /*var clicked = false;
+     document.addEventListener('mousedown', function () {
+        clicked = true;
+     });
+     document.addEventListener('mouseup', function () {
+         clicked = false;
+         angle = null;
+         distance = null;
+     });
+
+     var angle = null;
+     var distance = null;
+     document.addEventListener('mousemove', function (e) {
+         if (clicked) {
+             var pointerX = -e.clientX;
+             var pointerY = e.clientY;
+             var centerX = -window.innerWidth / 2;
+             var centerY = window.innerHeight / 2;
+
+             angle = (57.2958 * Math.atan((pointerY - centerY) / (pointerX - centerX)));
+             distance = Math.sqrt((pointerX - centerX)*(pointerX - centerX) + (pointerY - centerY)*(pointerY - centerY));
+
+             if (pointerX > centerX && pointerY < centerY) {
+                 //console.log('// en haut à droite', Math.abs(angle));
+                 angle =  Math.abs(angle);
+             } else if (pointerX > centerX && pointerY > centerY) {
+                 //console.log('// en bas à droite', 360 - Math.abs(angle));
+                 angle = 360 - Math.abs(angle);
+             } else if (pointerX < centerX && pointerY < centerY) {
+                 //console.log('// en haut à gauche', 180 - angle);
+                 angle =  180 - angle;
+             } else if (pointerX < centerX && pointerY > centerY) {
+                 //console.log('// en bas à droite', 180 + Math.abs(angle));
+                 angle = 180 + Math.abs(angle)
+             }
+             console.log(angle, distance);
+         }
+     });*/
+
+
+</script>
 </body>
 </html>

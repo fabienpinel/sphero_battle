@@ -39,32 +39,19 @@
 </table>
 
 <script>
-    /*interval = setInterval(function(){
-
-        var deltaX = joystick.deltaX();
-        var deltaY = joystick.deltaY();
-        var http = getAjax();
-        http.open('PUT', 'http://localhost:8080/move/', true);
-        xmlhttp.setRequestHeader("Content-type","application/json");
-        http.send(JSON.stringify({
-            deltaX: deltaX,
-            deltaY: deltaY
-        }));
-        console.log(deltaX, deltaY);
-    }, 1/30 * 1000);*/
 
     var distance = 500;
     var departureAngle = 0;
     function go (angle) {
         var http = getAjax();
-        http.open('POST', 'http://localhost:8080/move/' + parseInt(angle + departureAngle) + '/' + parseInt(distance), true);
+        http.open('POST', 'http://134.59.214.67:8080/move/' + parseInt(angle + departureAngle) + '/' + parseInt(distance), true);
         xmlhttp.setRequestHeader("Content-type","application/json");
         http.send();
     }
 
     function stop() {
         var http = getAjax();
-        http.open('POST', 'http://localhost:8080/move/0/0', true);
+        http.open('POST', 'http://134.59.214.67:8080/move/0/0', true);
         xmlhttp.setRequestHeader("Content-type","application/json");
         http.send();
     }
@@ -125,7 +112,6 @@
     }, 100);*/
 
     document.addEventListener('keydown', function (e) {
-        console.log(e.which);
         if (e.which == 39) { // droite
             go(180, 500);
         } else if (e.which == 37) { // gauche
