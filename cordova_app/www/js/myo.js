@@ -4,7 +4,8 @@
 var myMyo = null;
 var MyoApi = null;
 var lastMac = null;
-
+var NUM_PREC = 3;
+var i = 0;
 function checkBluetooth(btOnCallback){
     MyoApi.isBluetoothEnabled(function(isBtOn){
         console.log("The bluetooth adater is " + (isBtOn ? "ON" : "OFF") );
@@ -60,13 +61,6 @@ function initMyo(){
     }else{
         //window.alert("Place the Myo very close to the mobile device");
 
-        //console.log("mac adr connect");
-
-
-       /*
-
-        */
-
     }
 
     MyoApi.init(function(){
@@ -99,6 +93,7 @@ function initMyo(){
             myMyo = ev.myo;
             localStorage["lastUsedMyoMac"] = ev.myo.macAddress;
             console.log("Myo MAC address stored for easier future connection: " + localStorage["lastUsedMyoMac"]);
+
         })
         .on("detach", function(ev) {
             if (myMyo) {
@@ -109,7 +104,11 @@ function initMyo(){
             myMyo = null;
             logMyoEvent(ev);
             showUiState("initial");
-        });
+        })
+        .on("orientationData",orientationDataHandler)
+        .on("accelerometerData", accelerometerDataHandler)
+        .on("gyroscopeData", gyroscopeDataHandler);
+
 
     MyoApi
         .on("armSync", alertMyoEvent)
@@ -152,4 +151,44 @@ function vibrateMyo(){
 function showMyo(){
     console.log("Clicked on show myo button");
     window.alert("Current connected Myo: " + JSON.stringify(myMyo));
+}
+function orientationDataHandler(ev){
+//quaternion
+        var d = ev["rotation"];
+        var txt = "X: " + d.x.toFixed(NUM_PREC)
+            + " Y: " + d.y.toFixed(NUM_PREC)
+            + " Z: " + d.z.toFixed(NUM_PREC);
+
+        txt += " W: " + d.w.toFixed(NUM_PREC)
+        + "<br>&nbsp;&nbsp;\\\\\\ Roll: " + d.roll.toFixed(NUM_PREC)
+        + " Pitch: " + d.pitch.toFixed(NUM_PREC)
+        + " Yaw: " + d.yaw.toFixed(NUM_PREC)
+        + " Angle: " + d.angle.toFixed(NUM_PREC)
+        + " NORME: " + d.norme.toFixed(NUM_PREC);
+    if(i==0){
+        console.log(txt);
+        i++;
+    }
+}
+function accelerometerDataHandler(ev){
+//NOT quaternion
+   var d = ev["accel"];
+    var txt = "X: " + d.x.toFixed(NUM_PREC)
+        + " Y: " + d.y.toFixed(NUM_PREC)
+        + " Z: " + d.z.toFixed(NUM_PREC);
+   // console.log("accelerometerDataHandler",txt);
+}
+function gyroscopeDataHandler(ev){
+//NOT quaternion
+    var d = ev["gyro"];
+    var txt = "X: " + d.x.toFixed(NUM_PREC)
+        + " Y: " + d.y.toFixed(NUM_PREC)
+        + " Z: " + d.z.toFixed(NUM_PREC);
+  //  console.log("gyroscopeDataHandler",txt);
+}
+function detachMyo(){
+    myMyo.detach(myMyo.macAddress);
+}
+function displayData(){
+    i=0;
 }

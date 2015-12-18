@@ -143,7 +143,7 @@ class MyoEventController implements DeviceListener{
 	@Override
 	public void onOrientationData(Myo myo, long timestamp, Quaternion rotation) {
 		//logd("onOrientationData. rotation: " + rotation);
-		callHandler("orientationData", myo, timestamp, new Object[]{"rotation", JsonMapper.toJson(rotation)});
+		callHandler("orientationData", myo, timestamp, new Object[]{"rotation", JsonMapper.toJsonQ(rotation)});
 	}
 
 	@Override
@@ -151,7 +151,7 @@ class MyoEventController implements DeviceListener{
 		//logd("onRssi. rssi: " + rssi);
 		callHandler("rssi", myo, timestamp, new Object[]{"rssi", rssi});
 	}
-	
+
 	public void setEventHandler(String evType, CallbackContext cbc){ //TODO: support multiple listeners per event
 		logd("Adding event handler for type: " + evType);
 		CallbackContext prevCbc = null;

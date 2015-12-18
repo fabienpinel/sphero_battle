@@ -48,7 +48,7 @@ import com.thalmic.myo.scanner.ScanActivity;
  *
  */
 public class MyoApi extends CordovaPlugin {
-	
+	 
 	public static final boolean LOG_ENABLED = true;
 	
 	private static final String TAG = MyoApi.class.getSimpleName();	
@@ -78,6 +78,7 @@ public class MyoApi extends CordovaPlugin {
 	private static final String ACTION_MYO_LOCK = "myo_lock";
 	private static final String ACTION_MYO_UNLOCK = "myo_unlock";
 	private static final String ACTION_MYO_REQUEST_RSSI = "myo_requestRssi";
+	
 	private static final String ACTION_MYO_VIBRATE = "myo_vibrate";
 	private static final String ACTION_MYO_NOTIFY_USER = "myo_notifyUserAction";
 	private static final String ACTION_MYO_GET_CONNECT_STATE = "myo_getConnectionState";
