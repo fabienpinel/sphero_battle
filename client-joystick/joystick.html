@@ -38,14 +38,21 @@
 <div id="container"></div>
 <script src="./virtualjoystick.js"></script>
 
+<script src="http://localhost:8080/socket.io/socket.io.js"></script>
+
 <script>
+
+    var socket = io('http://localhost:8080');
+
     var departureAngle = 0;
     var begin = true;
 
     function go (angle, distance) {
         if (begin) {
+            //socket.emit('move', parseInt(angle + departureAngle), parseInt(distance));
+
             var http = getAjax();
-            http.open('POST', 'http://134.59.214.67:8080/move/' + parseInt(angle + departureAngle) + '/' + parseInt(distance * 2), true);
+            http.open('POST', 'http://localhost:8080/move/' + parseInt(angle + departureAngle) + '/' + parseInt(distance * 2), true);
             xmlhttp.setRequestHeader("Content-type","application/json");
             http.send();
         }
@@ -54,7 +61,7 @@
     function stop() {
         if (begin) {
             var http = getAjax();
-            http.open('POST', 'http://134.59.214.67:8080/move/0/0', true);
+            http.open('POST', 'http://localhost:8080/move/0/0', true);
             xmlhttp.setRequestHeader("Content-type","application/json");
             http.send();
         }

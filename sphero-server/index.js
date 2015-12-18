@@ -15,6 +15,7 @@ if (process.argv.length == 4) {
         orb.on("collision", function () {
             console.log('collision');
             orb.color("red");
+            orb.stop();
             setTimeout(function () {
                 orb.color("green");
             }, 1000);
@@ -23,7 +24,15 @@ if (process.argv.length == 4) {
         var router = require('./modules/router')(express.Router(), orb);
         app.use('/',router);
         console.log("Server Launched on port 8080...");
-        app.listen(8080);
+        var server = app.listen(8080);
+
+        var io = require('socket.io').listen(server);
+        var sockets = require('./modules/sockets');
+
+        io.on('connection', function (socket) {
+            sockets(socket, orb);
+        });
+
     });
 } else {
     console.error('You must specify the id of the Sphero and the url of the global server\nnode index.js [sphero_id] [server_url]');
