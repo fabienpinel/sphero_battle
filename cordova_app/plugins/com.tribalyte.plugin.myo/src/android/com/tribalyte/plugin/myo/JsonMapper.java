@@ -81,6 +81,28 @@ public class JsonMapper{
 		}
 		return res;
 	}
+	public static JSONObject toJsonQ(Quaternion q) {
+		q = q.normalized();
+		Double angle = (Math.acos(q.w()))*2;
+		Double angle_deg = Math.toDegrees(angle);
+		Double norme = Math.sqrt(q.x()*q.x()+(q.y()*q.y())+(q.z()*q.z()));
+		JSONObject res = new JSONObject();
+		try{
+			res.put("x", q.x());
+			res.put("y", q.y());
+			res.put("z", q.z());
+			res.put("w", q.w());
+			res.put("angle", angle_deg);
+			res.put("norme",norme);
+			//TODO: the following should be optional
+			res.put("roll", Quaternion.roll(q));
+			res.put("pitch", Quaternion.pitch(q));
+			res.put("yaw", Quaternion.yaw(q));
+		}catch(Exception e){
+			loge("ERROR mapping Quaternion", e);
+		}
+		return res;
+	}
 	
 	private static void loge(String msg, Throwable t) {
 		if(MyoApi.LOG_ENABLED){
