@@ -9,6 +9,10 @@ module.exports = {
         res.status(200).json(spheroFactory.getSpheros());
     },
 
+    getPlayers: function (req, res) {
+        res.status(200).json(playerFactory.getPlayers());
+    },
+
     registerSphero: function (req, res) {
         var result = spheroFactory.addSphero({
             id: req.body.id,
@@ -97,6 +101,16 @@ module.exports = {
                 console.log(error, body);
                 res.status(201).end();
             });
+        } else {
+            res.status(404).end();
+        }
+    },
+
+    voteForPlayer: function (req, res) {
+        var player = playerFactory.incrPower(req.params.id);
+        if (player) {
+            sockets.emitChanges();
+            res.status(201).end();
         } else {
             res.status(404).end();
         }
