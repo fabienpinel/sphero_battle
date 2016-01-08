@@ -5,7 +5,6 @@ var request = require('request');
 var sockets = require('../sockets');
 
 module.exports = {
-
     getSpheros: function (req, res) {
         res.status(200).json(spheroFactory.getSpheros());
     },
