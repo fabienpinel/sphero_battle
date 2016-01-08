@@ -13,6 +13,6 @@ console.log("Server Launched on port 3000...");
 var server = app.listen(3000);
 
 var io = require('socket.io').listen(server);
-var sockets = require('./modules/sockets');
+var sockets = require('./modules/sockets')(io);
 
 io.on('connection', sockets.socketCallback);
