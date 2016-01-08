@@ -9,4 +9,9 @@ app.use(cors());
 var router = require('./modules/router')(express.Router());
 app.use('/',router);
 console.log("Server Launched on port 3000...");
-app.listen(3000);
+var server = app.listen(3000);
+
+var io = require('socket.io').listen(server);
+var sockets = require('./modules/sockets');
+
+io.on('connection', sockets.socketCallback);
