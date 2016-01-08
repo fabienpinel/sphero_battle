@@ -1,5 +1,10 @@
 app.controller('homeCtrl', ['$scope','$rootScope', '$location', 'User', function ($scope, $rootScope, $location, User) {
-    $scope.user1 = new User(1, 'blue');
-    $scope.user2 = new User(2, 'green');
+    $scope.players = [];
+    $scope.spheros = [];
 
+    var socket = io.connect('http://localhost:3000');
+    socket.on('dataChange', function (data) {
+        $scope.spheros = data.spheros;
+        $scope.players = data.players;
+    });
 }]);

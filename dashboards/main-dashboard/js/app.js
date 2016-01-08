@@ -15,8 +15,8 @@ app.directive('home', ['homeCtrl', function(){
         restrict: 'E',
         templateUrl: 'js/partial/index.html',
         scope: {
-            user1: "@user1",
-            user2: "@user2"
+            players: "@players",
+            spheros: "@spheros"
         }
     }
 }]);
