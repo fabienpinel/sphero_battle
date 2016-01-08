@@ -79,7 +79,7 @@ function launchDataIntervalSender(){
     console.log("Lauching setinterval");
     setInterval(function(){
         sendCommand(angle, norme);
-    }, 250);
+    }, 100);
 }
 function initMyo(){
     if(cordova && cordova.plugins && cordova.plugins.MyoApi){
