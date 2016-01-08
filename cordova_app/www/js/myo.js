@@ -9,11 +9,10 @@ var i = 0;
 var IP = "134.59.215.166";
 var PORT="3000";
 
+var d, x, y,z;
+
 var GYRO_Y_MAX_RANGE = 400;
 var GYRO_X_MAX_RANGE = 100;
-
-var current_x = 0;
-var current_y = 0;
 
 var angle=0, norme=0;
 
@@ -80,7 +79,7 @@ function launchDataIntervalSender(){
     console.log("Lauching setinterval");
     setInterval(function(){
         sendCommand(angle, norme);
-    }, 1000);
+    }, 250);
 }
 function initMyo(){
     if(cordova && cordova.plugins && cordova.plugins.MyoApi){
@@ -226,12 +225,12 @@ function accelerometerDataHandler(ev){
 }
 function gyroscopeDataHandler(ev){
 
-    var d = ev["gyro"];
+    d = ev["gyro"];
 
-    var x = d.x.toFixed(NUM_PREC);
-    var y = d.y.toFixed(NUM_PREC);
-    var z = d.z.toFixed(NUM_PREC);
-
+    x = d.x.toFixed(NUM_PREC);
+    y = d.y.toFixed(NUM_PREC);
+    z = d.z.toFixed(NUM_PREC);
+    var temp = 0;
     var txt = "X: " + x
         + " Y: " + y
         + " Z: " + z;
@@ -252,24 +251,23 @@ function gyroscopeDataHandler(ev){
 
     if(x==0){
         if(y>0){
-            angle = (Math.PI / 2);
+            temp = (Math.PI / 2);
         }
         else if(y<0){
-            angle = (3*Math.PI)/2;
+            temp = (3*Math.PI)/2;
         }
     }else{
         if(x>0 && y>=0){
-            angle = Math.atan(y/x);
+            temp = Math.atan(y/x);
         }
         if(x>0 && y<0){
-            angle += 2* Math.PI;
+            temp += 2* Math.PI;
         }
         if(x<0){
-            angle += Math.PI;
+            temp += Math.PI;
         }
     }
-
-    angle = angle*(180/Math.PI);
+    angle = temp*(180/Math.PI);
 
     //console.log("gyroscopeDataHandler", txt);
     //console.log("Angle: "+angle+" Distance: "+norme);
