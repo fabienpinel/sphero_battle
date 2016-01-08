@@ -1,29 +1,27 @@
 var callbacks = require('../callbacks');
 var playerFactory = require('../players');
 var spherosFactory = require('../spheros');
-var sockets = [];
 
-module.exports = {
+module.exports = function (io) {
 
-    emitChanges: function () {
-          for (var i in sockets) {
-              sockets[i].emit('dataChange', {
-                  players: playerFactory.getPlayers(),
-                  spheros: spherosFactory.getSpheros()
-              });
-          }
-    },
+    return {
+        emitChanges: function () {
+            io.sockets.emit('dataChange', {
+                players: playerFactory.getPlayers(),
+                spheros: spherosFactory.getSpheros()
+            });
+        },
 
-    socketCallback: function (socket) {
+        socketCallback: function (socket) {
 
-        socket.emit('dataChange', {
-            players: playerFactory.getPlayers(),
-            spheros: spherosFactory.getSpheros()
-        });
+            socket.emit('dataChange', {
+                players: playerFactory.getPlayers(),
+                spheros: spherosFactory.getSpheros()
+            });
 
-        sockets.push(socket);
+        }
+    };
 
-    }
 };
 
 
