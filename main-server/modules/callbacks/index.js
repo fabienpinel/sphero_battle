@@ -3,7 +3,6 @@ var uniqid = require('uniqid');
 var request = require('request');
 
 module.exports = {
-
     getSpheros: function (req, res) {
         res.status(200).json(spheroFactory.getSpheros());
     },
