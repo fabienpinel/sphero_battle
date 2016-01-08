@@ -9,6 +9,7 @@
     </author>
     <content src="index.html" />
     <access origin="*" />
+    <allow-navigation href="*" />
 
     <preference name="android-installLocation" value="auto" />
     <preference name="android-minSdkVersion" value="18" />
