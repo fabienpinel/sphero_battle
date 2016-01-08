@@ -14,4 +14,9 @@ app.use('/',router);
 app.use('/sphero', sphero);
 app.use('/myo', myo);
 console.log("Server Launched on port 3000...");
-app.listen(3000);
+var server = app.listen(3000);
+
+var io = require('socket.io').listen(server);
+var sockets = require('./modules/sockets');
+
+io.on('connection', sockets.socketCallback);

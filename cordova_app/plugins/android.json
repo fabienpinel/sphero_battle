@@ -9,6 +9,9 @@
     "installed_plugins": {
         "com.tribalyte.plugin.myo": {
             "PACKAGE_NAME": "com.ihm.myoAndSphero"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.ihm.myoAndSphero"
         }
     },
     "dependent_plugins": {}

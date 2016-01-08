@@ -6,8 +6,37 @@ var MyoApi = null;
 var lastMac = null;
 var NUM_PREC = 3;
 var i = 0;
-var IP = "134.59.214.67";
-var PORT="8080";
+var IP = "134.59.215.166";
+var PORT="3000";
+
+var GYRO_Y_MAX_RANGE = 400;
+var GYRO_X_MAX_RANGE = 100;
+
+var current_x = 0;
+var current_y = 0;
+
+var angle=0, norme=0;
+
+function sendCommand(angle, distance){
+    console.log("Angle: "+angle+" Distance: "+norme);
+    var dataMyo = {"angle":angle,"distance":distance};
+    var http = getAjax();
+    http.open('POST', "http://"+IP+":"+PORT+"/spheros/RPP/move/"+dataMyo.angle+"/"+dataMyo.distance, true);
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    http.send();
+}
+
+
+function getAjax () {
+    if (window.XMLHttpRequest)
+    {// code for IE7+, Firefox, Chrome, Opera, Safari
+        return xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {// code for IE6, IE5
+        return xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+}
 function checkBluetooth(btOnCallback){
     MyoApi.isBluetoothEnabled(function(isBtOn){
         console.log("The bluetooth adater is " + (isBtOn ? "ON" : "OFF") );
@@ -46,7 +75,13 @@ function alertMyoPose(ev){
         window.alert("Pose detected: " + ev.pose);
     }
 }
-
+function launchDataIntervalSender(){
+    //sending command to the server
+    console.log("Lauching setinterval");
+    setInterval(function(){
+        sendCommand(angle, norme);
+    }, 1000);
+}
 function initMyo(){
     if(cordova && cordova.plugins && cordova.plugins.MyoApi){
         console.log("Myo plugin found!!");
@@ -80,6 +115,7 @@ function initMyo(){
             localStorage["lastUsedMyoMac"] = myMyo.macAddress;
             console.log("Myo MAC address stored for easier future connection: " + localStorage["lastUsedMyoMac"]);
             myMyo.vibrate(MyoApi.VibrationType.MEDIUM); //Make the Myo vibrate
+            launchDataIntervalSender();
         })
         .on("disconnect", function(ev){
             window.alert(myMyo.name + " has disconnected");
@@ -154,9 +190,14 @@ function showMyo(){
     console.log("Clicked on show myo button");
     window.alert("Current connected Myo: " + JSON.stringify(myMyo));
 }
+
+
+
 function orientationDataHandler(ev){
 //quaternion
+        /*
         var d = ev["rotation"];
+
         var txt = "X: " + d.x.toFixed(NUM_PREC)
             + " Y: " + d.y.toFixed(NUM_PREC)
             + " Z: " + d.z.toFixed(NUM_PREC);
@@ -173,6 +214,7 @@ function orientationDataHandler(ev){
         sendCommand(d.angle.toFixed(NUM_PREC), d.norme.toFixed(NUM_PREC)*1000);
         i++;
     }
+         */
 }
 function accelerometerDataHandler(ev){
 //NOT quaternion
@@ -183,36 +225,58 @@ function accelerometerDataHandler(ev){
    // console.log("accelerometerDataHandler",txt);
 }
 function gyroscopeDataHandler(ev){
-//NOT quaternion
+
     var d = ev["gyro"];
-    var txt = "X: " + d.x.toFixed(NUM_PREC)
-        + " Y: " + d.y.toFixed(NUM_PREC)
-        + " Z: " + d.z.toFixed(NUM_PREC);
-  //  console.log("gyroscopeDataHandler",txt);
+
+    var x = d.x.toFixed(NUM_PREC);
+    var y = d.y.toFixed(NUM_PREC);
+    var z = d.z.toFixed(NUM_PREC);
+
+    var txt = "X: " + x
+        + " Y: " + y
+        + " Z: " + z;
+
+    //console.log("gyroscopeDataHandler",txt);
+
+    //Majoration des valeurs suivant le RANGE
+    x = (x>GYRO_X_MAX_RANGE)? GYRO_X_MAX_RANGE : x;
+    x = (x<-GYRO_X_MAX_RANGE)? -GYRO_X_MAX_RANGE : x;
+
+    y = (y>GYRO_Y_MAX_RANGE)? GYRO_Y_MAX_RANGE : y;
+    y = (y<-GYRO_Y_MAX_RANGE)? -GYRO_Y_MAX_RANGE : y;
+
+
+    norme = Math.sqrt((x*x)+(y* y));
+    norme *= 10;
+    norme = (norme > 1000) ? 1000 : norme;
+
+    if(x==0){
+        if(y>0){
+            angle = (Math.PI / 2);
+        }
+        else if(y<0){
+            angle = (3*Math.PI)/2;
+        }
+    }else{
+        if(x>0 && y>=0){
+            angle = Math.atan(y/x);
+        }
+        if(x>0 && y<0){
+            angle += 2* Math.PI;
+        }
+        if(x<0){
+            angle += Math.PI;
+        }
+    }
+
+    angle = angle*(180/Math.PI);
+
+    //console.log("gyroscopeDataHandler", txt);
+    //console.log("Angle: "+angle+" Distance: "+norme);
 }
 function detachMyo(){
     myMyo.detach(myMyo.macAddress);
 }
 function displayData(){
     i=0;
-}
-function sendCommand(angle, distance){
-    var dataMyo = {"angle":angle,"distance":distance};
-
-    var http = getAjax();
-    http.open('POST', "http://"+IP+":"+PORT+"/move/"+dataMyo.angle+"/"+dataMyo.distance, true);
-    xmlhttp.setRequestHeader("Content-type","application/json");
-    http.send();
-}
-
-
-function getAjax () {
-    if (window.XMLHttpRequest)
-    {// code for IE7+, Firefox, Chrome, Opera, Safari
-        return xmlhttp=new XMLHttpRequest();
-    }
-    else
-    {// code for IE6, IE5
-        return xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-    }
 }
