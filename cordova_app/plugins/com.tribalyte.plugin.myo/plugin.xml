@@ -32,8 +32,7 @@
 		</config-file>
 		<config-file target="AndroidManifest.xml" parent="/manifest/application">
 			<!-- TODO: multilang label -->
-			<activity android:name="com.thalmic.myo.scanner.ScanActivity" android:label="Choose a Myo"
-				android:theme="@style/android:Theme.Holo.Light" />
+
 		</config-file>
 		<framework src="src/android/myo-android-sdk" custom="true" />
 		<source-file src="src/android/com/tribalyte/plugin/myo/MyoApi.java" target-dir="src/com/tribalyte/plugin/myo/" />

@@ -137,3 +137,5 @@ dist/
 .tmp/
 
 .DS_STORE
+cordova_app/platforms/
+
