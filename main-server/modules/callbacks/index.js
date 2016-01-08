@@ -1,6 +1,8 @@
-var spheroFactory = require('../spheros')();
+var spheroFactory = require('../spheros');
+var playerFactory = require('../players');
 var uniqid = require('uniqid');
 var request = require('request');
+var sockets = require('../sockets');
 
 module.exports = {
     getSpheros: function (req, res) {
@@ -12,36 +14,65 @@ module.exports = {
             id: req.body.id,
             url: req.body.url
         });
-        result ?
-            res.status(201).end():
+        if (result) {
+            res.status(201).end();
+            sockets.emitChanges();
+        } else {
             res.status(400).end();
+        }
     },
 
     associateSpheroToPlayer: function (req, res) {
         var playerId = uniqid();
         var sphero = spheroFactory.associatePlayer(playerId);
-        sphero ?
-            res.status(201).json(sphero):
+        if (sphero) {
+            var player = playerFactory.registerPlayer(playerId);
+            if (player) {
+                sockets.emitChanges();
+                res.status(201).end();
+            } else {
+                res.status(409).end();
+            }
+        } else {
             res.status(409).end();
+        }
     },
 
     deletePlayer: function (req, res) {
-        var isDeleted = spheroFactory.deletePlayer(req.params.id);
-        isDeleted ?
-            res.status(204).end():
-            res.status(404).end();
+        var isSpheroDeleted = spheroFactory.deletePlayer(req.params.id);
+        var isPlayerDeleted = playerFactory.deletePlayer(req.params.id);
+        if (isSpheroDeleted && isPlayerDeleted) {
+            sockets.emitChanges();
+            res.status(204).end()
+        } else {
+            res.status(404).end()
+        }
     },
 
     deleteSphero: function (req ,res) {
         var isDeleted = spheroFactory.deleteSpheroById(req.params.id);
-        isDeleted ?
-            res.status(204).end():
-            res.status(404).end();
+        if (isDeleted) {
+            sockets.emitChanges();
+            res.status(204).end()
+        } else {
+            res.status(404).end()
+        }
     },
 
     collision: function (req ,res) {
         console.log('collision of', req.params.id);
-        res.status(200).end();
+        var sphero = spheroFactory.getSpheroById(req.params.id);
+        if (sphero) {
+            var player = playerFactory.incrScore(sphero.player);
+            if (player) {
+                sockets.emitChanges();
+                res.status(201).end();
+            } else {
+                res.status(404).end();
+            }
+        } else {
+            res.status(404).end();
+        }
     },
 
     changeSpheroColor: function (req, res) {
