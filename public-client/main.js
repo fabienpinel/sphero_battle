@@ -1,5 +1,5 @@
 (function () {
-
+/*
     var scriptSrc = document.querySelector('script').src.split(':');
     var IP = scriptSrc[1].split('//')[1];
     var PORT = scriptSrc[2].split('/socket.io/')[0];
@@ -55,5 +55,5 @@
 
     }, false);
 
-
+*/
 })();
