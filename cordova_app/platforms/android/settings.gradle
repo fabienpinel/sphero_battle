@@ -1,5 +1,0 @@
-// GENERATED FILE - DO NOT EDIT
-include ":"
-include ":CordovaLib"
-include ":com.tribalyte.plugin.myo:myo-android-sdk"
-project(":com.tribalyte.plugin.myo:myo-android-sdk").projectDir = new File("com.tribalyte.plugin.myo/myoAndSphero-myo-android-sdk")
