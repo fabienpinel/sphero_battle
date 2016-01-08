@@ -16,6 +16,11 @@ module.exports = {
 
     socketCallback: function (socket) {
 
+        socket.emit('dataChange', {
+            players: playerFactory.getPlayers(),
+            spheros: spherosFactory.getSpheros()
+        });
+
         sockets.push(socket);
 
     }
