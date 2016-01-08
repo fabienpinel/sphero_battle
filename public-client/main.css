@@ -1,0 +1,18 @@
+button {
+    width: 200px;
+    height: 200px;
+    border-radius: 10000000px;
+    outline: 0px;
+    border:3px solid dodgerblue;
+    font-size: 40px;
+}
+
+div {
+    text-align:center;
+}
+
+body {
+    background: midnightblue;
+}
+
+.message-wrapper {font-size: 40px; color: white;}

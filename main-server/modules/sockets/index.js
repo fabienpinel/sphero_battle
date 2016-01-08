@@ -2,17 +2,24 @@ var callbacks = require('../callbacks');
 var playerFactory = require('../players');
 var spherosFactory = require('../spheros');
 
-module.exports = function (io) {
+var io = null;
 
-    return {
-        emitChanges: function () {
+module.exports = {
+
+
+    emitChanges: function () {
+        if (io)
             io.sockets.emit('dataChange', {
                 players: playerFactory.getPlayers(),
                 spheros: spherosFactory.getSpheros()
             });
-        },
+    },
 
-        socketCallback: function (socket) {
+    socketCallback: function (yoy) {
+
+        io = yoy;
+
+        return function (socket) {
 
             socket.emit('dataChange', {
                 players: playerFactory.getPlayers(),
@@ -20,8 +27,8 @@ module.exports = function (io) {
             });
 
         }
-    };
 
-};
+    }
+}
 
 
