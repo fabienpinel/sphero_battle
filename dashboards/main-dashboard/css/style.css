@@ -1,0 +1,39 @@
+html, .ng-scope{
+    margin:0;
+    padding:0;
+    height: 100%;
+}
+
+#contentM {
+    position: relative;
+    z-index: 2;
+    background: url("http://image.spreadshirtmedia.net/image-server/v1/designs/11122332/eclair_design.png") repeat-y center center transparent;
+    width: 1px;
+    height: 100%;
+}
+
+#content1, #contentM {
+    float : left;
+}
+
+#content2 {
+    float : right;
+}
+
+#content1, #content2 {
+    display: block;
+    background: #333;
+    width: 46%;
+    height: 100%;
+    padding: 10px 2%;
+}
+
+.name {
+    padding: 30px;
+    margin: 0 auto 10px;
+    border: 1px solid #fff;
+}
+
+span {
+    display: block;
+}

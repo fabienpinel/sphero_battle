@@ -10,11 +10,14 @@ app.config([ '$routeProvider', function ($routeProvider) {
         .otherwise({redirectTo : '/'});
 }]);
 
-app.directive('lettre', ['chooseLetterFactory', function(chooseLetterFactory){
+app.directive('home', ['homeCtrl', function(){
     return {
         restrict: 'E',
         templateUrl: 'js/partial/index.html',
-        scope: {user: "@user"}
+        scope: {
+            user1: "@user1",
+            user2: "@user2"
+        }
     }
 }]);
 
