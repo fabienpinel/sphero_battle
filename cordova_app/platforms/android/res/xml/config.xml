@@ -13,4 +13,6 @@
     </author>
     <content src="index.html" />
     <access origin="*" />
+    <preference name="android-installLocation" value="auto" />
+    <preference name="android-minSdkVersion" value="18" />
 </widget>
