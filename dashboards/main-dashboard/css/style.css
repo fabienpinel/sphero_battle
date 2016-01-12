@@ -1,40 +1,52 @@
 html, .ng-scope{
     height: 100%;
-    font-family: 'Lato', sans-serif;
 }
 
-#content1, #contentM {
+#content1 {
     float : left;
+    font-family: 'Inknut Antiqua', serif;
+    font-size: 2em;
+    background: #12a7c7;
+    background: -moz-linear-gradient(right, #12a7c7 0%, #13a6c8 100%);
+    background: -webkit-linear-gradient(right, #12a7c7 0%,#13a6c8 100%);
+    background: linear-gradient(to left, #12a7c7 0%,#13a6c8 100%);
 }
 
 #contentM {
-    font-size: 4em;
     position: absolute;
+    background: url("./img/repeat.png") repeat-y scroll top center transparent;
     top: 0;
     margin: 0 auto;
     width: 100%;
     text-align: center;
     z-index: 2;
+    padding: 10px 0;
     height: 100%;
 }
 
 #content2 {
     float : right;
+    font-family: 'Caveat Brush', cursive;
+    font-size: 2.3em;
+    background: #602D4C;
+    background: -moz-linear-gradient(left, #622c4c 0%, #180f3a 100%);
+    background: -webkit-linear-gradient(left, #622c4c 0%,#180f3a 100%);
+    background: linear-gradient(to right, #622c4c 0%,#180f3a 100%);
 }
 
 #content1, #content2 {
     display: block;
-    font-size: 2em;
     background: #333;
-    width: 46%;
+    width: 40%;
     height: 100%;
-    padding: 10px 2%;
+    padding: 10px 5%;
+    overflow: hidden;
 }
 
 .name {
     padding: 30px;
-    margin: 0 auto 10px;
-    border: 1px solid #fff;
+    font-weight: 600;
+    font-size: 2em;
 }
 
 span {
