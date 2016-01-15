@@ -6,26 +6,55 @@ var MyoApi = null;
 var lastMac = null;
 var NUM_PREC = 3;
 var i = 0;
-var IP = "134.59.215.166";
+var IP = "192.168.43.223";
 var PORT="3000";
 
-var d, x, y,z;
+var d, x = 0, y = 0 ,z = 0;
 
-var GYRO_Y_MAX_RANGE = 400;
-var GYRO_X_MAX_RANGE = 100;
+var GYRO_Y_MAX_RANGE = 3000;
+var GYRO_X_MAX_RANGE = 1000;
+
+var INTERVAL_REQUESTS_MYO = 10;
+var INTERVAL_AVERAGE_CALC = 20;
 
 var angle=0, norme=0;
 
-function sendCommand(angle, distance){
-    console.log("Angle: "+angle+" Distance: "+norme);
-    var dataMyo = {"angle":angle,"distance":distance};
-    var http = getAjax();
-    http.open('POST', "http://"+IP+":"+PORT+"/spheros/RPP/move/"+dataMyo.angle+"/"+dataMyo.distance, true);
-    xmlhttp.setRequestHeader("Content-type","application/json");
-    http.send();
+var angle_values = [];
+var norme_values = [];
+
+var globalX = 0;
+var globalY = 0;
+
+var globalDistance = 0;
+var globalAngle = 0;
+
+function getAverageFromTable(table){
+    var average = 0;
+    for(var i=0; i<table.length; i++){
+        average += table[i];
+    }
+    return (average / table.length);
+}
+
+function sendCommand(){
+
+    if (globalAngle > 0 || globalDistance > 0) {
+        console.log('angle: ' + globalAngle + ',\tdistance: ' + globalDistance * 5);
+        var http = getAjax();
+        http.open('POST', "http://"+IP+":"+PORT+"/spheros/WGY/move/"+parseInt(globalAngle)+"/"+parseInt(globalDistance * 5), true);
+        xmlhttp.setRequestHeader("Content-type","application/json");
+        http.send();
+    }
+
 }
 
 
+function reset_values(){
+    x = 0;
+    y = 0;
+    z = 0;
+
+}
 function getAjax () {
     if (window.XMLHttpRequest)
     {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -51,14 +80,14 @@ function checkBluetooth(btOnCallback){
                         btOnCallback();
                     }
                 }else{
-                    window.alert("You need to enable the Bluetooth adapter in order to use Myo");
+                    console.log("You need to enable the Bluetooth adapter in order to use Myo");
                 }
             }, function(err){
-                window.alert("Error opening Bluetooth configuration: " + err);
+                console.log("Error opening Bluetooth configuration: " + err);
             });
         }
     }, function(err){
-        window.alert("Error checking Bluetooth adapter state: " + err);
+        console.log("Error checking Bluetooth adapter state: " + err);
     });
 }
 function logMyoEvent(arg){
@@ -66,21 +95,28 @@ function logMyoEvent(arg){
 }
 function alertMyoEvent(ev){
     logMyoEvent(ev);
-    window.alert("Event: " + ev.eventName);
+    console.log("Event: " + ev.eventName);
 }
 function alertMyoPose(ev){
     logMyoEvent(ev);
     if(ev.pose !== MyoApi.Pose.REST){
-        window.alert("Pose detected: " + ev.pose);
+        console.log("Pose detected: " + ev.pose);
     }
 }
 function launchDataIntervalSender(){
     //sending command to the server
     console.log("Lauching setinterval");
+
     setInterval(function(){
-        sendCommand(angle, norme);
-    }, 100);
+        sendCommand();
+    }, INTERVAL_REQUESTS_MYO);
 }
+
+function getDataForAverageCalc(){
+    angle_values.push(angle);
+    norme_values.push(norme);
+}
+
 function initMyo(){
     if(cordova && cordova.plugins && cordova.plugins.MyoApi){
         console.log("Myo plugin found!!");
@@ -110,7 +146,7 @@ function initMyo(){
         .on("connect", function(ev){
             console.log("CONNECT EVENT");
             myMyo = ev.myo;
-            window.alert(myMyo.name + " is  connected");
+            document.getElementById('infos').innerHTML = (myMyo.name + " is  connected");
             localStorage["lastUsedMyoMac"] = myMyo.macAddress;
             console.log("Myo MAC address stored for easier future connection: " + localStorage["lastUsedMyoMac"]);
             myMyo.vibrate(MyoApi.VibrationType.MEDIUM); //Make the Myo vibrate
@@ -175,68 +211,102 @@ function connect_myo(){
 function vibrateMyo(){
     console.log("Clicked on vibrate myo button");
     if(myMyo){
+        reset_values();
         myMyo.vibrate(MyoApi.VibrationType.MEDIUM, function(){
             console.log("Vibration sent successfully");
         }, function(err){
             console.log("ERROR: couldn't send vibration: " + err);
         });
     }else{
-        window.alert("There are no Myos connected at the moment");
+        console.log("There are no Myos connected at the moment");
     }
 }
 
 function showMyo(){
     console.log("Clicked on show myo button");
-    window.alert("Current connected Myo: " + JSON.stringify(myMyo));
+    console.log("Current connected Myo: " + JSON.stringify(myMyo));
 }
 
 
 
 function orientationDataHandler(ev){
 //quaternion
-        /*
+
         var d = ev["rotation"];
 
-        var txt = "X: " + d.x.toFixed(NUM_PREC)
-            + " Y: " + d.y.toFixed(NUM_PREC)
-            + " Z: " + d.z.toFixed(NUM_PREC);
+        var txt = "X: " + (d.x * 100).toFixed(NUM_PREC)
+            + " Y: " + (d.y * 100).toFixed(NUM_PREC)
+            + " Z: " + (d.z * 100).toFixed(NUM_PREC);
 
-        txt += " W: " + d.w.toFixed(NUM_PREC)
+
+        txt = " W: " + d.w.toFixed(NUM_PREC)
         + "<br>&nbsp;&nbsp;\\\\\\ Roll: " + d.roll.toFixed(NUM_PREC)
         + " Pitch: " + d.pitch.toFixed(NUM_PREC)
         + " Yaw: " + d.yaw.toFixed(NUM_PREC)
         + " Angle: " + d.angle.toFixed(NUM_PREC)
         + " NORME: " + d.norme.toFixed(NUM_PREC);
-    setTimeout(sendCommand(d.angle.toFixed(NUM_PREC), d.norme.toFixed(NUM_PREC)*1000), 50);
+    //console.log(txt);
+
+    // pitch = Y max : 1.6 min : -1.5
+    // yaw = X -3.5 à 3.5
+
+    var x = -parseInt((( d.yaw > 0 ? d.yaw - 0.5 : d.yaw + 0.5) * 100));
+    var y = parseInt(d.pitch * 2 * 100);
+
+    var distance = Math.sqrt((x * x) + (y * y));
+    var angle = 0;
+
+    if (x >= 0 && y >= 0) {
+        angle = 57.2958 * Math.atan(y / x);
+    } else if (x < 0 && y >= 0) {
+        angle = 180 + 57.2958 * Math.atan(y / x);
+    } else if (x >= 0 && y <= 0) {
+        angle = 360 + 57.2958 * Math.atan(y / x);
+    } else if (x < 0 && y <= 0) {
+        angle = 180 + 57.2958 * Math.atan(y / x);
+    } else {
+        // do nothing
+    }
+
+    //console.log('x: ' + x + '\ty: ' + y + '\tangle: ' + angle + '\tdistance: ' + distance);
+
+    globalDistance = distance;
+    globalAngle = angle;
+
+
+
+    /*setTimeout(sendCommand(d.angle.toFixed(NUM_PREC), d.norme.toFixed(NUM_PREC)*1000), 50);
     if(i==0){
         console.log(txt);
         sendCommand(d.angle.toFixed(NUM_PREC), d.norme.toFixed(NUM_PREC)*1000);
         i++;
-    }
-         */
+    }*/
+
 }
 function accelerometerDataHandler(ev){
 //NOT quaternion
    var d = ev["accel"];
-    var txt = "X: " + d.x.toFixed(NUM_PREC)
-        + " Y: " + d.y.toFixed(NUM_PREC)
-        + " Z: " + d.z.toFixed(NUM_PREC);
-   // console.log("accelerometerDataHandler",txt);
+
+    var txt = "X: " + (d.x*100).toFixed(NUM_PREC)
+        + " Y: " + (d.y*100).toFixed(NUM_PREC)
+        + " Z: " + (d.z*100).toFixed(NUM_PREC);
+
+    globalY = (d.x*100).toFixed(NUM_PREC);
+
 }
 function gyroscopeDataHandler(ev){
 
     d = ev["gyro"];
 
-    x = d.x.toFixed(NUM_PREC);
-    y = d.y.toFixed(NUM_PREC);
-    z = d.z.toFixed(NUM_PREC);
+    globalX = d.x.toFixed(NUM_PREC);
+
     var temp = 0;
-    var txt = "X: " + x
-        + " Y: " + y
-        + " Z: " + z;
+    var txt = "X: " + d.x.toFixed(NUM_PREC)
+        + " Y: " + d.y.toFixed(NUM_PREC)
+        + " Z: " + d.z.toFixed(NUM_PREC);
 
     //console.log("gyroscopeDataHandler",txt);
-
+/*
     //Majoration des valeurs suivant le RANGE
     x = (x>GYRO_X_MAX_RANGE)? GYRO_X_MAX_RANGE : x;
     x = (x<-GYRO_X_MAX_RANGE)? -GYRO_X_MAX_RANGE : x;
@@ -246,7 +316,7 @@ function gyroscopeDataHandler(ev){
 
 
     norme = Math.sqrt((x*x)+(y* y));
-    norme *= 10;
+    norme /= 5;
     norme = (norme > 1000) ? 1000 : norme;
 
     if(x==0){
@@ -268,8 +338,10 @@ function gyroscopeDataHandler(ev){
         }
     }
     angle = temp*(180/Math.PI);
+    */
 
     //console.log("gyroscopeDataHandler", txt);
+
     //console.log("Angle: "+angle+" Distance: "+norme);
 }
 function detachMyo(){

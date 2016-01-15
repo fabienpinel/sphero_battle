@@ -117,6 +117,7 @@ h1 {
     height:40%;
     border: none;
 }
-button:focus {
+button:focus, button:hover {
     outline: none;
+    background-color: blue !important;
 }
