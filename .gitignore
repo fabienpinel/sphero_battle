@@ -138,4 +138,6 @@ dist/
 
 .DS_STORE
 cordova_app/platforms/
+phonertc/phonertcapp/platforms/
+
 
