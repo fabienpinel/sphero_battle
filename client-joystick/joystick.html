@@ -52,7 +52,7 @@
             //socket.emit('move', parseInt(angle + departureAngle), parseInt(distance));
 
             var http = getAjax();
-            http.open('POST', 'http://134.59.215.166:3000/spheros/RPP/move/' + parseInt(angle + departureAngle) + '/' + parseInt(distance * 2), true);
+            http.open('POST', 'http://localhost:3000/spheros/RPP/move/' + parseInt(angle + departureAngle) + '/' + parseInt(distance * 2), true);
             xmlhttp.setRequestHeader("Content-type","application/json");
             http.send();
         }
@@ -61,7 +61,7 @@
     function stop() {
         if (begin) {
             var http = getAjax();
-            http.open('POST', 'http://134.59.215.166:3000/spheros/RPP/move/0/0', true);
+            http.open('POST', 'http://localhost:3000/spheros/RPP/move/0/0', true);
             xmlhttp.setRequestHeader("Content-type","application/json");
             http.send();
         }
@@ -128,7 +128,7 @@
                 //console.log('// en bas à droite', 180 + Math.abs(angle));
                 angle = 180 + Math.abs(angle)
             }
-            console.log(/*Math.abs(angle), */distance);
+            console.log(/*Math.abs(angle), */pointerX - centerX, pointerY - centerY);
             go(Math.abs(angle), distance);
         }
     }, 100);
