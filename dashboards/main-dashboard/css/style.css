@@ -1,18 +1,54 @@
-.versus {
+md-content {
+    background-color: #C5CAE9;
+}
+
+.center {
     position: absolute;
     transform: translate(-50%, -50%);
     -moz-transform: translate(-50%, -50%);
     left: 50%;
     top: 50%;
+}
+
+.versus {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    left: 50.5%;
+    top: 50%;
     max-width: 80px;
 }
 
-.main {
-
+#score1, #score2 {
+    margin: 8px;
+    position: relative;
 }
 
-md-progress-circular {
-    height: 300px;
+#score1 {
+    margin-right: 0px;
+    background-color: #C5CAE9;
+}
+
+#score2 {
+    margin-left: 0px;
+    border-left: 2px dashed #3E4EB8;
+    background-color: #C5CAE9;
+}
+
+#content1 md-card {
+    margin: 0 8px 0 0;
+}
+
+#content2 md-card {
+    margin: 0 0 0 8px;
+}
+
+.md-toolbar-tools {
+    text-align: center;
+}
+
+#score1 span, #score2 span {
+    font-size: 3em;
 }
 
 header {
@@ -26,4 +62,19 @@ header {
 
 #content2 {
     text-align: right;
+}
+
+.dialogdemoBasicUsage #popupContainer {
+    position: relative;
+}
+
+.dialogdemoBasicUsage .footer {
+    width: 100%;
+    text-align: center;
+    margin-left: 20px;
+}
+
+.dialogdemoBasicUsage .footer, .dialogdemoBasicUsage .footer > code {
+    font-size: 0.8em;
+    margin-top: 50px;
 }
