@@ -22,6 +22,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
     $stateProvider
         .state('state1', {
             url: "/",
-            templateUrl: "js/partials/home.html"
+            templateUrl: "js/partials/home.html",
+            controller: "homeCtrl",
+            controllerAs: "home"
         });
 });

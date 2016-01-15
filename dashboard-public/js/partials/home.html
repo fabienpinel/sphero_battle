@@ -4,8 +4,8 @@
             <md-card>
                 <md-card-title>
                     <md-card-title-text>
-                        <span class="md-headline">Player 1{{players[1].name}}</span>
-                        <span class="md-subhead">Score : 2</span>
+                        <span class="md-headline">Player 1 : {{home.players[0].name}}</span>
+                        <span class="md-subhead">Score : {{home.players[0].score}}</span>
                     </md-card-title-text>
                 </md-card-title>
             </md-card>
@@ -15,8 +15,8 @@
             <md-card>
                 <md-card-title>
                     <md-card-title-text>
-                        <span class="md-headline">Player 2{{players[1].name}}</span>
-                        <span class="md-subhead">Score : 1</span>
+                        <span class="md-headline">Player 2 : {{home.players[1].name}}</span>
+                        <span class="md-subhead">Score : {{home.players[1].score}}</span>
                     </md-card-title-text>
                 </md-card-title>
             </md-card>
@@ -26,22 +26,21 @@
         <div id="score1" flex="50">
             <div class="md-toolbar-tools">
                 <h3 flex>
-                    <span>Vote</span>
+                    <span>Pouvoir</span>
                 </h3>
             </div>
             <div layout="row" layout-sm="column" layout-align="space-around" class="res">
-                <md-progress-circular class="md-warn " md-diameter='180' md-mode="determinate" value="89"></md-progress-circular>
+                <md-progress-circular class="md-warn" md-diameter='180' md-mode="determinate" value="{{home.players[0].power}}" ng-click="home.up(0)"></md-progress-circular>
             </div>
-
         </div>
         <div id="score2" flex="50">
             <div class="md-toolbar-tools">
                 <h3 flex>
-                    <span>Vote</span>
+                    <span>Pouvoir</span>
                 </h3>
             </div>
             <div layout="row" layout-sm="column" layout-align="space-around" class="res">
-                <md-progress-circular md-diameter='180' md-mode="determinate" value="45"></md-progress-circular>
+                <md-progress-circular md-diameter='180' md-mode="determinate" value="{{home.players[1].power}}" ng-click="home.up(1)"></md-progress-circular>
             </div>
         </div>
     </div>
