@@ -16,6 +16,6 @@
   "dependencies": {
     "angular": "~1.4.8",
     "angular-route": "~1.4.8",
-    "mprogress": "~0.1.1"
+    "angular-material": "~1.0.2"
   }
 }

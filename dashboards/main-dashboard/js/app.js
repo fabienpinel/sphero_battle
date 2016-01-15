@@ -1,4 +1,4 @@
-var app = angular.module('mainDashboard', ['ngRoute']);
+var app = angular.module('mainDashboard', ['ngRoute', 'ngMaterial']);
 
 app.config([ '$routeProvider', function ($routeProvider) {
     $routeProvider
