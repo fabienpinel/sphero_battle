@@ -1,0 +1,19 @@
+{
+  "name": "dashboard-public",
+  "version": "0.0.0",
+  "homepage": "https://github.com/fabienpinel/sphero_battle",
+  "authors": [
+    "Zassshem <maxime.dito@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -1,0 +1,48 @@
+<md-content layout="column" layout-fill>
+    <header layout="row">
+        <div id="content1" flex="50">
+            <md-card>
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">Player 1{{players[1].name}}</span>
+                        <span class="md-subhead">Score : 2</span>
+                    </md-card-title-text>
+                </md-card-title>
+            </md-card>
+        </div>
+        <img class="versus center" src="img/vs.png" alt=""/>
+        <div id="content2" flex="50">
+            <md-card>
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">Player 2{{players[1].name}}</span>
+                        <span class="md-subhead">Score : 1</span>
+                    </md-card-title-text>
+                </md-card-title>
+            </md-card>
+        </div>
+    </header>
+    <div class="md-padding" flex layout="row" ng-cloak layout-align="center none" >
+        <div id="score1" flex="50">
+            <div class="md-toolbar-tools">
+                <h3 flex>
+                    <span>Vote</span>
+                </h3>
+            </div>
+            <div layout="row" layout-sm="column" layout-align="space-around" class="res">
+                <md-progress-circular class="md-warn " md-diameter='180' md-mode="determinate" value="89"></md-progress-circular>
+            </div>
+
+        </div>
+        <div id="score2" flex="50">
+            <div class="md-toolbar-tools">
+                <h3 flex>
+                    <span>Vote</span>
+                </h3>
+            </div>
+            <div layout="row" layout-sm="column" layout-align="space-around" class="res">
+                <md-progress-circular md-diameter='180' md-mode="determinate" value="45"></md-progress-circular>
+            </div>
+        </div>
+    </div>
+</md-content>

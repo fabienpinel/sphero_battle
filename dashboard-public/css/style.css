@@ -1,0 +1,53 @@
+md-content {
+    background-color: #C5CAE9;
+}
+
+.versus {
+    left: 50.5%;
+    top: 52px;
+    max-width: 80px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+#score1 {
+    margin-right: 5px;
+}
+
+#score2 {
+    margin-left: 0px;
+    border-left: 2px dashed #3E4EB8;
+}
+
+.res {
+    margin-top:50px;
+}
+
+#content1 md-card {
+    margin: 0 0px 0 0;
+}
+
+#content2 md-card {
+    margin: 0 0 0 8px;
+}
+
+.md-toolbar-tools {
+    text-align: center;
+}
+
+#score1 span, #score2 span {
+    font-size: 3em;
+}
+
+header {
+    position: relative;
+}
+
+#content1 md-card, #content2 md-card {
+    background-color: #3E4EB8;
+    color: #fff;
+}
+
+#content2 {
+    text-align: right;
+}
