@@ -1,13 +1,33 @@
-<div id="content1" style="background-color: #12A7C7">
-    <span class="name">{{players[0].name}}</span>
-    <span class="score">Score : {{players[0].score}}</span>
-    <span class="power">Power : {{players[0].power}}</span>
-</div>
-
-<div id="contentM"></div>
-
-<div id="content2" style="background-color: #602D4C">
-    <span class="name">{{players[1].name}}</span>
-    <span class="score">Score : {{players[1].score}}</span>
-    <span class="power">Power : {{players[1].power}}</span>
-</div>
+<md-content flex layout-fill>
+    <header class="md-padding" layout="row" layout-wrap layout-align="center start" layout-xs="column" flex>
+        <div id="content1" flex>
+            <md-card>
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">Player 1{{players[1].name}}</span>
+                        <span class="md-subhead">Score : 2</span>
+                    </md-card-title-text>
+                </md-card-title>
+            </md-card>
+        </div>
+        <img class="versus" src="img/vs.png" alt=""/>
+        <div id="content2" flex>
+            <md-card>
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">Player 2{{players[1].name}}</span>
+                        <span class="md-subhead">Score : 1</span>
+                    </md-card-title-text>
+                </md-card-title>
+            </md-card>
+        </div>
+    </header>
+    <div class="md-padding" layout="row" flex layout-align="center start" layout-fill ng-cloak>
+        <div id="score1" flex layout-fill layout="row" layout-align="space-around">
+            <md-progress-circular md-diameter='100%' md-mode="determinate" value="89"></md-progress-circular>
+        </div>
+        <div id="score2" flex layout-fill layout="row" layout-align="space-around">
+            <md-progress-linear md-swipe-up md-mode="determinate" value="45"></md-progress-linear>
+        </div>
+    </div>
+</md-content>
