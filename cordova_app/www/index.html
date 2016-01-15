@@ -25,15 +25,22 @@
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+        <link rel="stylesheet" type="text/css" href="css/material.min.css" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <title>Sphero Battle</title>
     </head>
     <body>
         <div class="app">
-            <h1>SPHERO BATTLE</h1>
+            <h1 class="title mdl-typography--display-2">SPHERO BATTLE</h1>
             <div id="commands" >
-                <button id="scanDialog" onclick="connect_myo()">CONNECT</button>
-                <button id="vibrateMyo" onclick="vibrateMyo()">VIBRATE</button>
+                <button id="scanDialog" onclick="connect_myo()" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect">CONNECT</button>
+                <button id="vibrateMyo" onclick="vibrateMyo()" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect">VIBRATE</button>
+                <div id="sliderContainer">
+                    <label for="rangeSlider">Message frequence</label>
+                    <input id="rangeSlider" class="mdl-slider mdl-js-slider" type="range"
+                           min="0" max="1000" value="200" tabindex="0" onchange="changeSendRange(this.value)">
+                </div>
+                <span id="infos" class="texteZone"></span>
                 <!-- <button id="showMyo" onclick="showMyo()">SHOW MYO</button>
                 <button id="detachMyo" onclick="detachMyo()">Detach</button>
                <button id="dataMyo" onclick="displayData()">Display Orientation data</button>
@@ -42,6 +49,7 @@
            </div>
        </div>
        <script type="text/javascript" src="cordova.js"></script>
+       <script type="text/javascript" src="js/material.min.js"></script>
        <script type="text/javascript" src="js/index.js"></script>
        <script type="text/javascript" src="js/myo.js"></script>
    </body>
