@@ -14,7 +14,7 @@ var d, x = 0, y = 0 ,z = 0;
 var GYRO_Y_MAX_RANGE = 3000;
 var GYRO_X_MAX_RANGE = 1000;
 
-var INTERVAL_REQUESTS_MYO = 10;
+var INTERVAL_REQUESTS_MYO = 400;
 var INTERVAL_AVERAGE_CALC = 20;
 
 var angle=0, norme=0;
@@ -102,6 +102,9 @@ function alertMyoPose(ev){
     if(ev.pose !== MyoApi.Pose.REST){
         console.log("Pose detected: " + ev.pose);
     }
+}
+function changeSendRange(val){
+    INTERVAL_REQUESTS_MYO = val;
 }
 function launchDataIntervalSender(){
     //sending command to the server
@@ -202,9 +205,9 @@ function initMyo(){
 function connect_myo(){
    console.log("adjacent search");
     MyoApi.attachToAdjacentMyo(function(s){
-        console.log("Connecting with adjacent Myo success", s);
+        console.log("Connecting with adjacent Myo", s);
     }, function(err){
-        console.log("connecting with adjacent Myo error", err);
+        console.log("connecting with adjacent Myo", err);
     });
 }
 
@@ -350,3 +353,4 @@ function detachMyo(){
 function displayData(){
     i=0;
 }
+document.getElementById("rangeSlider").value = INTERVAL_REQUESTS_MYO;
