@@ -8,6 +8,17 @@
 
     function playersFactory() {
         return {
+            getPlayers: function () {
+                return [{
+                    id: 'joueur inconnu',
+                    score: 0,
+                    power: 0
+                }, {
+                    id: 'joueur inconnu',
+                    score: 0,
+                    power: 0
+                }];
+            },
             setPlayers: function (index,newValue) {
                 this.getPlayers[index] = newValue;
             },
