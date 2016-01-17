@@ -1,34 +1,29 @@
-var app = angular.module('mainDashboard', ['ngRoute', 'ngMaterial']);
+var app = angular.module('dashboardPublic', ['ui.router', 'ngMaterial', 'btford.socket-io']);
 
-app.config([ '$routeProvider', function ($routeProvider) {
-    $routeProvider
-        .when('/', {
-            templateUrl: 'js/partial/index.html',
-            controller: 'homeCtrl',
-            controllerAs: 'home'
-        })
-        .otherwise({redirectTo : '/'});
-}]);
 
-app.directive('home', ['homeCtrl', function(){
-    return {
-        restrict: 'E',
-        templateUrl: 'js/partial/index.html',
-        scope: {
-            players: "@players",
-            spheros: "@spheros"
-        }
-    }
-}]);
-
-// premier block ex�cut� dans Angular
+// premier block ex?cut? dans Angular
 app.run([ '$rootScope','$location',  function ($rootScope, $location) {
     /*$http
-        .get('http://localhost:3000/hello-world')
-        .then(function (response) {
-            console.log('success', response);
-        })
-        .catch(function (error) {
-            console.log('unexpected error', error);
-        });*/
+     .get('http://localhost:3000/hello-world')
+     .then(function (response) {
+     console.log('success', response);
+     })
+     .catch(function (error) {
+     console.log('unexpected error', error);
+     });*/
 }]);
+
+app.config(function($stateProvider, $urlRouterProvider) {
+    //
+    // For any unmatched url, redirect to /state1
+    $urlRouterProvider.otherwise("/");
+    //
+    // Now set up the states
+    $stateProvider
+        .state('state1', {
+            url: "/",
+            templateUrl: "js/partials/home.html",
+            controller: "homeCtrl",
+            controllerAs: "home"
+        });
+});

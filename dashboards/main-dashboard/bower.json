@@ -1,10 +1,13 @@
 {
-  "name": "main-dashboard",
+  "name": "dashboard-public",
   "version": "0.0.0",
   "homepage": "https://github.com/fabienpinel/sphero_battle",
   "authors": [
-    "Jean-Yves Delmotte <jean-yves.delmotte@greencom-networks.com>"
+    "Zassshem <maxime.dito@gmail.com>"
   ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -15,7 +18,8 @@
   ],
   "dependencies": {
     "angular": "~1.4.8",
-    "angular-route": "~1.4.8",
-    "angular-material": "~1.0.2"
+    "angular-ui-router": "~0.2.15",
+    "angular-material": "~1.0.2",
+    "angular-socket-io": "~0.7.0"
   }
 }

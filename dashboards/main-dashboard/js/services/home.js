@@ -2,15 +2,23 @@
     'use strict';
 
     app.factory('playersFactory', playersFactory)
-        .factory('spherosFactory', spherosFactory);
+        .factory('spherosFactory', spherosFactory)
+        .factory('socket', socket);
 
 
     function playersFactory() {
         return {
-            getPlayers : [
-                {name : "pd", score: 0, power: 32},
-                {name : "sodom", score: 5, power:42}
-            ],
+            getPlayers: function () {
+                return [{
+                    id: 'joueur inconnu',
+                    score: 0,
+                    power: 0
+                }, {
+                    id: 'joueur inconnu',
+                    score: 0,
+                    power: 0
+                }];
+            },
             setPlayers: function (index,newValue) {
                 this.getPlayers[index] = newValue;
             },
@@ -30,5 +38,12 @@
                 this.getSpheros[i] = newValue;
             }
         }
+    }
+
+    function socket(socketFactory) {
+        return socketFactory({
+            prefix: 'dp~',
+            ioSocket: io.connect('http://localhost:3000/')
+        });
     }
 })();

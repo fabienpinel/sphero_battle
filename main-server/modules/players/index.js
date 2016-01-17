@@ -1,4 +1,12 @@
-var players = [];
+var players = [{
+    id: 'Sophie Phonsec',
+    score: 0,
+    power: 0
+}, {
+    id: 'Jean Némar',
+    score: 0,
+    power: 0
+}];
 
 var GAME_HORIZONTAL = 1000;
 var GAME_VERTICAL = 1000;
