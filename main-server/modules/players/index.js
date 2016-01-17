@@ -1,4 +1,12 @@
-var players = [];
+var players = [{
+    id: 'Sophie Phonsec',
+    score: 0,
+    power: 0
+}, {
+    id: 'Jean Némar',
+    score: 0,
+    power: 0
+}];
 
 module.exports = {
 
