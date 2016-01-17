@@ -2,7 +2,7 @@ app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket'
 
     var vm = this;
 
-    vm.players = [];
+    vm.players = playersFactory.getPlayers;
     vm.spheros = spherosFactory.getSpheros;
 
     socket.on('dataChange', function (data) {
