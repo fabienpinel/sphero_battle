@@ -114,6 +114,16 @@ module.exports = {
         } else {
             res.status(404).end();
         }
+    },
+
+    movePlayer: function (req, res) {
+        var hasMoved = playerFactory.movePlayer(req.params.id, req.params.deltaX, req.params.deltaY);
+        if (hasMoved) {
+            sockets.emitChanges();
+            res.status(201).end();
+        } else {
+            res.status(404).end();
+        }
     }
 
 };

@@ -1,5 +1,11 @@
 var players = [];
 
+var GAME_HORIZONTAL = 1000;
+var GAME_VERTICAL = 1000;
+
+var BALL_RADIUS = 50;
+
+
 module.exports = {
 
     getPlayers: function () {
@@ -20,7 +26,11 @@ module.exports = {
             players.push({
                 id: id,
                 score: 0,
-                power: 0
+                power: 0,
+                position: {
+                    x: players.length == 1 ? GAME_HORIZONTAL - BALL_RADIUS : BALL_RADIUS,
+                    y: players.length == 1 ? GAME_VERTICAL - BALL_RADIUS : BALL_RADIUS
+                }
             });
             return true;
         }
@@ -51,6 +61,19 @@ module.exports = {
         for (var i in players) {
             if (players[i].id == playerId) {
                 players[i].power++;
+                return true;
+            }
+        }
+        return false;
+    },
+
+    movePlayer: function (playerId, deltaX, deltaY) {
+        for (var i in players) {
+            if (players[i].id == playerId) {
+                var newX = players[i].position.x + deltaX;
+                var newY = players[i].position.y + deltaY;
+                players[i].position.x = newX > GAME_HORIZONTAL - BALL_RADIUS ? GAME_HORIZONTAL - BALL_RADIUS : (newX < BALL_RADIUS ? BALL_RADIUS : newX);
+                players[i].position.x = newY > GAME_VERTICAL - BALL_RADIUS ? GAME_VERTICAL - BALL_RADIUS : (newY < BALL_RADIUS ? BALL_RADIUS : newY);
                 return true;
             }
         }

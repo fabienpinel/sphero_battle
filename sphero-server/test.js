@@ -1,5 +1,21 @@
-if (process.argv.length == 4) {
+var spheroConnect = require('./modules/connect');
+spheroConnect('RPP', function (orb) {
 
-} else {
-    console.error('You must specify the id of the Sphero and the url of the global server\nnode index.js [sphero_id] [server_url]');
-}
+    orb.color("green");
+    setTimeout(function () {
+        orb.color("red");
+    }, 1000);
+    setTimeout(function () {
+        orb.color("blue");
+    }, 2000);
+    orb.on('collision', function () {
+        console.log('coucou');
+        orb.color("red");
+        setTimeout(function () {
+            orb.color("green");
+        }, 1000);
+    });
+
+    orb.detectCollisions();
+
+});

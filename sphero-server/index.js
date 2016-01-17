@@ -42,7 +42,6 @@ function buildSphero() {
 
                 console.log('collision');
                 orb.color("red");
-                orb.stop();
                 setTimeout(function () {
                     orb.color("green");
                 }, 1000);
@@ -52,7 +51,7 @@ function buildSphero() {
             app.use('/',router);
             console.log("Server Launched on port " + process.argv[5] + " ...");
             server = app.listen(process.argv[5], function () {
-                recursivePing(orb);
+                //recursivePing(orb);
             });
 
         });
