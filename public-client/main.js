@@ -10,7 +10,7 @@
 
     socket.on('dataChange', function (data) {
         players = data.players;
-        if (players.length === 0) {
+        /*if (players.length === 0) {
             document.getElementById('info').innerHTML = 'Waiting for 2 players...';
             document.getElementById('info').style.display = 'block';
             document.getElementById('table').style.display = 'none';
@@ -22,7 +22,7 @@
             document.getElementById('info').innerHTML = 'osef';
             document.getElementById('info').style.display = 'none';
             document.getElementById('table').style.display = 'block';
-        }
+        }*/
     });
 
 
