@@ -1,0 +1,122 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            overflow	: hidden;
+            padding		: 0;
+            margin		: 0;
+            background-color: #BBB;
+        }
+        #info {
+            position	: absolute;
+            top		: 0px;
+            width		: 100%;
+            padding		: 5px;
+            text-align	: center;
+        }
+        #info a {
+            color		: #66F;
+            text-decoration	: none;
+        }
+        #info a:hover {
+            text-decoration	: underline;
+        }
+        #container {
+            width		: 100%;
+            height		: 100%;
+            overflow	: hidden;
+            padding		: 0;
+            margin		: 0;
+            -webkit-user-select	: none;
+            -moz-user-select	: none;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+<script src="./virtualjoystick.js"></script>
+
+<!--<script src="http://localhost:8080/socket.io/socket.io.js"></script>-->
+
+<script>
+
+    //var socket = io('http://localhost:8080');
+
+    var departureAngle = 0;
+    var begin = true;
+
+    function go (x, y) {
+        if (begin) {
+            //socket.emit('move', parseInt(angle + departureAngle), parseInt(distance));
+
+            var http = getAjax();
+            http.open('POST', 'http://localhost:3000/api/players/player2/deltaX/' + x + '/deltaY/' + y, true);
+            http.setRequestHeader("Content-type","application/json");
+            http.send();
+        }
+    }
+
+    function stop() {
+        if (begin) {
+            var http = getAjax();
+            http.open('POST', 'http://localhost:3000/spheros/RPP/move/0/0', true);
+            http.setRequestHeader("Content-type","application/json");
+            //http.send();
+        }
+    }
+
+    function getAjax () {
+        if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+            return xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {// code for IE6, IE5
+            return xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+    }
+
+
+
+
+    var joystick	= new VirtualJoystick({
+        container	: document.getElementById('container'),
+        mouseSupport	: true
+    });
+
+    var clicked = false;
+    var originalPoint = null;
+    var actualPoint = null;
+
+    document.addEventListener('mousedown', function (e) { clicked = true; originalPoint = {x: e.clientX,y: e.clientY }; });
+    document.addEventListener('mouseup', function () {
+        clicked = false;actualPoint = null;originalPoint = null;
+        stop();
+    });
+    document.addEventListener('mousemove', function (e) { if (clicked) actualPoint = {x: e.clientX, y: e.clientY}; });
+
+    document.addEventListener('touchstart', function (e) { clicked = true; originalPoint = {x: e.touches[0].clientX,y: e.touches[0].clientY }; });
+    document.addEventListener('touchend', function () { clicked = false;actualPoint = null;originalPoint = null; stop(); });
+    document.addEventListener('touchmove', function (e) { if (clicked) actualPoint = {x: e.touches[0].clientX, y: e.touches[0].clientY}; });
+
+    setInterval(function(){
+        //var angle = (57.2958 * Math.atan((joystick.deltaY()) / (joystick.deltaX())));
+        //console.log(angle, joystick.deltaX(), joystick.deltaY());
+        if (actualPoint && originalPoint) {
+            //console.log('calculate');
+
+            var centerX = originalPoint.x;
+            var centerY = originalPoint.y;
+            var pointerX = actualPoint.x;
+            var pointerY = actualPoint.y;
+
+            console.log(parseInt((pointerX - centerX) / 10), parseInt((centerY - pointerY) / 10));
+            go(parseInt((pointerX - centerX) / 5), - parseInt((centerY - pointerY) / 5));
+        }
+    }, 30);
+
+</script>
+</body>
+</html>
