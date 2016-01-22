@@ -2,6 +2,19 @@ md-content {
     background-color: #C5CAE9;
 }
 
+.delay2 {
+    animation-delay: 0.2s;
+}
+
+.delay2.wobble {
+    animation-delay: 0s;
+    animation-duration: 0.3s;
+}
+
+.delay5 {
+    animation-delay: 0.5s;
+}
+
 .versus {
     left: 50.5%;
     top: 52px;

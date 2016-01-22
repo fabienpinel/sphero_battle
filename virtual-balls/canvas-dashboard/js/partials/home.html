@@ -1,5 +1,5 @@
 <md-content layout="column" layout-fill>
-    <header layout="row" class="animated" ng-class="{slideInDown: init, wobble: collision}">
+    <header layout="row" class="animated slideInDown">
         <div id="content1" flex="50">
             <md-card>
                 <md-card-title>
@@ -23,7 +23,7 @@
         </div>
     </header>
     <div class="md-padding" flex layout="row" ng-cloak layout-align="center none" >
-        <div id="score1" flex="25" class="animated delay2" ng-class="{slideInLeft: init, wobble: collision}">
+        <div id="score1" flex="25" class="animated delay2" ng-class="{slideInLeft: home.init, wobble: home.collision1}">
             <div class="md-toolbar-tools">
                 <h3 flex>
                     <span>Pouvoir</span>
@@ -35,13 +35,13 @@
             </div>
         </div>
         <div class="canvas-container" flex="50" >
-            <div class="content animated delay5" ng-class="{zoomIn: init, wobble: collision}">
+            <div class="content animated delay5 zoomIn">
                 <canvas height="480" width="480" id="demoCanvas">
 
                 </canvas>
             </div>
         </div>
-        <div id="score2" flex="25" class="animated delay2" ng-class="{slideInRight: init, wobble: collision}">
+        <div id="score2" flex="25" class="animated delay2" ng-class="{slideInRight: home.init, wobble: home.collision2}">
             <div class="md-toolbar-tools">
                 <h3 flex>
                     <span>Pouvoir</span>

@@ -1,6 +1,12 @@
-app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket', function ($scope,playersFactory,spherosFactory,socket) {
+app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket', '$timeout', function ($scope,playersFactory,spherosFactory,socket,$timeout) {
 
     var vm = this;
+    vm.init = true;
+    vm.collision1 = vm.collision2 = false;
+
+    $timeout(function(){
+       vm.init = false;
+    }, 2000);
 
     vm.players = playersFactory.getPlayers;
     vm.spheros = spherosFactory.getSpheros;
@@ -16,8 +22,24 @@ app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket'
         console.log(playersFactory.upPower);
     };
 
-    socket.on('collision', function (playerId) {
-        console.log('collision', playerId);
+    socket.on('collision', function (playerIds) {
+        console.log('collision', playerIds);
+        if(playerIds.length == 2){
+            vm.collision1 = vm.collision2 = true;
+            $timeout(function(){
+                vm.collision1 = vm.collision2 = false;
+            }, 300);
+        } else if (playerIds[0] == "player1") {
+            vm.collision1 = true;
+            $timeout(function(){
+                vm.collision1 = false;
+            }, 300);
+        } else {
+            vm.collision2 = true;
+            $timeout(function(){
+                vm.collision2 = false;
+            }, 300);
+        }
     });
 
 
