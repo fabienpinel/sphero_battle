@@ -20,7 +20,7 @@ module.exports = {
             var player = playerFactory.registerPlayer(playerId);
             if (player) {
                 sockets.emitChanges();
-                res.status(201).end();
+                res.status(201).json(sphero);
             } else {
                 res.status(409).end();
             }

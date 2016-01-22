@@ -8,8 +8,10 @@ var io = null;
 var moduleToExports = {
 
     sendCommand: function(spheroId, x, y) {
+        console.log("trying to emit towards "+spheroId+" ,x: "+x+" ,y: "+y);
         for (var i in sockets) {
             if (sockets[i].id == spheroId) {
+                console.log("seding to socket connection"+spheroId+" ,x: "+x+" ,y: "+y);
                 sockets[i].emit('command', x, y);
             }
         }
@@ -37,7 +39,7 @@ var moduleToExports = {
             });
 
             socket.on('spheroId', function (id) {
-                var result = spheroFactory.addSphero(id);
+                var result = spherosFactory.addSphero(id);
                 if (result) {
                     socket.id = id;
                     sockets.push(socket);

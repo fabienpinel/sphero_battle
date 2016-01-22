@@ -48,11 +48,19 @@
     var begin = true;
 
     function go (angle, distance) {
+        distance *= -1;
+        angle += 700;
+        distance += 700;
+        angle *= 0.495;
+        distance *= 0.495;
+
+
+
         if (begin) {
             //socket.emit('move', parseInt(angle + departureAngle), parseInt(distance));
-
+            console.log("sending ", angle, distance);
             var http = getAjax();
-            http.open('POST', 'http://localhost:3000/spheros/RPP/move/' + parseInt(angle + departureAngle) + '/' + parseInt(distance * 2), true);
+            http.open('POST', 'http://localhost:3000/spheros/Sphero-WGY/move/' + parseInt(angle) + '/' + parseInt(distance), true);
             xmlhttp.setRequestHeader("Content-type","application/json");
             http.send();
         }
@@ -61,7 +69,7 @@
     function stop() {
         if (begin) {
             var http = getAjax();
-            http.open('POST', 'http://localhost:3000/spheros/RPP/move/0/0', true);
+            http.open('POST', 'http://localhost:3000/spheros/Sphero-WGY/move/0/0', true);
             xmlhttp.setRequestHeader("Content-type","application/json");
             http.send();
         }
@@ -112,7 +120,9 @@
             var pointerX = -actualPoint.x;
             var pointerY = actualPoint.y;
 
-            var angle = (57.2958 * Math.atan((pointerY - centerY) / (pointerX - centerX)));
+            go(centerX - pointerX, centerY - pointerY);
+
+            /*var angle = (57.2958 * Math.atan((pointerY - centerY) / (pointerX - centerX)));
             var distance = Math.sqrt((pointerX - centerX)*(pointerX - centerX) + (pointerY - centerY)*(pointerY - centerY));
 
             if (pointerX > centerX && pointerY < centerY) {
@@ -128,8 +138,8 @@
                 //console.log('// en bas à droite', 180 + Math.abs(angle));
                 angle = 180 + Math.abs(angle)
             }
-            console.log(/*Math.abs(angle), */pointerX - centerX, pointerY - centerY);
-            go(Math.abs(angle), distance);
+            console.log(/*Math.abs(angle), pointerX - centerX, pointerY - centerY);
+            go(Math.abs(angle), distance);*/
         }
     }, 100);
 
