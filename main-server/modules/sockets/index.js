@@ -48,7 +48,7 @@ var moduleToExports = {
             });
 
             socket.on('collision', function () {
-
+                io.sockets.emit('collision', spherosFactory.getSpheroById(spheroId));
             });
 
             socket.on('disconnect', function () {
