@@ -1,3 +1,5 @@
+var sockets = require('../sockets');
+
 var GAME_HORIZONTAL = 1000;
 var GAME_VERTICAL = 1000;
 var BALL_RADIUS = 50;
@@ -10,6 +12,7 @@ var players = [{
         x: BALL_RADIUS + 200,
         y: BALL_RADIUS + 200
     },
+    lastImpact: Date.now(),
     history: [{x: 0, y: 0},{x: 0, y: 0}]
 }, {
     id: "player2",
@@ -19,6 +22,7 @@ var players = [{
         x: GAME_HORIZONTAL - BALL_RADIUS,
         y: GAME_VERTICAL - BALL_RADIUS
     },
+    lastImpact: Date.now(),
     history: [{x: 0, y: 0},{x: 0, y: 0}]
 }];
 
@@ -48,7 +52,13 @@ function _findNewPosition(playerId, newX, newY, previousX, previousY) {
     }
 
     if (isBeforeX || isAfterX || isBeforeY || isAfterY) {
-        //console.log('collision contre le mur');
+        for (var i in players) {
+            if (players[i].id == playerId) {
+                players[i].lastImpact = Date.now();
+                sockets.collision([playerId]);
+                break;
+            }
+        }
     }
 
     // collision avec joueur
@@ -68,8 +78,9 @@ function _findNewPosition(playerId, newX, newY, previousX, previousY) {
                     returnValue.newY = players[i].position.y + (y * 2 * BALL_RADIUS / distanceBetweenCenters);
 
                     // TODO : check who has the biggest speed. Then take the biggest speed and recurse on it for the looser
+                    sockets.collision([playerId, players[i].id]);
 
-                    // TODO : if not impacted within the last 1s
+                    players[i].lastImpact = Date.now();
                     var deltaX = previousX - players[i].position.x;
                     var deltaY = previousY - players[i].position.y;
                     _recurseImpact(
@@ -189,10 +200,26 @@ function _recurseImpact(playerId, deltaX, deltaY, index) {
         if (players[i].id == playerId) {
             players[i].position.x -= deltaX;
             players[i].position.y -= deltaY;
-            if (players[i].position.x < BALL_RADIUS) players[i].position.x = BALL_RADIUS;
-            if (players[i].position.y < BALL_RADIUS) players[i].position.y = BALL_RADIUS;
-            if (players[i].position.x > GAME_HORIZONTAL - BALL_RADIUS) players[i].position.x = GAME_HORIZONTAL - BALL_RADIUS;
-            if (players[i].position.y > GAME_VERTICAL - BALL_RADIUS) players[i].position.y = GAME_VERTICAL - BALL_RADIUS;
+            if (players[i].position.x < BALL_RADIUS) {
+                players[i].position.x = BALL_RADIUS;
+                deltaX = -deltaX;
+                sockets.collision([playerId]);
+            }
+            if (players[i].position.y < BALL_RADIUS) {
+                players[i].position.y = BALL_RADIUS;
+                deltaY = -deltaY;
+                sockets.collision([playerId]);
+            }
+            if (players[i].position.x > GAME_HORIZONTAL - BALL_RADIUS) {
+                players[i].position.x = GAME_HORIZONTAL - BALL_RADIUS;
+                deltaX = -deltaX;
+                sockets.collision([playerId]);
+            }
+            if (players[i].position.y > GAME_VERTICAL - BALL_RADIUS) {
+                players[i].position.y = GAME_VERTICAL - BALL_RADIUS;
+                deltaY = -deltaY;
+                sockets.collision([playerId]);
+            }
             sockets.emitChanges();
             break;
         }
