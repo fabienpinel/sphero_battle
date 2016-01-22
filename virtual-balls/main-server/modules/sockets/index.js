@@ -6,6 +6,14 @@ module.exports = {
     collision: function (playerId) {
         if (io)
             io.sockets.emit('collision', playerId);
+        var players = require('../players').getPlayers();
+        for (var i in players) {
+            if (players[i].id != playerId) {
+                players[i].score++;
+            }
+        }
+        this.emitChanges();
+
     },
 
     emitChanges: function () {
@@ -30,6 +38,6 @@ module.exports = {
         }
 
     }
-}
+};
 
 

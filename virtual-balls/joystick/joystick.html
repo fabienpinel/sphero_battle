@@ -52,7 +52,7 @@
             //socket.emit('move', parseInt(angle + departureAngle), parseInt(distance));
 
             var http = getAjax();
-            http.open('POST', 'http://localhost:3000/api/players/player2/deltaX/' + x + '/deltaY/' + y, true);
+            http.open('POST', 'http://localhost:3000/api/players/player1/deltaX/' + x + '/deltaY/' + y, true);
             http.setRequestHeader("Content-type","application/json");
             http.send();
         }
