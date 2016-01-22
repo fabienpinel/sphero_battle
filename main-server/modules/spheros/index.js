@@ -21,18 +21,17 @@ module.exports = {
         }
         return null;
     },
-    addSphero: function (sphero) {
+    addSphero: function (spheroId) {
         var found = false;
         for (var i in spheros) {
-            if (spheros[i].id == sphero.id) {
+            if (spheros[i].id == spheroId) {
                 found = true;
                 break;
             }
         }
         if (!found) {
             spheros.push({
-                id: sphero.id,
-                url: sphero.url
+                id: spheroId
             });
             return true;
         }
@@ -41,7 +40,7 @@ module.exports = {
     associatePlayer: function (playerId) {
         for (var i in spheros) {
             if (! spheros[i].playerId) {
-                spheros[i].player = playerId;
+                spheros[i].playerId = playerId;
                 return spheros[i];
             }
         }
