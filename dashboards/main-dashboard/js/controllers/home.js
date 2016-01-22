@@ -1,4 +1,4 @@
-app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket', function ($scope,playersFactory,spherosFactory,socket) {
+app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket', '$timeout', function ($scope,playersFactory,spherosFactory,socket,$timeout) {
 
     var vm = this;
     vm.init = true;
@@ -20,6 +20,7 @@ app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket'
         console.log('collision', sphero);
         for (var i in vm.players) {
             if (vm.players[i].id == sphero.playerId) {
+                vm.collision1=true;
                 makeCollision(i);
                 break;
             }
