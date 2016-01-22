@@ -37,7 +37,7 @@ var moduleToExports = {
             });
 
             socket.on('spheroId', function (id) {
-                var result = spheroFactory.addSphero(id);
+                var result = spherosFactory.addSphero(id);
                 if (result) {
                     socket.id = id;
                     sockets.push(socket);
