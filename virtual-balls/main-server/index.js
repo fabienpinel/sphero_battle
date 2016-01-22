@@ -19,3 +19,5 @@ var io = require('socket.io').listen(server);
 var sockets = require('./modules/sockets');
 
 io.on('connection', sockets.socketCallback(io));
+
+// TODO : celui qui a la vitesse la plus grande

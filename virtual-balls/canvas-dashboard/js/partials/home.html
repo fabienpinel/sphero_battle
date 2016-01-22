@@ -1,0 +1,56 @@
+<md-content layout="column" layout-fill>
+    <header layout="row" class="animated slideInDown">
+        <div id="content1" flex="50">
+            <md-card>
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">Player 1 : {{home.players[0].id}}</span>
+                        <span class="md-subhead">Score : {{home.players[0].score}}</span>
+                    </md-card-title-text>
+                </md-card-title>
+            </md-card>
+        </div>
+        <img class="versus center" src="img/vs.png" alt=""/>
+        <div id="content2" flex="50">
+            <md-card>
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">Player 2 : {{home.players[1].id}}</span>
+                        <span class="md-subhead">Score : {{home.players[1].score}}</span>
+                    </md-card-title-text>
+                </md-card-title>
+            </md-card>
+        </div>
+    </header>
+    <div class="md-padding" flex layout="row" ng-cloak layout-align="center none" >
+        <div id="score1" flex="25" class="animated delay2" ng-class="{slideInLeft: home.init, wobble: home.collision1}">
+            <div class="md-toolbar-tools">
+                <h3 flex>
+                    <span>Pouvoir</span>
+                </h3>
+            </div>
+            <div layout="row" layout-sm="column" layout-align="space-around" class="center res">
+                <md-progress-circular class="md-warn" md-diameter='180' md-mode="determinate" value="{{home.players[0].power}}" ng-click="home.up(0)"></md-progress-circular>
+                <span class="center">{{home.players[0].power}}</span>
+            </div>
+        </div>
+        <div class="canvas-container" flex="50" >
+            <div class="content animated delay5 zoomIn">
+                <canvas height="480" width="480" id="demoCanvas">
+
+                </canvas>
+            </div>
+        </div>
+        <div id="score2" flex="25" class="animated delay2" ng-class="{slideInRight: home.init, wobble: home.collision2}">
+            <div class="md-toolbar-tools">
+                <h3 flex>
+                    <span>Pouvoir</span>
+                </h3>
+            </div>
+            <div layout="row" layout-sm="column" layout-align="space-around" class="center res">
+                <md-progress-circular md-diameter='180' md-mode="determinate" value="{{home.players[1].power}}" ng-click="home.up(1)"></md-progress-circular>
+                <span class="center">{{home.players[1].power}}</span>
+            </div>
+        </div>
+    </div>
+</md-content>

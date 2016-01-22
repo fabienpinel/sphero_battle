@@ -9,11 +9,14 @@ var players = [{
     score: 0,
     power: 0,
     position: {
-        x: BALL_RADIUS + 200,
-        y: BALL_RADIUS + 200
+        x: BALL_RADIUS,
+        y: BALL_RADIUS
     },
     lastImpact: Date.now(),
-    history: [{x: 0, y: 0},{x: 0, y: 0}]
+    history: [
+        { x: BALL_RADIUS, y: BALL_RADIUS },
+        { x: BALL_RADIUS, y: BALL_RADIUS }
+    ]
 }, {
     id: "player2",
     score: 0,
@@ -23,7 +26,10 @@ var players = [{
         y: GAME_VERTICAL - BALL_RADIUS
     },
     lastImpact: Date.now(),
-    history: [{x: 0, y: 0},{x: 0, y: 0}]
+    history: [
+        { x: GAME_HORIZONTAL - BALL_RADIUS, y: GAME_VERTICAL - BALL_RADIUS },
+        { x: GAME_HORIZONTAL - BALL_RADIUS, y: GAME_VERTICAL - BALL_RADIUS }
+    ]
 }];
 
 function _findNewPosition(playerId, newX, newY, previousX, previousY) {
@@ -78,17 +84,34 @@ function _findNewPosition(playerId, newX, newY, previousX, previousY) {
                     returnValue.newY = players[i].position.y + (y * 2 * BALL_RADIUS / distanceBetweenCenters);
 
                     // TODO : check who has the biggest speed. Then take the biggest speed and recurse on it for the looser
+                    //console.log(moduleToExports.getPlayerSpeed(playerId), moduleToExports.getPlayerSpeed(players[i].id));
+
                     sockets.collision([playerId, players[i].id]);
 
-                    players[i].lastImpact = Date.now();
-                    var deltaX = previousX - players[i].position.x;
-                    var deltaY = previousY - players[i].position.y;
-                    _recurseImpact(
-                        players[i].id,
-                        deltaX > 0 ? deltaX - BALL_RADIUS : deltaX + BALL_RADIUS,
-                        deltaY > 0 ? deltaY - BALL_RADIUS : deltaY + BALL_RADIUS,
-                        0
-                    );
+                    var player1Speed = moduleToExports.getPlayerSpeed(playerId);
+                    var player2Speed = moduleToExports.getPlayerSpeed(players[i].id);
+
+                    if (player1Speed > player2Speed) {
+                        players[i].lastImpact = Date.now();
+                        var deltaX = previousX - players[i].position.x;
+                        var deltaY = previousY - players[i].position.y;
+                        _recurseImpact(
+                            players[i].id,
+                            deltaX > 0 ? deltaX - BALL_RADIUS : deltaX + BALL_RADIUS,
+                            deltaY > 0 ? deltaY - BALL_RADIUS : deltaY + BALL_RADIUS,
+                            0
+                        );
+                    } else if (player1Speed < player2Speed) {
+                        players[i].lastImpact = Date.now();
+                        var deltaX = -(previousX - players[i].position.x);
+                        var deltaY = -(previousY - players[i].position.y);
+                        _recurseImpact(
+                            playerId,
+                            deltaX > 0 ? deltaX - BALL_RADIUS : deltaX + BALL_RADIUS,
+                            deltaY > 0 ? deltaY - BALL_RADIUS : deltaY + BALL_RADIUS,
+                            0
+                        );
+                    }
                 }
 
                 break;
@@ -98,7 +121,7 @@ function _findNewPosition(playerId, newX, newY, previousX, previousY) {
     return returnValue;
 }
 
-module.exports = {
+var moduleToExports = {
 
     getPlayers: function () {
         return players;
@@ -159,6 +182,18 @@ module.exports = {
         return false;
     },
 
+    getPlayerSpeed: function (playerId) {
+        for (var i in players) {
+            if (players[i].id == playerId) {
+                return Math.sqrt(
+                    Math.pow(players[i].history[0].x - players[i].history[1].x, 2)
+                    + Math.pow(players[i].history[0].y - players[i].history[1].y, 2)
+                ) / 60;
+            }
+        }
+        return null;
+    },
+
     movePlayer: function (playerId, deltaX, deltaY) {
         if (deltaX > BALL_RADIUS) { deltaX = BALL_RADIUS - 1; }
         if (deltaY > BALL_RADIUS) { deltaY = BALL_RADIUS - 1; }
@@ -186,13 +221,16 @@ module.exports = {
     memorizeHistory: function () {
         setInterval(function () {
             for (var i in players) {
-                players[i].history.push(players[i].position);
-                players[i].history.shift();
+                players[i].history = [players[i].history[1], {
+                    x: players[i].position.x,
+                    y: players[i].position.y
+                }];
             }
         }, 60);
     }
 
 };
+module.exports = moduleToExports;
 
 var sockets = require('../sockets');
 function _recurseImpact(playerId, deltaX, deltaY, index) {

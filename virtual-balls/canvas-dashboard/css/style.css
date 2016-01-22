@@ -1,0 +1,93 @@
+md-content {
+    background-color: #C5CAE9;
+}
+
+.delay2 {
+    animation-delay: 0.2s;
+}
+
+.delay2.wobble {
+    animation-delay: 0s;
+    animation-duration: 0.3s;
+}
+
+.delay5 {
+    animation-delay: 0.5s;
+}
+
+.versus {
+    left: 50.5%;
+    top: 52px;
+    max-width: 80px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+.canvas-container {
+    text-align: center;
+}
+
+.canvas-container .content {
+    background: #e1e1e1;
+    width: 480px;
+    height: 480px;
+    border: 2px solid #3E4EB8;
+    display: inline-block;
+}
+
+.center {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+}
+
+#score1 {
+    margin-right: 15px;
+}
+
+#score2 {
+    margin-left: 15px;
+}
+
+#score1, #score2 {
+    position: relative;
+}
+
+#score1 h3, #score2 h3 {
+    font-size: 0.8em;
+}
+
+.res {
+    margin-top:50px;
+}
+
+#content1 md-card {
+    margin: 0 0px 0 0;
+}
+
+#content2 md-card {
+    margin: 0 0 0 8px;
+}
+
+.md-toolbar-tools {
+    text-align: center;
+}
+
+#score1 span, #score2 span {
+    font-size: 3em;
+}
+
+header {
+    position: relative;
+}
+
+#content1 md-card, #content2 md-card {
+    background-color: #3E4EB8;
+    color: #fff;
+}
+
+#content2 {
+    text-align: right;
+}
