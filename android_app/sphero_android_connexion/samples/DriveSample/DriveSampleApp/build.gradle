@@ -4,7 +4,7 @@ android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
     defaultConfig {
-        minSdkVersion 18
+        minSdkVersion 21
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -21,13 +21,15 @@ android {
 
 dependencies {
     compile fileTree(dir: '../../../library', include: ['RobotLibrary.jar'])
-    compile 'com.android.support:appcompat-v7:22.0.0'
-    compile 'com.github.nkzawa:socket.io-client:0.3.0'
 
     compile project(':CalibrationLibrary')
     compile project(':ColorPickerLibrary')
     compile project(':JoystickLibrary')
     compile project(':RobotPickerLibrary')
     compile project(':SpeedSliderLibrary')
+    compile 'com.android.support:appcompat-v7:21.0.0'
+    compile 'com.github.nkzawa:socket.io-client:0.3.0'
+    compile 'com.android.support:support-v4:21.0.3'
 }
+
 

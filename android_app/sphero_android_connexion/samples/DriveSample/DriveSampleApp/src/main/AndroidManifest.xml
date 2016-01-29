@@ -17,6 +17,7 @@
         <activity android:name="com.orbotix.drivesample.MainActivity"
                   android:label="MyoSphero Battle"
                   android:screenOrientation="portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,6 +32,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".Connexion"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_connexion"
+            android:parentActivityName=".FirstScreen"
+            android:theme="@style/FullscreenTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.orbotix.drivesample.FirstScreen" />
         </activity>
     </application>
 
