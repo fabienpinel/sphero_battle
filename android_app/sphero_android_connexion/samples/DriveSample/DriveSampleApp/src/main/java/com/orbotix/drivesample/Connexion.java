@@ -1,25 +1,18 @@
 package com.orbotix.drivesample;
 
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
+import android.view.View;
 import android.widget.Button;
 
 import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
 import com.orbotix.ConvenienceRobot;
-import com.orbotix.Ollie;
 import com.orbotix.Sphero;
 import com.orbotix.classic.DiscoveryAgentClassic;
-import com.orbotix.classic.RobotClassic;
 import com.orbotix.common.DiscoveryAgent;
 import com.orbotix.common.DiscoveryAgentEventListener;
 import com.orbotix.common.DiscoveryException;
@@ -29,7 +22,6 @@ import com.orbotix.common.RobotChangedStateListener;
 import com.orbotix.common.internal.AsyncMessage;
 import com.orbotix.common.internal.DeviceResponse;
 import com.orbotix.le.DiscoveryAgentLE;
-import com.orbotix.le.RobotLE;
 import com.orbotix.robotpicker.RobotPickerDialog;
 
 import java.net.URISyntaxException;
@@ -147,46 +139,46 @@ public class Connexion extends Activity implements RobotPickerDialog.RobotPicker
                 _currentDiscoveryAgent.stopDiscovery();
                 _currentDiscoveryAgent.removeDiscoveryListener(this);
                 _connectedRobot = new Sphero(robot);
-                    try {
-                        Log.d("SPHERO", "ONLINELINEDFNKBGIROFGBRIEFF");
+                try {
+                    Log.d("SPHERO", "ONLINELINEDFNKBGIROFGBRIEFF");
 
-                        _connectedRobot.enableCollisions(true);
-                        _connectedRobot.addResponseListener(new ResponseListener() {
-                            @Override
-                            public void handleResponse(DeviceResponse deviceResponse, Robot robot) {
+                    _connectedRobot.enableCollisions(true);
+                    _connectedRobot.addResponseListener(new ResponseListener() {
+                        @Override
+                        public void handleResponse(DeviceResponse deviceResponse, Robot robot) {
 
-                            }
+                        }
 
-                            @Override
-                            public void handleStringResponse(String s, Robot robot) {
+                        @Override
+                        public void handleStringResponse(String s, Robot robot) {
 
-                            }
+                        }
 
-                            @Override
-                            public void handleAsyncMessage(AsyncMessage asyncMessage, Robot robot) {
-                                _connectedRobot.setLed(1, 0, 0);
-                                Log.d("collision", "collision");
-                                mSocket.emit("collision");
-                                _connectedRobot.setLed(0, 1, 0);
+                        @Override
+                        public void handleAsyncMessage(AsyncMessage asyncMessage, Robot robot) {
+                            _connectedRobot.setLed(1, 0, 0);
+                            Log.d("collision", "collision");
+                            mSocket.emit("collision");
+                            _connectedRobot.setLed(0, 1, 0);
 
-                            }
-                        });
-                        Log.d("SOCKET", "Trying to create socket");
+                        }
+                    });
+                    Log.d("SOCKET", "Trying to create socket");
 
-                        mSocket = (CustomSocket)IO.socket("http://134.59.215.166:3000/");
-                        //mSocket.emit("spheroId", spheroId);
-                        mSocket.connect();
-                        //mSocket.on('connection')
-                        Log.d("SPHERO ID", _connectedRobot.getRobot().getName());
-                        mSocket.emit("spheroId", _connectedRobot.getRobot().getName());
+                    mSocket = (CustomSocket)IO.socket("http://134.59.215.166:3000/");
+                    //mSocket.emit("spheroId", spheroId);
+                    mSocket.connect();
+                    //mSocket.on('connection')
+                    Log.d("SPHERO ID", _connectedRobot.getRobot().getName());
+                    mSocket.emit("spheroId", _connectedRobot.getRobot().getName());
 
-                    } catch (URISyntaxException e) {
-                        Log.d("ERROR SOCKET", e.getMessage());
-                    }
+                } catch (URISyntaxException e) {
+                    Log.d("ERROR SOCKET", e.getMessage());
+                }
                 _connectedRobot.setLed(0f, 1f, 0f);
                 break;
             case Disconnected:
-                    startDiscovery();
+                startDiscovery();
                 break;
             default:
                 Log.v(TAG, "Not handling state change notification: " + type);

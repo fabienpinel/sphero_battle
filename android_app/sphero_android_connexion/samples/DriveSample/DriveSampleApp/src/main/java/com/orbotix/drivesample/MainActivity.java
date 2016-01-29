@@ -1,41 +1,20 @@
 package com.orbotix.drivesample;
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
-import android.widget.Switch;
+
+import com.github.nkzawa.emitter.Emitter;
 import com.orbotix.ConvenienceRobot;
-import com.orbotix.Ollie;
-import com.orbotix.Sphero;
 import com.orbotix.calibration.api.CalibrationEventListener;
 import com.orbotix.calibration.api.CalibrationImageButtonView;
 import com.orbotix.calibration.api.CalibrationView;
-import com.orbotix.classic.DiscoveryAgentClassic;
-import com.orbotix.classic.RobotClassic;
 import com.orbotix.colorpicker.api.ColorPickerEventListener;
 import com.orbotix.colorpicker.api.ColorPickerFragment;
-import com.orbotix.common.*;
-import com.orbotix.common.internal.AsyncMessage;
-import com.orbotix.common.internal.DeviceResponse;
 import com.orbotix.joystick.api.JoystickEventListener;
 import com.orbotix.joystick.api.JoystickView;
-import com.orbotix.le.DiscoveryAgentLE;
-import com.orbotix.le.RobotLE;
-import com.orbotix.robotpicker.RobotPickerDialog;
-import com.github.nkzawa.emitter.Emitter;
-import java.net.URISyntaxException;
-import java.util.List;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class MainActivity extends Activity {
 
@@ -59,10 +38,10 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //get the connectedRobot
+        //get the connectedRobot from the extra datas
         robby = (Robby)getIntent().getSerializableExtra("theConnectedRobot");
         _connectedRobot = robby.robot;
-                //get the socket connection
+        //get the socket connection from the extra datas
         mSocket = (CustomSocket)getIntent().getSerializableExtra("theSocketConnection");
 
         setContentView(R.layout.main);
@@ -130,9 +109,6 @@ public class MainActivity extends Activity {
                 _connectedRobot.stop();
             }
         });
-
-        // It is also a good idea to disable the joystick when a robot is not connected so that you do not have to
-        // handle the user using the joystick while there is no robot connected.
         _joystick.setEnabled(false);
     }
 
@@ -221,29 +197,29 @@ public class MainActivity extends Activity {
         @Override
         public void call(final Object... args) {
             Log.d("call socket ", "call socket onNewMessage" + args[0].toString());
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //JSONObject data = (JSONObject) args;
-                        Double x;
-                        Double y;
+            MainActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    //JSONObject data = (JSONObject) args;
+                    Double x;
+                    Double y;
 
-                        x = Double.parseDouble(args[0].toString());
-                        y = Double.parseDouble(args[1].toString());
+                    x = Double.parseDouble(args[0].toString());
+                    y = Double.parseDouble(args[1].toString());
 
-                        y *= -1;
-                        x += 360;
-                        y += 360;
+                    y *= -1;
+                    x += 360;
+                    y += 360;
 
-                        Log.d("Receiving", "x: " + x + "y: " + y);
-                        if (!_calibrationView.isCalibrating() ) {
-                            _joystick.sendDataToMyo(x, y);
+                    Log.d("Receiving", "x: " + x + "y: " + y);
+                    if (!_calibrationView.isCalibrating() ) {
+                        _joystick.sendDataToMyo(x, y);
 
-                        }
-                        // add the message to view
-                        //addMessage(username, message);
                     }
-                });
+                    // add the message to view
+                    //addMessage(username, message);
+                }
+            });
         }
     };
 }
