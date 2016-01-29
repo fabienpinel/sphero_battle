@@ -1,8 +1,16 @@
 var sockets = require('../sockets');
+var spells = require('./spells.js');
 
 var GAME_HORIZONTAL = 1000;
 var GAME_VERTICAL = 1000;
 var BALL_RADIUS = 50;
+
+var SPELLS = {
+    SLOW_DOWN: 'SLOW_DOWN',
+    CONTROL_REVERSAL: 'CONTROL_REVERSAL',
+    HEAL: 'HEAL',
+    IMMUNITY: 'IMMUNITY'
+};
 
 var players = [{
     id: "player1",
@@ -32,89 +40,84 @@ var players = [{
     ]
 }];
 
-function _findNewPosition(playerId, newX, newY, previousX, previousY) {
+function _findNewPosition(player, newX, newY) {
 
-    var returnValue = {
-        newX: newX,
-        newY: newY
-    };
-
+    // CONST DEFINITIONS
+    var previousX = player.position.x;
+    var previousY = player.position.y;
+    var returnValue = { newX: newX, newY: newY };
     var isBeforeX = returnValue.newX < BALL_RADIUS;
     var isAfterX = returnValue.newX > GAME_HORIZONTAL - BALL_RADIUS;
     var isBeforeY = returnValue.newY < BALL_RADIUS;
     var isAfterY = returnValue.newY > GAME_VERTICAL - BALL_RADIUS;
 
     // collision avec mur
-    if (isBeforeX) {
-        returnValue.newX = BALL_RADIUS;
-    } else if (isAfterX) {
-        returnValue.newX = GAME_HORIZONTAL - BALL_RADIUS;
-    }
+    if (isBeforeX) returnValue.newX = BALL_RADIUS;
+    else if (isAfterX) returnValue.newX = GAME_HORIZONTAL - BALL_RADIUS;
+    if (isBeforeY) returnValue.newY = BALL_RADIUS;
+    else if (isAfterY) returnValue.newY = GAME_VERTICAL - BALL_RADIUS;
 
-    if (isBeforeY) {
-        returnValue.newY = BALL_RADIUS;
-    } else if (isAfterY) {
-        returnValue.newY = GAME_VERTICAL - BALL_RADIUS;
-    }
-
-    if (isBeforeX || isAfterX || isBeforeY || isAfterY) {
-        for (var i in players) {
-            if (players[i].id == playerId) {
-                players[i].lastImpact = Date.now();
-                sockets.collision([playerId]);
-                break;
-            }
-        }
+    if ((isBeforeX || isAfterX || isBeforeY || isAfterY) && player.spellEffect != SPELLS.IMMUNITY) {
+        player.lastImpact = Date.now();
+        sockets.collision([player.id]);
     }
 
     // collision avec joueur
     if (players.length > 1) {
-        var otherPlayerPosition = null;
-        for (var i in players) {
-            if (players[i].id != playerId) {
-                otherPlayerPosition = players[i].position;
-                var x = returnValue.newX - players[i].position.x;
-                var y = returnValue.newY - players[i].position.y;
-                var distanceBetweenCenters =  Math.sqrt(
-                    Math.pow(x, 2)
-                    + Math.pow(y, 2)
-                );
-                if (distanceBetweenCenters < 2 * BALL_RADIUS) {
-                    returnValue.newX = players[i].position.x + (x * 2 * BALL_RADIUS / distanceBetweenCenters);
-                    returnValue.newY = players[i].position.y + (y * 2 * BALL_RADIUS / distanceBetweenCenters);
+        var otherPlayer = moduleToExports.getOtherPlayerById(player.id);
+        if (otherPlayer) {
 
-                    // TODO : check who has the biggest speed. Then take the biggest speed and recurse on it for the looser
-                    //console.log(moduleToExports.getPlayerSpeed(playerId), moduleToExports.getPlayerSpeed(players[i].id));
+            // calculate distance between the two players
+            var x = returnValue.newX - otherPlayer.position.x;
+            var y = returnValue.newY - otherPlayer.position.y;
+            var distanceBetweenCenters =  Math.sqrt(
+                Math.pow(x, 2)
+                + Math.pow(y, 2)
+            );
 
-                    sockets.collision([playerId, players[i].id]);
+            // if there is a collision
+            if (distanceBetweenCenters < 2 * BALL_RADIUS) {
+                returnValue.newX = otherPlayer.position.x + (x * 2 * BALL_RADIUS / distanceBetweenCenters);
+                returnValue.newY = otherPlayer.position.y + (y * 2 * BALL_RADIUS / distanceBetweenCenters);
 
-                    var player1Speed = moduleToExports.getPlayerSpeed(playerId);
-                    var player2Speed = moduleToExports.getPlayerSpeed(players[i].id);
+                sockets.collision([player.id, otherPlayer.id]);
 
-                    if (player1Speed > player2Speed) {
-                        players[i].lastImpact = Date.now();
-                        var deltaX = previousX - players[i].position.x;
-                        var deltaY = previousY - players[i].position.y;
-                        _recurseImpact(
-                            players[i].id,
-                            deltaX > 0 ? deltaX - BALL_RADIUS : deltaX + BALL_RADIUS,
-                            deltaY > 0 ? deltaY - BALL_RADIUS : deltaY + BALL_RADIUS,
-                            0
-                        );
-                    } else if (player1Speed < player2Speed) {
-                        players[i].lastImpact = Date.now();
-                        var deltaX = -(previousX - players[i].position.x);
-                        var deltaY = -(previousY - players[i].position.y);
-                        _recurseImpact(
-                            playerId,
-                            deltaX > 0 ? deltaX - BALL_RADIUS : deltaX + BALL_RADIUS,
-                            deltaY > 0 ? deltaY - BALL_RADIUS : deltaY + BALL_RADIUS,
-                            0
-                        );
-                    }
+                var player1Speed = moduleToExports.getPlayerSpeedFromPlayer(player);
+                var player2Speed = moduleToExports.getPlayerSpeedFromPlayer(otherPlayer);
+
+                if (
+                    player1Speed > player2Speed
+                    && otherPlayer.spellEffect != SPELLS.IMMUNITY
+                    && Date.now() - otherPlayer.lastImpact > 500
+                ) {
+                    otherPlayer.lastImpact = Date.now();
+                    var deltaX = previousX - otherPlayer.position.x;
+                    var deltaY = previousY - otherPlayer.position.y;
+                    _recurseImpact(
+                        otherPlayer,
+                        deltaX > 0 ? deltaX - BALL_RADIUS : deltaX + BALL_RADIUS,
+                        deltaY > 0 ? deltaY - BALL_RADIUS : deltaY + BALL_RADIUS,
+                        0
+                    );
+                } else if (player1Speed < player2Speed) {
+                    //for (var index in players) {
+                        if (
+                            player.spellEffect != SPELLS.IMMUNITY
+                            && Date.now() - player.lastImpact > 500
+                        ) {
+                            player.lastImpact = Date.now();
+                            var deltaX = -(previousX - player.position.x);
+                            var deltaY = -(previousY - player.position.y);
+                            _recurseImpact(
+                                player,
+                                deltaX > 0 ? deltaX - BALL_RADIUS : deltaX + BALL_RADIUS,
+                                deltaY > 0 ? deltaY - BALL_RADIUS : deltaY + BALL_RADIUS,
+                                0
+                            );
+                            //break;
+                        }
+                    //}
                 }
-
-                break;
             }
         }
     }
@@ -136,18 +139,32 @@ var moduleToExports = {
         return null;
     },
 
-    registerPlayer: function (id) {
+    getOtherPlayerById: function (id) {
+        for (var i in players) {
+            if (players[i].id != id) {
+                return players[i];
+            }
+        }
+        return null;
+    },
+
+    registerPlayer: function (id, spellType) {
         if (players.length < 2) {
-            players.push({
+            var initPosition = {
+                x: players.length == 1 ? GAME_HORIZONTAL - BALL_RADIUS : BALL_RADIUS,
+                y: players.length == 1 ? GAME_VERTICAL - BALL_RADIUS : BALL_RADIUS
+            };
+            var player = {
                 id: id,
                 score: 0,
                 power: 0,
-                position: {
-                    x: players.length == 1 ? GAME_HORIZONTAL - BALL_RADIUS : BALL_RADIUS,
-                    y: players.length == 1 ? GAME_VERTICAL - BALL_RADIUS : BALL_RADIUS
-                }
-            });
-            return true;
+                position: initPosition,
+                lastImpact: Date.now(),
+                history: [initPosition,initPosition],
+                spell: spellType
+            };
+            players.push(player);
+            return player;
         }
         return false;
     },
@@ -163,57 +180,92 @@ var moduleToExports = {
     },
 
     incrScore: function (playerId) {
-        for (var i in players) {
-            if (players[i].id == playerId) {
-                players[i].score++;
-                return true;
-            }
+        var player = this.getPlayerById(playerId);
+        if (player) {
+            player.score++;
+            return true;
         }
         return false;
     },
 
     incrPower: function (playerId) {
-        for (var i in players) {
-            if (players[i].id == playerId) {
-                players[i].power++;
-                return true;
-            }
+        var player = this.getPlayerById(playerId);
+        if (player) {
+            player.power++;
+            return true;
         }
         return false;
     },
 
     getPlayerSpeed: function (playerId) {
-        for (var i in players) {
-            if (players[i].id == playerId) {
-                return Math.sqrt(
-                    Math.pow(players[i].history[0].x - players[i].history[1].x, 2)
-                    + Math.pow(players[i].history[0].y - players[i].history[1].y, 2)
-                ) / 60;
-            }
+        var player = this.getPlayerById(playerId);
+        if (player) {
+            return Math.sqrt(
+                Math.pow(player.history[0].x - player.history[1].x, 2)
+                + Math.pow(player.history[0].y - player.history[1].y, 2)
+            ) / 60;
         }
         return null;
     },
 
+    getPlayerSpeedFromPlayer: function (player) {
+        return Math.sqrt(
+            Math.pow(player.history[0].x - player.history[1].x, 2)
+            + Math.pow(player.history[0].y - player.history[1].y, 2)
+        ) / 60;
+    },
+
     movePlayer: function (playerId, deltaX, deltaY) {
-        if (deltaX > BALL_RADIUS) { deltaX = BALL_RADIUS - 1; }
-        if (deltaY > BALL_RADIUS) { deltaY = BALL_RADIUS - 1; }
-        if (deltaX < - BALL_RADIUS) { deltaX = - BALL_RADIUS + 1; }
-        if (deltaY < - BALL_RADIUS) { deltaY = - BALL_RADIUS + 1; }
 
-        for (var i in players) {
-            if (players[i].id == playerId) {
-                var newPosition = _findNewPosition(
-                    playerId,
-                    players[i].position.x + parseInt(deltaX),
-                    players[i].position.y + parseInt(deltaY),
-                    players[i].position.x,
-                    players[i].position.y
-                );
-                players[i].position.x = newPosition.newX;
-                players[i].position.y = newPosition.newY;
-
-                return true;
+        var player = this.getPlayerById(playerId);
+        if (player) {
+            // SPELL EFFECT
+            if (player.spellEffect == SPELLS.CONTROL_REVERSAL) {
+                deltaX = - deltaX;
+                deltaY = - deltaY;
+            } else if (player.spellEffect == SPELLS.SLOW_DOWN) {
+                deltaX /= 5;
+                deltaY /= 5;
             }
+
+            // CHECK MAX BOUND
+            if (deltaX > BALL_RADIUS) { deltaX = BALL_RADIUS - 1; }
+            if (deltaY > BALL_RADIUS) { deltaY = BALL_RADIUS - 1; }
+            if (deltaX < - BALL_RADIUS) { deltaX = - BALL_RADIUS + 1; }
+            if (deltaY < - BALL_RADIUS) { deltaY = - BALL_RADIUS + 1; }
+
+            // FIND NEW POSITION
+            var newPosition = _findNewPosition(
+                player,
+                player.position.x + parseInt(deltaX),
+                player.position.y + parseInt(deltaY),
+                player.position.x,
+                player.position.y
+            );
+
+            // AFFECT POSITION
+            player.position.x = newPosition.newX;
+            player.position.y = newPosition.newY;
+            return player;
+        }
+
+        return false;
+    },
+
+    castSpell: function (playerId) {
+        var player = this.getPlayerById(playerId);
+        var otherPlayer = this.getOtherPlayerById(playerId);
+        if (player) {
+            if (player.spell == SPELLS.CONTROL_REVERSAL && otherPlayer) {
+                spells.castSpell(player.spell, otherPlayer);
+            } else if (player.spell == SPELLS.SLOW_DOWN && otherPlayer) {
+                spells.castSpell(player.spell, otherPlayer);
+            } else if (player.spell == SPELLS.HEAL) {
+                spells.castSpell(player.spell, player);
+            } else if (player.spell == SPELLS.IMMUNITY) {
+                spells.castSpell(player.spell, player);
+            }
+            return true;
         }
         return false;
     },
@@ -233,38 +285,35 @@ var moduleToExports = {
 module.exports = moduleToExports;
 
 var sockets = require('../sockets');
-function _recurseImpact(playerId, deltaX, deltaY, index) {
-    for (var i in players) {
-        if (players[i].id == playerId) {
-            players[i].position.x -= deltaX;
-            players[i].position.y -= deltaY;
-            if (players[i].position.x < BALL_RADIUS) {
-                players[i].position.x = BALL_RADIUS;
-                deltaX = -deltaX;
-                sockets.collision([playerId]);
-            }
-            if (players[i].position.y < BALL_RADIUS) {
-                players[i].position.y = BALL_RADIUS;
-                deltaY = -deltaY;
-                sockets.collision([playerId]);
-            }
-            if (players[i].position.x > GAME_HORIZONTAL - BALL_RADIUS) {
-                players[i].position.x = GAME_HORIZONTAL - BALL_RADIUS;
-                deltaX = -deltaX;
-                sockets.collision([playerId]);
-            }
-            if (players[i].position.y > GAME_VERTICAL - BALL_RADIUS) {
-                players[i].position.y = GAME_VERTICAL - BALL_RADIUS;
-                deltaY = -deltaY;
-                sockets.collision([playerId]);
-            }
-            sockets.emitChanges();
-            break;
+function _recurseImpact(player, deltaX, deltaY, index) {
+    if (player) {
+        player.position.x -= deltaX;
+        player.position.y -= deltaY;
+        if (player.position.x < BALL_RADIUS) {
+            player.position.x = BALL_RADIUS;
+            deltaX = -deltaX;
+            if (player.spellEffect != SPELLS.IMMUNITY) sockets.collision([player.id]);
         }
-    }
-    if (index < 100 && (Math.abs(deltaX) >= 1 || Math.abs(deltaY) >= 1)) {
-        setTimeout(function () {
-            _recurseImpact(playerId, deltaX / 1.3, deltaY / 1.3, index + 1);
-        }, 60);
+        if (player.position.y < BALL_RADIUS) {
+            player.position.y = BALL_RADIUS;
+            deltaY = -deltaY;
+            if (player.spellEffect != SPELLS.IMMUNITY) sockets.collision([player.id]);
+        }
+        if (player.position.x > GAME_HORIZONTAL - BALL_RADIUS) {
+            player.position.x = GAME_HORIZONTAL - BALL_RADIUS;
+            deltaX = -deltaX;
+            if (player.spellEffect != SPELLS.IMMUNITY) sockets.collision([player.id]);
+        }
+        if (player.position.y > GAME_VERTICAL - BALL_RADIUS) {
+            player.position.y = GAME_VERTICAL - BALL_RADIUS;
+            deltaY = -deltaY;
+            if (player.spellEffect != SPELLS.IMMUNITY) sockets.collision([player.id]);
+        }
+        sockets.emitChanges();
+        if (index < 100 && (Math.abs(deltaX) >= 1 || Math.abs(deltaY) >= 1)) {
+            setTimeout(function () {
+                _recurseImpact(player, deltaX / 1.3, deltaY / 1.3, index + 1);
+            }, 60);
+        }
     }
 }
