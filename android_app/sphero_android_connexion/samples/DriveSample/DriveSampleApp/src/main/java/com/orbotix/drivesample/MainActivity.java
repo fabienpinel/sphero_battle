@@ -63,7 +63,6 @@ public class MainActivity extends Activity {
         //get the socket connection
         mSocket = (CustomSocket)getIntent().getSerializableExtra("theSocketConnection");
 
-
         setContentView(R.layout.main);
 
         setupJoystick();
@@ -212,7 +211,6 @@ public class MainActivity extends Activity {
 
     }
 
-
     private void myoCommandReceived(int angle, int speed){
         Log.d("command reveived", "Angle: " + angle + " ,Speed: " + speed);
     }
@@ -228,8 +226,6 @@ public class MainActivity extends Activity {
                         Double x;
                         Double y;
 
-                        // x = Double.parseDouble(data.getString("x"));
-                        //y = Double.parseDouble(data.getString("y"));
                         x = Double.parseDouble(args[0].toString());
                         y = Double.parseDouble(args[1].toString());
 
