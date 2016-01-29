@@ -7,44 +7,52 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
     <script src="./virtualjoystick.js"></script>
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="main.css" type="text/css">
 </head>
 <body>
 
-<div id="login-form">
-    <form>
-        <div class="mdl-textfield mdl-js-textfield">
-            <input class="mdl-textfield__input" type="text" id="sample1" required>
-            <label class="mdl-textfield__label" for="sample1">Choisissez votre nom</label>
+<div id="login-form" class="center">
+    <div class="container demo-card-wide mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Connexion</h2>
         </div>
-        <br>
-        <div class="text-info">
-            Choisissez votre pouvoir
-        </div>
-        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
-            <input type="radio" id="option-1" class="mdl-radio__button" name="options" value="1" checked>
-            <span class="mdl-radio__label">Ralentissement</span>
-        </label>
-        <br>
-        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2">
-            <input type="radio" id="option-2" class="mdl-radio__button" name="options" value="2">
-            <span class="mdl-radio__label">Inversion de commande</span>
-        </label>
-        <br>
-        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-3">
-            <input type="radio" id="option-3" class="mdl-radio__button" name="options" value="3">
-            <span class="mdl-radio__label">Bonus de vie</span>
-        </label>
-        <br>
-        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-4">
-            <input type="radio" id="option-4" class="mdl-radio__button" name="options" value="4">
-            <span class="mdl-radio__label">Immunité</span>
-        </label>
-        <br>
-        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
-            Button
-        </button>
-    </form>
+        <form>
+            <div class="mdl-card__supporting-text">
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input class="mdl-textfield__input" type="text" id="sample1" required>
+                    <label class="mdl-textfield__label" for="sample1">Choisissez votre nom</label>
+                </div>
+                <br>
+                <div class="text-info">
+                    Choisissez votre pouvoir
+                </div>
+                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
+                    <input type="radio" id="option-1" class="mdl-radio__button" name="options" value="1" checked>
+                    <span class="mdl-radio__label">Ralentissement</span>
+                </label>
+                <br>
+                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2">
+                    <input type="radio" id="option-2" class="mdl-radio__button" name="options" value="2">
+                    <span class="mdl-radio__label">Inversion de commande</span>
+                </label>
+                <br>
+                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-3">
+                    <input type="radio" id="option-3" class="mdl-radio__button" name="options" value="3">
+                    <span class="mdl-radio__label">Bonus de vie</span>
+                </label>
+                <br>
+                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-4">
+                    <input type="radio" id="option-4" class="mdl-radio__button" name="options" value="4">
+                    <span class="mdl-radio__label">Immunité</span>
+                </label>
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+                    Connexion
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <div id="joystick" class="while-game"></div>
@@ -55,7 +63,7 @@
     </button>
 </div>
 
-<script src="main.js"></script>
+<script src="main.js?0.0.1"></script>
 
 </body>
 </html>
