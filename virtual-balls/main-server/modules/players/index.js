@@ -258,7 +258,10 @@ var moduleToExports = {
     castSpell: function (playerId) {
         var player = this.getPlayerById(playerId);
         var otherPlayer = this.getOtherPlayerById(playerId);
-        if (player) {
+        var now = Date.now();
+        if (player && player.power > 10 && (now - (player.lastCast ? player.lastCast : 0) > 3000) ) {
+            player.power -= 10;
+            player.lastCast = now;
             if (player.spell == SPELLS.CONTROL_REVERSAL && otherPlayer) {
                 spells.castSpell(player.spell, otherPlayer);
             } else if (player.spell == SPELLS.SLOW_DOWN && otherPlayer) {

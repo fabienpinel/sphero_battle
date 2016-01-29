@@ -4,6 +4,7 @@ function getAjax () {
 }
 
 var player = null;
+var reloadingSpellCast = false;
 
 // Login Form Part
 (
@@ -88,6 +89,18 @@ var player = null;
                 var http = getAjax();
                 http.open('POST', 'http://localhost:3000/api/players/' + player.id + '/cast-spell', true);
                 http.setRequestHeader("Content-type","application/json");
+                http.onload = function (response) {
+                    if (response.currentTarget.status == 404) {
+                        // marche pas osef
+                    } else if (response.currentTarget.status == 201) {
+                        reloadingSpellCast = true;
+                        document.querySelector('#cast-spell button').setAttribute("disabled", "");
+                        setTimeout(function () {
+                            reloadingSpellCast = false;
+                            document.querySelector('#cast-spell button').removeAttribute("disabled");
+                        }, 3000);
+                    }
+                };
                 http.send();
             }
         }
