@@ -1,10 +1,16 @@
+function getAjax () {
+    if (window.XMLHttpRequest) return new XMLHttpRequest();
+    else return new ActiveXObject("Microsoft.XMLHTTP");
+}
+
+var player = null;
 
 // Login Form Part
 (
     function () {
         document.querySelector('#login-form form').addEventListener('submit', function (event) {
             event.preventDefault();
-            console.log({
+            var data = {
                 name: document.querySelector('#login-form input.mdl-textfield__input').value,
                 spell:
                     document.querySelector('#login-form input#option-1').checked ?
@@ -16,8 +22,26 @@
                                 document.querySelector('#login-form input#option-4').checked ?
                                     'IMMUNITY'
                                     :null
-            })
-        })
+            };
+            if (!player) {
+                var http = getAjax();
+                http.open('POST', 'http://localhost:3000/api/players/', true);
+                http.setRequestHeader("Content-type","application/json");
+                http.onload = function (response) {
+                    if (response.currentTarget.status == 409) {
+                        alert('le serveur est full');
+                    } else if (response.currentTarget.status == 201) {
+                        player = JSON.parse(response.currentTarget.responseText);
+                        document.querySelector('#login-form').style.display = 'none';
+                        var elements = document.querySelectorAll('.while-game');
+                        for (var i = 0; i < elements.length; i++) {
+                            elements[i].style.display = 'block';
+                        }
+                    }
+                };
+                http.send(JSON.stringify(data));
+            }
+        });
     }
 )();
 
@@ -25,15 +49,10 @@
 (
     function () {
 
-        function getAjax () {
-            if (window.XMLHttpRequest) return new XMLHttpRequest();
-            else return new ActiveXObject("Microsoft.XMLHTTP");
-        }
-
         function go (x, y) {
-            if (x !== 0 && y !== 0) {
+            if (x !== 0 && y !== 0 && player) {
                 var http = getAjax();
-                http.open('POST', 'http://localhost:3000/api/players/player1/deltaX/' + x + '/deltaY/' + y, true);
+                http.open('POST', 'http://localhost:3000/api/players/' + player.id + '/deltaX/' + x + '/deltaY/' + y, true);
                 http.setRequestHeader("Content-type","application/json");
                 http.send();
             }
@@ -62,6 +81,16 @@
             clearInterval(interval);
         }
 
+        document.querySelector('#cast-spell button').addEventListener('mousedown', _castSpell, false);
+        document.querySelector('#cast-spell button').addEventListener('touchstart', _castSpell, false);
+        function _castSpell() {
+            if (player) {
+                var http = getAjax();
+                http.open('POST', 'http://localhost:3000/api/players/' + player.id + '/cast-spell', true);
+                http.setRequestHeader("Content-type","application/json");
+                http.send();
+            }
+        }
 
         /////////////////// GESTURE PART ///////////////////
         var clicked = false;
@@ -77,3 +106,11 @@
     }
 )();
 
+window.onbeforeunload = function () {
+    if (player) {
+        var http = getAjax();
+        http.open('DELETE', 'http://localhost:3000/api/players/' + player.id, true);
+        http.setRequestHeader("Content-type","application/json");
+        http.send();
+    }
+};
