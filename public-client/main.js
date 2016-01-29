@@ -11,7 +11,7 @@
     socket.on('dataChange', function (data) {
         players = data.players;
         if (players.length === 0) {
-            document.getElementById('info').innerHTML = "<div class='center'>Waiting for 2 players...</div";
+            document.getElementById('info').innerHTML = "<div class='center'>Waiting for 2 players...</div>";
             document.getElementById('info').style.display = 'block';
         } else if (players.length === 1) {
             document.getElementById('info').innerHTML = "<div class='center'>Waiting for 1 players...</div>";
