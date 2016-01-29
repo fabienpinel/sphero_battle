@@ -1,5 +1,5 @@
 .demo-card-event.mdl-card {
-    background: #3E4EB8;
+    background: #0099CC;
     display:inline-block;
     margin:0 !important;
     min-height: 100%;
@@ -28,7 +28,7 @@
     color: #fff;
 }
 .demo-card-image__filename {
-    color: #FF9800;
+    color: #64ffda;
     font-size: 15px;
     font-weight: 600;
 }
@@ -91,8 +91,9 @@ button.mdl-button {
 
 .center {
     top: 50%;
+    text-align: center;
     left: 50%;
-    display: inline-block;
+    display: block;
     position: absolute;
     transform: translate(-50%, -50%);
 }
