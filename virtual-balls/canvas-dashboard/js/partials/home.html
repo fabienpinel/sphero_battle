@@ -53,4 +53,7 @@
             </div>
         </div>
     </div>
+    <div id="info" ng-class="home.players.length == 2 ? 'hide' : ''">
+        <div class="center">Waiting for {{2 - home.players.length}} player(s)</div>
+    </div>
 </md-content>
