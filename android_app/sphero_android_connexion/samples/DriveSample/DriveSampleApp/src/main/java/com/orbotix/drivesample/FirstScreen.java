@@ -10,5 +10,4 @@ public class FirstScreen extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_screen);
     }
-
 }
