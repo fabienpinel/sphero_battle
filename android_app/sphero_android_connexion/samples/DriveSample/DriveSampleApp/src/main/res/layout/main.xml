@@ -5,39 +5,8 @@
                 android:id="@+id/entire_view"
               android:orientation="vertical"
               android:layout_width="fill_parent"
-              android:layout_height="fill_parent">
-
-    <Button
-            android:id="@+id/colorPickerButton"
-            android:layout_width="190dp"
-            android:layout_height="80dp"
-            android:text="@string/color_picker_title"
-            />
-
-    <LinearLayout
-            android:id="@+id/developerModeLayout"
-            android:layout_width="190dp"
-            android:layout_height="80dp"
-            android:orientation="horizontal"
-            android:layout_alignParentEnd="true"
-            android:visibility="invisible"
-            >
-        <TextView
-                android:text="@string/developer_mode"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight=".5"
-                android:gravity="center"
-                />
-        <Switch
-                android:id="@+id/developerModeSwitch"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight=".5"
-                android:gravity="center"
-                />
-    </LinearLayout>
-
+              android:layout_height="fill_parent"
+    android:background="#C6CBE9">
 
 
     <!-- The joystick view for the application -->
@@ -87,8 +56,7 @@
     <FrameLayout
             android:id="@+id/fragment_root"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
 
 </RelativeLayout>
 

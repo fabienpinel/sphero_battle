@@ -1,0 +1,82 @@
+.demo-card-event.mdl-card {
+background: #3E4EB8;
+    display:inline-block;
+    min-height:0px;
+    display: block;
+    margin:0px;!important
+}
+.demo-card-event > .mdl-card__actions {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+.demo-card-event > .mdl-card__title {
+    align-items: flex-start;
+}
+.demo-card-event > .mdl-card__title > h4 {
+    margin-top: 0;
+}
+.demo-card-event > .mdl-card__actions {
+    display: flex;
+    box-sizing:border-box;
+    align-items: center;
+}
+.demo-card-event > .mdl-card__title,
+.demo-card-event > .mdl-card__actions,
+.demo-card-event > .mdl-card__actions > .mdl-button {
+    color: #fff;
+}
+.demo-card-image__filename {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+}
+.header .demo-card-event:last-child h4 {
+    margin-left: auto;
+}
+.header > img {
+    position:absolute;
+    transform: translate(-50%, 30%);
+    height:75px;
+    z-index:100000000;
+}
+
+.mdl-grid {
+    padding: 0px !important;
+}
+
+.mdl-card {
+    width: 100% !important;
+    z-index: 1!important
+}
+
+table {
+    width:100%;
+    text-align:center;
+    height:100vh;
+}
+
+table tr { width:33.333%; }
+
+button.mdl-button {
+    height: 114px;
+    width: 80%;
+    padding-left:0px!important;
+    padding-right:0px!important;
+}
+
+.mdl-button__ripple-container {
+    z-index:10!important;
+}
+
+body {
+    background: url(http://www.motionbackgroundsforfree.com/wp-content/uploads/2012/04/Screen-shot-2012-04-13-at-2.24.50-PM.png);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+#info {
+    font-size: 24px;
+    color: white;
+    margin-top:40px;
+    text-align:center;
+}
