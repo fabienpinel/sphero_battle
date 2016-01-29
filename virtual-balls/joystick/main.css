@@ -34,5 +34,8 @@ body {
 }
 
 #cast-spell .mdl-button.mdl-button--colored {
-    background: #3f51b5!important;
+    background: #3f51b5;
+}
+#cast-spell .mdl-button.mdl-button--colored[disabled] {
+    background: grey;
 }
