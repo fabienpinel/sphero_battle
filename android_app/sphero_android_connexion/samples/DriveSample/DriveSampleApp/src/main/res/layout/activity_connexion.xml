@@ -26,7 +26,8 @@
             android:layout_gravity="center"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            style="@style/Widget.AppCompat.Button.Borderless"/>
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:textColor="#FFFFFF" />
 
         <CheckBox
             android:layout_width="wrap_content"
@@ -41,7 +42,10 @@
             android:textColorHighlight="#FFFFFF"
             android:buttonTint="#FFFFFF"
             android:layout_weight="0.2"
+            android:scaleX="2"
+            android:scaleY="2"
             android:layout_gravity="center_vertical|right"
+            android:enabled="false"
             />
 
     </LinearLayout>
@@ -62,7 +66,8 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_gravity="center"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp" />
+            android:layout_marginRight="20dp"
+            android:textColor="#FFFFFF" />
 
         <CheckBox
             android:layout_width="wrap_content"
@@ -75,8 +80,11 @@
             android:textColorHighlight="#FFFFFF"
             android:buttonTint="#FFFFFF"
             android:layout_weight="0.2"
+            android:scaleX="2"
+            android:scaleY="2"
             android:layout_gravity="center_vertical|right"
-           />
+            android:focusableInTouchMode="false"
+            android:enabled="false" />
 
     </LinearLayout>
     <LinearLayout
@@ -87,15 +95,13 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Let&apos;s GO !"
+        android:text="> Let&apos;s GO !"
         android:id="@+id/buttonLetsGo"
-        android:textSize="40dp"
-        android:paddingRight="50dp"
-        android:paddingLeft="50dp"
         android:layout_weight="0.8"
-
         android:layout_gravity="center"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp" />
+        android:theme="@style/tealButton"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:enabled="true" />
     </LinearLayout>
 </LinearLayout>
