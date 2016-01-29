@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">DriveSample</string>
+    <string name="app_name">MyoSphero Battle</string>
     <string name="developer_mode">Developer Mode</string>
+    <string name="title_activity_first_screen">FirstScreen</string>
+    <string name="welcome_text_fr">Bienvenue</string>
+
+    <string name="title_activity_connexion">Connexion</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

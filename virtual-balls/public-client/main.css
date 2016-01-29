@@ -1,9 +1,12 @@
 .demo-card-event.mdl-card {
-background: #3E4EB8;
+    background: #3E4EB8;
     display:inline-block;
-    min-height:0px;
-    display: block;
-    margin:0px;!important
+    margin:0 !important;
+    min-height: 100%;
+}
+.clear1px{
+    clear: both;
+    height: 1px;
 }
 .demo-card-event > .mdl-card__actions {
     border-color: rgba(255, 255, 255, 0.2);
@@ -25,9 +28,9 @@ background: #3E4EB8;
     color: #fff;
 }
 .demo-card-image__filename {
-    color: #fff;
-    font-size: 14px;
-    font-weight: 500;
+    color: #FF9800;
+    font-size: 15px;
+    font-weight: 600;
 }
 .header .demo-card-event:last-child h4 {
     margin-left: auto;
@@ -57,8 +60,8 @@ table {
 table tr { width:33.333%; }
 
 button.mdl-button {
-    height: 114px;
-    width: 80%;
+    height: 80%;
+    width: 90%;
     padding-left:0px!important;
     padding-right:0px!important;
 }
@@ -67,13 +70,31 @@ button.mdl-button {
     z-index:10!important;
 }
 
+.player2 {
+    padding-top: 40px;
+}
+
+.player1 {
+    padding-bottom: 40px;
+}
+
+.versus {
+    left: 50.5%;
+    top: 50%;
+    right: 50%;
+    z-index: 2;
+    max-width: 45%;
+    max-height: 45%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
 body {
-    background: url(http://www.motionbackgroundsforfree.com/wp-content/uploads/2012/04/Screen-shot-2012-04-13-at-2.24.50-PM.png);
+    background-color: #C5CAE9;
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
 }
-
 #info {
     font-size: 24px;
     color: white;

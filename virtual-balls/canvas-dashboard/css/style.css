@@ -2,6 +2,12 @@ md-content {
     background-color: #C5CAE9;
 }
 
+.md-subhead {
+    font-size: 24px !important;
+    line-height: 32px;
+    color: #FF9800;
+}
+
 .delay2 {
     animation-delay: 0.2s;
 }
