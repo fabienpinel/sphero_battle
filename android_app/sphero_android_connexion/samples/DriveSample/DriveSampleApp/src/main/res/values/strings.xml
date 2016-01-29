@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">DriveSample</string>
     <string name="developer_mode">Developer Mode</string>
+    <string name="title_activity_first_screen">FirstScreen</string>
+    <string name="welcome_text_fr">Bienvenue</string>
 </resources>
