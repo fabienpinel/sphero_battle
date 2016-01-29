@@ -1,11 +1,101 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0099cc"
-    tools:context="com.orbotix.drivesample.Connexion">
+    tools:context="com.orbotix.drivesample.Connexion"
+    android:theme="@android:style/Theme.Material.Light"
+    android:orientation="vertical"
+    >
 
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:text="Connect SPHERO"
+            android:id="@+id/connectSpheroButton"
+            android:textSize="20dp"
+            android:layout_weight="0.8"
 
-</FrameLayout>
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            style="@style/Widget.AppCompat.Button.Borderless"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkBoxSPHERO"
+            android:layout_alignBottom="@+id/spheroText"
+            android:layout_toEndOf="@+id/buttonLetsGo"
+            android:textColor="#FFFFFF"
+            android:checked="false"
+            android:textColorLink="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:textColorHighlight="#FFFFFF"
+            android:buttonTint="#FFFFFF"
+            android:layout_weight="0.2"
+            android:layout_gravity="center_vertical|right"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:text="Connect MYO"
+            android:id="@+id/connectMyoButton"
+            android:textSize="20dp"
+            android:layout_weight="0.8"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkBoxMYO"
+            android:layout_alignTop="@+id/myoConnection"
+            android:layout_alignStart="@+id/checkBox"
+            android:textColor="#FFFFFF"
+            android:checked="false"
+            android:textColorHighlight="#FFFFFF"
+            android:buttonTint="#FFFFFF"
+            android:layout_weight="0.2"
+            android:layout_gravity="center_vertical|right"
+           />
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Let&apos;s GO !"
+        android:id="@+id/buttonLetsGo"
+        android:textSize="40dp"
+        android:paddingRight="50dp"
+        android:paddingLeft="50dp"
+        android:layout_weight="0.8"
+
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+    </LinearLayout>
+</LinearLayout>
