@@ -79,11 +79,6 @@ public class MainActivity extends Activity implements RobotPickerDialog.RobotPic
     private ColorPickerFragment _colorPicker;
 
     /**
-     * The button used to bring up the color picker
-     */
-    private Button _colorPickerButton;
-
-    /**
      * The button to set developer mode
      */
     private Switch _developerModeSwitch;
@@ -131,7 +126,8 @@ public class MainActivity extends Activity implements RobotPickerDialog.RobotPic
         if (_robotPickerDialog == null) {
             _robotPickerDialog = new RobotPickerDialog(this, this);
         }
-        // Show the picker only if it's not showing. This keeps multiple calls to onStart from showing too many pickers.
+        // Show the picker only if it's not showing. This kmade by Lorc under CC BY 3.0
+
         if (!_robotPickerDialog.isShowing()) {
             _robotPickerDialog.show();
         }
@@ -213,7 +209,6 @@ public class MainActivity extends Activity implements RobotPickerDialog.RobotPic
                 // Don't forget to turn on UI elements
                 _joystick.setEnabled(true);
                 _calibrationView.setEnabled(true);
-                _colorPickerButton.setEnabled(true);
                 _calibrationButtonView.setEnabled(true);
 
                 // Depending on what was connected, you might want to create a wrapper that allows you to do some
@@ -275,7 +270,6 @@ public class MainActivity extends Activity implements RobotPickerDialog.RobotPic
                 // do not have to handle the user continuing to use them while the robot is not connected
                 _joystick.setEnabled(false);
                 _calibrationView.setEnabled(false);
-                _colorPickerButton.setEnabled(false);
                 _calibrationButtonView.setEnabled(false);
 
                 // Disable the developer mode button when the robot disconnects so that it can be set up if a LE robot
@@ -415,19 +409,6 @@ public class MainActivity extends Activity implements RobotPickerDialog.RobotPic
             public void onColorPickerChanged(int red, int green, int blue) {
                 Log.v(TAG, String.format("%d, %d, %d", red, green, blue));
                 _connectedRobot.setLed(red, green, blue);
-            }
-        });
-
-        // Find the color picker fragment and add a click listener to show the color picker
-        _colorPickerButton = (Button)findViewById(R.id.colorPickerButton);
-        _colorPickerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.add(R.id.fragment_root, _colorPicker, "ColorPicker");
-                transaction.show(_colorPicker);
-                transaction.addToBackStack("DriveSample");
-                transaction.commit();
             }
         });
 
