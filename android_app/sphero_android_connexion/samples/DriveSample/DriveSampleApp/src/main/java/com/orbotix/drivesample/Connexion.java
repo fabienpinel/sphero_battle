@@ -47,8 +47,8 @@ public class Connexion extends Activity implements RobotPickerDialog.RobotPicker
 
     private RobotPickerDialog _robotPickerDialog;
 
-    private ConvenienceRobot _connectedRobot;
-    private Socket mSocket;
+    private Robby _connectedRobot;
+    private CustomSocket mSocket;
 
 
     @Override
@@ -78,6 +78,20 @@ public class Connexion extends Activity implements RobotPickerDialog.RobotPicker
                 startActivity(intent);
             }
         });
+
+        final Button letsgoButton = (Button) findViewById(R.id.buttonLetsGo);
+        letsgoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Connexion.this, MainActivity.class);
+                intent.putExtra("theConnectedRobot", _connectedRobot);
+                intent.putExtra("theSocketConnection", mSocket);
+                startActivity(intent);
+            }
+        });
+
+
+
 
     }
 
@@ -160,11 +174,8 @@ public class Connexion extends Activity implements RobotPickerDialog.RobotPicker
                 // Depending on what was connected, you might want to create a wrapper that allows you to do some
                 // common functionality related to the individual robots. You can always of course use the
                 // Robot#sendCommand() method, but Ollie#drive() reads a bit better.
-                if (robot instanceof RobotLE) {
-                    _connectedRobot = new Ollie(robot);
-                }
-                else if (robot instanceof RobotClassic) {
-                    _connectedRobot = new Sphero(robot);
+
+                    _connectedRobot = (Robby)new Sphero(robot);
                     try {
                         _connectedRobot.enableCollisions(true);
                         _connectedRobot.addResponseListener(new ResponseListener() {
@@ -187,7 +198,7 @@ public class Connexion extends Activity implements RobotPickerDialog.RobotPicker
 
                             }
                         });
-                        mSocket = IO.socket("http://134.59.215.166:3000/");
+                        mSocket = (CustomSocket)IO.socket("http://134.59.215.166:3000/");
                         //mSocket.emit("spheroId", spheroId);
                         mSocket.connect();
                         //mSocket.on('connection')
@@ -199,7 +210,7 @@ public class Connexion extends Activity implements RobotPickerDialog.RobotPicker
                     }
 
 
-                }
+
 
                 // Finally for visual feedback let's turn the robot green saying that it's been connected
                 _connectedRobot.setLed(0f, 1f, 0f);
@@ -248,13 +259,7 @@ public class Connexion extends Activity implements RobotPickerDialog.RobotPicker
     * */
     private void startDiscovery() {
         try {
-            // You first need to set up so that the discovery agent will notify you when it finds robots.
-            // To do this, you need to implement the DiscoveryAgentEventListener interface (or declare
-            // it anonymously) and then register it on the discovery agent with DiscoveryAgent#addDiscoveryListener()
             _currentDiscoveryAgent.addDiscoveryListener(this);
-            // Second, you need to make sure that you are notified when a robot changes state. To do this,
-            // implement RobotChangedStateListener (or declare it anonymously) and use
-            // DiscoveryAgent#addRobotStateListener()
             _currentDiscoveryAgent.addRobotStateListener(this);
             // Then to start looking for a Sphero, you use DiscoveryAgent#startDiscovery()
             // You do need to handle the discovery exception. This can occur in cases where the user has

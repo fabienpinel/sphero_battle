@@ -37,13 +37,13 @@ import com.github.nkzawa.socketio.client.Socket;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends Activity implements RobotChangedStateListener {
+public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
 
     private JoystickView _joystick;
 
-    private ConvenienceRobot _connectedRobot;
+    private Robby _connectedRobot;
 
     private CalibrationView _calibrationView;
 
@@ -51,13 +51,19 @@ public class MainActivity extends Activity implements RobotChangedStateListener 
 
     private ColorPickerFragment _colorPicker;
 
-    private Socket mSocket;
+    private CustomSocket mSocket;
     private String spheroId;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //get the connectedRobot
+        _connectedRobot = (Robby)getIntent().getSerializableExtra("theConnectedRobot");
+        //get the socket connection
+        mSocket = (CustomSocket)getIntent().getSerializableExtra("theSocketConnection");
+
+
         setContentView(R.layout.main);
 
         setupJoystick();
@@ -82,80 +88,6 @@ public class MainActivity extends Activity implements RobotChangedStateListener 
 
     @Override
     public void onResume() {    super.onResume();   }
-
-    /**
-     * Invoked when a robot changes state. For example, when a robot connects or disconnects.
-     * @param robot The robot whose state changed
-     * @param type Describes what changed in the state
-     */
-    @Override
-    public void handleRobotChangedState(Robot robot, RobotChangedStateNotificationType type) {
-        // For the purpose of this sample, we'll only handle the connected and disconnected notifications
-        switch (type) {
-            // A robot was connected, and is ready for you to send commands to it.
-            case Online:
-                _joystick.setEnabled(true);
-                _calibrationView.setEnabled(true);
-                _calibrationButtonView.setEnabled(true);
-
-                // Depending on what was connected, you might want to create a wrapper that allows you to do some
-                // common functionality related to the individual robots. You can always of course use the
-                // Robot#sendCommand() method, but Ollie#drive() reads a bit better.
-                if (robot instanceof RobotLE) {
-                    _connectedRobot = new Ollie(robot);
-                }
-                else if (robot instanceof RobotClassic) {
-                    _connectedRobot = new Sphero(robot);
-
-                        _connectedRobot.enableCollisions(true);
-                        _connectedRobot.addResponseListener(new ResponseListener() {
-                            @Override
-                            public void handleResponse(DeviceResponse deviceResponse, Robot robot) {
-
-                            }
-
-                            @Override
-                            public void handleStringResponse(String s, Robot robot) {
-
-                            }
-
-                            @Override
-                            public void handleAsyncMessage(AsyncMessage asyncMessage, Robot robot) {
-                                _connectedRobot.setLed(1, 0, 0);
-                                Log.d("collision", "collision");
-                                mSocket.emit("collision");
-                                _connectedRobot.setLed(0,1,0);
-
-                            }
-                        });
-                        //mSocket = IO.socket("http://134.59.215.166:3000/");
-                        //mSocket.emit("spheroId", spheroId);
-                        mSocket.on("command", onNewMessage);
-                        //mSocket.connect();
-                        //mSocket.on('connection')
-                        Log.d("SPHERO ID", _connectedRobot.getRobot().getName());
-                        mSocket.emit("spheroId", _connectedRobot.getRobot().getName());
-
-
-
-                }
-
-                // Finally for visual feedback let's turn the robot green saying that it's been connected
-                _connectedRobot.setLed(0f, 1f, 0f);
-
-                break;
-            case Disconnected:
-                //what happenned ?
-
-                _joystick.setEnabled(false);
-                _calibrationView.setEnabled(false);
-                _calibrationButtonView.setEnabled(false);
-                break;
-            default:
-                Log.v(TAG, "Not handling state change notification: " + type);
-                break;
-        }
-    }
 
     /**
      * Sets up the joystick from scratch
