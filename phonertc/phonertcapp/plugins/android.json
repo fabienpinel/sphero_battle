@@ -7,10 +7,10 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-whitelist": {
+        "com.dooble.phonertc": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
         },
-        "com.dooble.phonertc": {
+        "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
         }
     },

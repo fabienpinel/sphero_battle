@@ -4,29 +4,16 @@
 var myMyo = null;
 var MyoApi = null;
 var lastMac = null;
-var NUM_PREC = 3;
+var NUM_PREC = 0;
 var i = 0;
-var IP = "192.168.43.223";
+//var IP = "134.59.215.166";
+var IP = "134.59.215.166";
 var PORT="3000";
 
 var d, x = 0, y = 0 ,z = 0;
+var sphero;
+var INTERVAL_REQUESTS_MYO = 180;
 
-var GYRO_Y_MAX_RANGE = 3000;
-var GYRO_X_MAX_RANGE = 1000;
-
-var INTERVAL_REQUESTS_MYO = 400;
-var INTERVAL_AVERAGE_CALC = 20;
-
-var angle=0, norme=0;
-
-var angle_values = [];
-var norme_values = [];
-
-var globalX = 0;
-var globalY = 0;
-
-var globalDistance = 0;
-var globalAngle = 0;
 
 function getAverageFromTable(table){
     var average = 0;
@@ -36,25 +23,15 @@ function getAverageFromTable(table){
     return (average / table.length);
 }
 
-function sendCommand(){
-
-    if (globalAngle > 0 || globalDistance > 0) {
-        console.log('angle: ' + globalAngle + ',\tdistance: ' + globalDistance * 5);
+function sendCommand(x,y){
+    if(x  && y && sphero){
         var http = getAjax();
-        http.open('POST', "http://"+IP+":"+PORT+"/spheros/WGY/move/"+parseInt(globalAngle)+"/"+parseInt(globalDistance * 5), true);
+        http.open('POST', "http://"+IP+":"+PORT+"/spheros/"+sphero.id+"/move/"+x+"/"+y, true);
         xmlhttp.setRequestHeader("Content-type","application/json");
         http.send();
     }
-
 }
 
-
-function reset_values(){
-    x = 0;
-    y = 0;
-    z = 0;
-
-}
 function getAjax () {
     if (window.XMLHttpRequest)
     {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -103,23 +80,43 @@ function alertMyoPose(ev){
         console.log("Pose detected: " + ev.pose);
     }
 }
-function changeSendRange(val){
-    INTERVAL_REQUESTS_MYO = val;
-}
 function launchDataIntervalSender(){
     //sending command to the server
-    console.log("Lauching setinterval");
+    /*  console.log("Lauching setinterval");
 
-    setInterval(function(){
-        sendCommand();
+   setInterval(function(){
+        //sendCommand();
     }, INTERVAL_REQUESTS_MYO);
+
+    */
 }
 
-function getDataForAverageCalc(){
-    angle_values.push(angle);
-    norme_values.push(norme);
-}
+function registerPlayer(){
+    var http = getAjax();
+    http.open('POST', "http://"+IP+":"+PORT+"/players", true);
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    http.send();
 
+    http.onreadystatechange = function() {
+        if (http.readyState == 4 && http.status == 201) {
+            sphero = JSON.parse(http.responseText);
+            console.log(sphero);
+            document.getElementById("infosSphero").innerHTML = ""+sphero.id;
+            //SPHERO_NAME = sphero;
+        }
+    };
+}
+function getSphero(){
+    if(myMyo){
+        myMyo.vibrate(MyoApi.VibrationType.MEDIUM, function(){
+        }, function(err){
+        });
+        //ask for a sphero to the server
+        registerPlayer();
+    }else{
+        console.log("There are no Myos connected at the moment");
+    }
+}
 function initMyo(){
     if(cordova && cordova.plugins && cordova.plugins.MyoApi){
         console.log("Myo plugin found!!");
@@ -154,6 +151,7 @@ function initMyo(){
             console.log("Myo MAC address stored for easier future connection: " + localStorage["lastUsedMyoMac"]);
             myMyo.vibrate(MyoApi.VibrationType.MEDIUM); //Make the Myo vibrate
             launchDataIntervalSender();
+            registerPlayer();
         })
         .on("disconnect", function(ev){
             window.alert(myMyo.name + " has disconnected");
@@ -211,20 +209,6 @@ function connect_myo(){
     });
 }
 
-function vibrateMyo(){
-    console.log("Clicked on vibrate myo button");
-    if(myMyo){
-        reset_values();
-        myMyo.vibrate(MyoApi.VibrationType.MEDIUM, function(){
-            console.log("Vibration sent successfully");
-        }, function(err){
-            console.log("ERROR: couldn't send vibration: " + err);
-        });
-    }else{
-        console.log("There are no Myos connected at the moment");
-    }
-}
-
 function showMyo(){
     console.log("Clicked on show myo button");
     console.log("Current connected Myo: " + JSON.stringify(myMyo));
@@ -248,109 +232,36 @@ function orientationDataHandler(ev){
         + " Yaw: " + d.yaw.toFixed(NUM_PREC)
         + " Angle: " + d.angle.toFixed(NUM_PREC)
         + " NORME: " + d.norme.toFixed(NUM_PREC);
-    //console.log(txt);
 
-    // pitch = Y max : 1.6 min : -1.5
-    // yaw = X -3.5 à 3.5
+    var x = -((( d.yaw > 0 ? d.yaw - 0.5 : d.yaw + 0.5) * 100));
+    var y = (d.pitch * 2 * 100);
 
-    var x = -parseInt((( d.yaw > 0 ? d.yaw - 0.5 : d.yaw + 0.5) * 100));
-    var y = parseInt(d.pitch * 2 * 100);
-
-    var distance = Math.sqrt((x * x) + (y * y));
-    var angle = 0;
-
-    if (x >= 0 && y >= 0) {
-        angle = 57.2958 * Math.atan(y / x);
-    } else if (x < 0 && y >= 0) {
-        angle = 180 + 57.2958 * Math.atan(y / x);
-    } else if (x >= 0 && y <= 0) {
-        angle = 360 + 57.2958 * Math.atan(y / x);
-    } else if (x < 0 && y <= 0) {
-        angle = 180 + 57.2958 * Math.atan(y / x);
-    } else {
-        // do nothing
-    }
-
-    //console.log('x: ' + x + '\ty: ' + y + '\tangle: ' + angle + '\tdistance: ' + distance);
-
-    globalDistance = distance;
-    globalAngle = angle;
-
-
-
-    /*setTimeout(sendCommand(d.angle.toFixed(NUM_PREC), d.norme.toFixed(NUM_PREC)*1000), 50);
-    if(i==0){
-        console.log(txt);
-        sendCommand(d.angle.toFixed(NUM_PREC), d.norme.toFixed(NUM_PREC)*1000);
-        i++;
-    }*/
+    sendCommand(x, y);
+    //console.log("XY",x,y);
 
 }
 function accelerometerDataHandler(ev){
 //NOT quaternion
    var d = ev["accel"];
-
-    var txt = "X: " + (d.x*100).toFixed(NUM_PREC)
-        + " Y: " + (d.y*100).toFixed(NUM_PREC)
-        + " Z: " + (d.z*100).toFixed(NUM_PREC);
-
-    globalY = (d.x*100).toFixed(NUM_PREC);
-
 }
 function gyroscopeDataHandler(ev){
-
     d = ev["gyro"];
-
-    globalX = d.x.toFixed(NUM_PREC);
-
-    var temp = 0;
-    var txt = "X: " + d.x.toFixed(NUM_PREC)
-        + " Y: " + d.y.toFixed(NUM_PREC)
-        + " Z: " + d.z.toFixed(NUM_PREC);
-
-    //console.log("gyroscopeDataHandler",txt);
-/*
-    //Majoration des valeurs suivant le RANGE
-    x = (x>GYRO_X_MAX_RANGE)? GYRO_X_MAX_RANGE : x;
-    x = (x<-GYRO_X_MAX_RANGE)? -GYRO_X_MAX_RANGE : x;
-
-    y = (y>GYRO_Y_MAX_RANGE)? GYRO_Y_MAX_RANGE : y;
-    y = (y<-GYRO_Y_MAX_RANGE)? -GYRO_Y_MAX_RANGE : y;
-
-
-    norme = Math.sqrt((x*x)+(y* y));
-    norme /= 5;
-    norme = (norme > 1000) ? 1000 : norme;
-
-    if(x==0){
-        if(y>0){
-            temp = (Math.PI / 2);
-        }
-        else if(y<0){
-            temp = (3*Math.PI)/2;
-        }
-    }else{
-        if(x>0 && y>=0){
-            temp = Math.atan(y/x);
-        }
-        if(x>0 && y<0){
-            temp += 2* Math.PI;
-        }
-        if(x<0){
-            temp += Math.PI;
-        }
-    }
-    angle = temp*(180/Math.PI);
-    */
-
-    //console.log("gyroscopeDataHandler", txt);
-
-    //console.log("Angle: "+angle+" Distance: "+norme);
 }
 function detachMyo(){
-    myMyo.detach(myMyo.macAddress);
+    //myMyo.detach(myMyo.macAddress);
+    document.getElementById("infos").innerHTML = "MYO NOT CONNECTED";
 }
-function displayData(){
-    i=0;
+function detachSphero(){
+    document.getElementById("infosSphero").innerHTML = "SPHERO NOT CONNECTED";
+    //call to destroy player
+    var http = getAjax();
+    http.open('DELETE', "http://"+IP+":"+PORT+"/players/"+sphero.playerId, true);
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    http.send();
+
 }
-document.getElementById("rangeSlider").value = INTERVAL_REQUESTS_MYO;
+function disconnect(){
+    console.log("disconnecting");
+    detachMyo();
+    detachSphero();
+}

@@ -1,5 +1,5 @@
 <md-content layout="column" layout-fill>
-    <header layout="row">
+    <header layout="row" class="animated slideInDown">
         <div id="content1" flex="50">
             <md-card>
                 <md-card-title>
@@ -23,7 +23,7 @@
         </div>
     </header>
     <div class="md-padding" flex layout="row" ng-cloak layout-align="center none" >
-        <div id="score1" flex="50">
+        <div id="score1" flex="50" class="animated delay2" ng-class="{slideInLeft: home.init, wobble: home.collision1}">
             <div class="md-toolbar-tools">
                 <h3 flex>
                     <span>Pouvoir</span>
@@ -34,7 +34,7 @@
                 <span class="center">{{home.players[0].power}}</span>
             </div>
         </div>
-        <div id="score2" flex="50">
+        <div id="score2" flex="50" class="animated delay2" ng-class="{slideInLeft: home.init, wobble: home.collision2}">
             <div class="md-toolbar-tools">
                 <h3 flex>
                     <span>Pouvoir</span>

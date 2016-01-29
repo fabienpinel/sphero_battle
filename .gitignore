@@ -140,4 +140,17 @@ dist/
 cordova_app/platforms/
 phonertc/phonertcapp/platforms/
 
+android_app/sphero_android_connexion/samples/ButtonDrive
+android_app/sphero_android_connexion/samples/HelloWorld
+android_app/sphero_android_connexion/samples/Locator
+android_app/sphero_android_connexion/samples/MacroLoader
+android_app/sphero_android_connexion/samples/MacroSample
+android_app/sphero_android_connexion/samples/OrbBasicLoader
+android_app/sphero_android_connexion/samples/OvalAccelData
+android_app/sphero_android_connexion/samples/OvalCollisions
+android_app/sphero_android_connexion/samples/OvalFreeFall
+android_app/sphero_android_connexion/samples/OvalSample
+android_app/sphero_android_connexion/samples/SensorStreaming
+android_app/sphero_android_connexion/.idea
+
 

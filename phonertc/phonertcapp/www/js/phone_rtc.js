@@ -1,37 +1,33 @@
-/**
- * Created by fabienpinel on 15/01/16.
- */
-function launch_phonertc(){
+function launch_phonertc() {
+
     var config = {
         isInitiator: true,
         turn: {
-            host: 'http://localhost:3000',
+            host: 'turn:turn.example.com:3478',
             username: 'test',
-            password: '123'
+            password: 'test'
         },
         streams: {
             audio: true,
-            video: true
+            video: false
         }
-    }
+    };
 
     var session = new cordova.plugins.phonertc.Session(config);
 
-    cordova.plugins.phonertc.setVideoView({
-        container: document.getElementById('videoContainer'),
-        local: {
-            position: [0, 0],
-            size: [100, 100]
-        }
+// all config options are accessible from the session object
+// (implemented with JS getters and setters)
+    console.log(session.isInitiator);
+
+// event handling
+    session.on('sendMessage', function (data) {
+        //signaling.emit(data);
+        console.log("signaling.emit(data);");
     });
 
-    session.on('sendMessage', function (data) {
-        //signaling.send(otherUser, data);
-        console.log("signaling.send(otherUser, data);");
-    });
 
     session.on('answer', function () {
-        console.log('Other client answered!');
+        console.log('answer!');
     });
 
     session.on('disconnect', function () {
@@ -39,5 +35,17 @@ function launch_phonertc(){
     });
 
     session.call();
+    cordova.plugins.phonertc.setVideoView({
+        container: document.getElementById('videoContainer'),
+        local: {
+            position: [0, 0],
+            size: [150, 150]
+        }
+    });
+
+
+// TODO:
+// session.streams.audio = false;
+// session.renegotiate();
 
 }

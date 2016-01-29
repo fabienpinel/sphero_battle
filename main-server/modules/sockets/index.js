@@ -8,8 +8,10 @@ var io = null;
 var moduleToExports = {
 
     sendCommand: function(spheroId, x, y) {
+        console.log("trying to emit towards "+spheroId+" ,x: "+x+" ,y: "+y);
         for (var i in sockets) {
             if (sockets[i].id == spheroId) {
+                console.log("seding to socket connection"+spheroId+" ,x: "+x+" ,y: "+y);
                 sockets[i].emit('command', x, y);
             }
         }
@@ -46,7 +48,7 @@ var moduleToExports = {
             });
 
             socket.on('collision', function () {
-
+                io.sockets.emit('collision', spherosFactory.getSpheroById(spheroId));
             });
 
             socket.on('disconnect', function () {
