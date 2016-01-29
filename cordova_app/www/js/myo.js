@@ -6,7 +6,6 @@ var MyoApi = null;
 var lastMac = null;
 var NUM_PREC = 0;
 var i = 0;
-//var IP = "134.59.215.166";
 var IP = "134.59.215.166";
 var PORT="3000";
 
@@ -84,11 +83,11 @@ function launchDataIntervalSender(){
     //sending command to the server
     /*  console.log("Lauching setinterval");
 
-   setInterval(function(){
-        //sendCommand();
-    }, INTERVAL_REQUESTS_MYO);
+     setInterval(function(){
+     //sendCommand();
+     }, INTERVAL_REQUESTS_MYO);
 
-    */
+     */
 }
 
 function registerPlayer(){
@@ -161,7 +160,6 @@ function initMyo(){
             window.alert("Pose detected: " + ev.pose);
         })
         .on("attach", function(ev){
-            console.log("ATTACH EVENT");
             logMyoEvent(ev);
             console.log("ev.myo", ev.myo);
             myMyo = ev.myo;
@@ -183,7 +181,6 @@ function initMyo(){
         .on("accelerometerData", accelerometerDataHandler)
         .on("gyroscopeData", gyroscopeDataHandler);
 
-
     MyoApi
         .on("armSync", alertMyoEvent)
         .on("armUnsync", alertMyoEvent)
@@ -193,15 +190,10 @@ function initMyo(){
             console.log("ERROR: onPose: " + err);
         })
         .on("rssi", logMyoEvent);
-
-
-
-//Alternatively, for testing purposes, we could use MyoApi.openScanDialog()
-//to connect to a device manually
 }
 
 function connect_myo(){
-   console.log("adjacent search");
+    console.log("Searching...");
     MyoApi.attachToAdjacentMyo(function(s){
         console.log("Connecting with adjacent Myo", s);
     }, function(err){
@@ -210,23 +202,16 @@ function connect_myo(){
 }
 
 function showMyo(){
-    console.log("Clicked on show myo button");
     console.log("Current connected Myo: " + JSON.stringify(myMyo));
 }
 
 
 
 function orientationDataHandler(ev){
-//quaternion
+    //quaternion
+    var d = ev["rotation"];
 
-        var d = ev["rotation"];
-
-        var txt = "X: " + (d.x * 100).toFixed(NUM_PREC)
-            + " Y: " + (d.y * 100).toFixed(NUM_PREC)
-            + " Z: " + (d.z * 100).toFixed(NUM_PREC);
-
-
-        txt = " W: " + d.w.toFixed(NUM_PREC)
+    txt = " W: " + d.w.toFixed(NUM_PREC)
         + "<br>&nbsp;&nbsp;\\\\\\ Roll: " + d.roll.toFixed(NUM_PREC)
         + " Pitch: " + d.pitch.toFixed(NUM_PREC)
         + " Yaw: " + d.yaw.toFixed(NUM_PREC)
@@ -241,8 +226,8 @@ function orientationDataHandler(ev){
 
 }
 function accelerometerDataHandler(ev){
-//NOT quaternion
-   var d = ev["accel"];
+    //NOT quaternion
+    var d = ev["accel"];
 }
 function gyroscopeDataHandler(ev){
     d = ev["gyro"];
