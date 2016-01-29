@@ -1,0 +1,21 @@
+{
+  "name": "public-client",
+  "homepage": "https://github.com/fabienpinel/sphero_battle",
+  "authors": [
+    "Jean-Yves Delmotte <jean-yves.delmotte@greencom-networks.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "material-design-lite": "~1.0.6"
+  }
+}

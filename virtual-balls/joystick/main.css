@@ -1,0 +1,38 @@
+body {
+    overflow	: hidden;
+    padding		: 0;
+    margin		: 0;
+    background-color: #BBB;
+}
+#joystick {
+    width		: 100%;
+    height		: 100%;
+    overflow	: hidden;
+    padding		: 0;
+    margin		: 0;
+    -webkit-user-select	: none;
+    -moz-user-select	: none;
+}
+#login-form {
+    display:none;
+}
+
+#login-form form {
+    max-width: 400px;
+    margin:auto;
+    width:100%;
+}
+
+.while-game {
+    display:block;
+}
+
+#cast-spell {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+
+#cast-spell .mdl-button.mdl-button--colored {
+    background: #3f51b5!important;
+}
