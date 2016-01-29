@@ -6,86 +6,67 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 import android.widget.Button;
 
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+import com.orbotix.ConvenienceRobot;
+import com.orbotix.Ollie;
+import com.orbotix.Sphero;
+import com.orbotix.classic.DiscoveryAgentClassic;
+import com.orbotix.classic.RobotClassic;
+import com.orbotix.common.DiscoveryAgent;
+import com.orbotix.common.DiscoveryAgentEventListener;
+import com.orbotix.common.DiscoveryException;
+import com.orbotix.common.ResponseListener;
+import com.orbotix.common.Robot;
+import com.orbotix.common.RobotChangedStateListener;
+import com.orbotix.common.internal.AsyncMessage;
+import com.orbotix.common.internal.DeviceResponse;
+import com.orbotix.le.DiscoveryAgentLE;
+import com.orbotix.le.RobotLE;
+import com.orbotix.robotpicker.RobotPickerDialog;
+
+import java.net.URISyntaxException;
+import java.util.List;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class Connexion extends Activity {
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = true;
+public class Connexion extends Activity implements RobotPickerDialog.RobotPickerListener, DiscoveryAgentEventListener, RobotChangedStateListener {
 
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+    private static final String TAG = "Connexion View";
 
-    /**
-     * Some older devices needs a small delay between UI widget updates
-     * and a change of the status and navigation bar.
-     */
-    private static final int UI_ANIMATION_DELAY = 300;
-    private final Handler mHideHandler = new Handler();
-    private final Runnable mHidePart2Runnable = new Runnable() {
-        @SuppressLint("InlinedApi")
-        @Override
-        public void run() {
-            // Delayed removal of status and navigation bar
+    private DiscoveryAgent _currentDiscoveryAgent;
+    private RobotPickerDialog _robotPickerDialog;
 
-            // Note that some of these constants are new as of API 16 (Jelly Bean)
-            // and API 19 (KitKat). It is safe to use them, as they are inlined
-            // at compile-time and do nothing on earlier devices.
-
-        }
-    };
-    private View mControlsView;
-    private final Runnable mShowPart2Runnable = new Runnable() {
-        @Override
-        public void run() {
-            // Delayed display of UI elements
-
-            mControlsView.setVisibility(View.VISIBLE);
-        }
-    };
-    private boolean mVisible;
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
-
+    private Robby _connectedRobot;
+    private CustomSocket mSocket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        //hide the actionbar
         ActionBar actionBar = getActionBar();
         actionBar.hide();
 
+        _currentDiscoveryAgent = DiscoveryAgentClassic.getInstance();
 
-        mVisible = false;
         setContentView(R.layout.activity_connexion);
-
-
-
 
         final Button connectSpheroButton = (Button) findViewById(R.id.connectSpheroButton);
         connectSpheroButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Connexion.this, Connexion.class);
-                startActivity(intent);
+                Log.d("DISCO", "starting discovery");
+                startDiscovery();
             }
         });
 
@@ -98,80 +79,141 @@ public class Connexion extends Activity {
             }
         });
 
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
+        final Button letsgoButton = (Button) findViewById(R.id.buttonLetsGo);
+        letsgoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Connexion.this, MainActivity.class);
+                intent.putExtra("theConnectedRobot", _connectedRobot);
+                intent.putExtra("theSocketConnection", mSocket);
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    protected void onPause() { super.onPause();}
+
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            // This ID represents the Home or Up button.
-            NavUtils.navigateUpFromSameTask(this);
-            return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void toggle() {
-        if (mVisible) {
-            hide();
-        } else {
-            show();
-        }
-    }
-
-    private void hide() {
-        // Hide UI first
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
-        mVisible = false;
-
-        // Schedule a runnable to remove the status and navigation bar after a delay
-        mHideHandler.removeCallbacks(mShowPart2Runnable);
-        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
-    }
-
-    @SuppressLint("InlinedApi")
-    private void show() {
-
-        mVisible = true;
-
-        // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable);
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
-    }
-
-    /**
-     * Schedules a call to hide() in [delay] milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
-    }
-
-
-
-
     public void connectSphero(){
+        //launch the connection with the sphero
+        startDiscovery();
 
     }
 
     public void connectMyo(){
+        //launch the myo connection (proximity)
+    }
 
+    @Override
+    public void handleRobotsAvailable(List<Robot> robots) {
+        if (_currentDiscoveryAgent instanceof DiscoveryAgentClassic) {
+            _currentDiscoveryAgent.connect(robots.get(0));
+        }
+        else if (_currentDiscoveryAgent instanceof DiscoveryAgentLE) {
+        }
+    }
+
+    @Override
+    public void handleRobotChangedState(Robot robot, RobotChangedStateNotificationType type) {
+        switch (type) {
+            case Online:
+                _currentDiscoveryAgent.stopDiscovery();
+                _currentDiscoveryAgent.removeDiscoveryListener(this);
+                _connectedRobot = (Robby) new Sphero(robot);
+                    try {
+                        Log.d("SPHERO", "ONLINELINEDFNKBGIROFGBRIEFF");
+
+                        _connectedRobot.enableCollisions(true);
+                        _connectedRobot.addResponseListener(new ResponseListener() {
+                            @Override
+                            public void handleResponse(DeviceResponse deviceResponse, Robot robot) {
+
+                            }
+
+                            @Override
+                            public void handleStringResponse(String s, Robot robot) {
+
+                            }
+
+                            @Override
+                            public void handleAsyncMessage(AsyncMessage asyncMessage, Robot robot) {
+                                _connectedRobot.setLed(1, 0, 0);
+                                Log.d("collision", "collision");
+                                mSocket.emit("collision");
+                                _connectedRobot.setLed(0, 1, 0);
+
+                            }
+                        });
+                        Log.d("SOCKET", "Trying to create socket");
+
+                        mSocket = (CustomSocket)IO.socket("http://134.59.215.166:3000/");
+                        //mSocket.emit("spheroId", spheroId);
+                        mSocket.connect();
+                        //mSocket.on('connection')
+                        Log.d("SPHERO ID", _connectedRobot.getRobot().getName());
+                        mSocket.emit("spheroId", _connectedRobot.getRobot().getName());
+
+                    } catch (URISyntaxException e) {
+                        Log.d("ERROR SOCKET", e.getMessage());
+                    }
+                _connectedRobot.setLed(0f, 1f, 0f);
+                break;
+            case Disconnected:
+                    startDiscovery();
+                break;
+            default:
+                Log.v(TAG, "Not handling state change notification: " + type);
+                break;
+        }
+    }
+
+    @Override
+    public void onRobotPicked(RobotPickerDialog.RobotPicked robotPicked) {
+        _robotPickerDialog.dismiss();
+        switch (robotPicked) {
+            case Sphero:
+                _currentDiscoveryAgent = DiscoveryAgentClassic.getInstance();
+                Log.d("SPHERO", "We have a sphero");
+                break;
+            case Ollie:
+                _currentDiscoveryAgent = DiscoveryAgentLE.getInstance();
+                break;
+        }
+        startDiscovery();
+    }
+
+    private void startDiscovery() {
+        try {
+            _currentDiscoveryAgent.addDiscoveryListener(this);
+            _currentDiscoveryAgent.addRobotStateListener(this);
+            _currentDiscoveryAgent.startDiscovery(this);
+        } catch (DiscoveryException e) {
+            Log.e(TAG, "Could not start discovery. Reason: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
