@@ -89,6 +89,15 @@ button.mdl-button {
     transform: translate(-50%, -50%);
 }
 
+.center {
+    top: 50%;
+    text-align: center;
+    left: 50%;
+    display: block;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
 body {
     background-color: #C5CAE9;
     background-size: cover;
@@ -98,6 +107,13 @@ body {
 #info {
     font-size: 24px;
     color: white;
-    margin-top:40px;
     text-align:center;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    vertical-align: middle;
+    z-index:10;
+    background: #0099cc;
+    top: 0;
+    left: 0;
 }

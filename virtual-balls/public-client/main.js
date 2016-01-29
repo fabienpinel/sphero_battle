@@ -5,14 +5,20 @@
         else return xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
     }
 
-    var socket = io.connect('http://134.59.214.67:3000');
+    var socket = io.connect('http://localhost:3000');
     var players = [];
 
     socket.on('dataChange', function (data) {
         players = data.players;
-        if (players.length === 2) {
-            document.getElementById('player1score').innerHTML = players[0].score;
-            document.getElementById('player2score').innerHTML = players[1].score;
+        if (players.length === 0) {
+            document.getElementById('info').innerHTML = "<div class='center'>Waiting for 2 players...</div>";
+            document.getElementById('info').style.display = 'block';
+        } else if (players.length === 1) {
+            document.getElementById('info').innerHTML = "<div class='center'>Waiting for 1 players...</div>";
+            document.getElementById('info').style.display = 'block';
+        } else if (players.length === 2) {
+            document.getElementById('info').innerHTML = "<div class='center'>osef</div>";
+            document.getElementById('info').style.display = 'none';
         }
     });
 
