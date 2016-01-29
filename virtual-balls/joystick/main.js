@@ -5,6 +5,7 @@ function getAjax () {
 
 var player = null;
 var reloadingSpellCast = false;
+var players = [];
 
 // Login Form Part
 (
@@ -34,9 +35,27 @@ var reloadingSpellCast = false;
                     } else if (response.currentTarget.status == 201) {
                         player = JSON.parse(response.currentTarget.responseText);
                         document.querySelector('#login-form').style.display = 'none';
-                        var elements = document.querySelectorAll('.while-game');
-                        for (var i = 0; i < elements.length; i++) {
-                            elements[i].style.display = 'block';
+                        if (players.length === 2) {
+                            document.querySelector('#waiting').innerHTML = 'laule';
+                            document.querySelector('#waiting').style.display = 'none';
+                            var elements = document.querySelectorAll('.while-game');
+                            for (var i = 0; i < elements.length; i++) {
+                                elements[i].style.display = 'block';
+                            }
+                        } else if (players.length == 1) {
+                            document.querySelector('#waiting').innerHTML = 'Waiting for 1 players';
+                            document.querySelector('#waiting').style.display = 'block';
+                            var elements = document.querySelectorAll('.while-game');
+                            for (var i = 0; i < elements.length; i++) {
+                                elements[i].style.display = 'none';
+                            }
+                        } else {
+                            document.querySelector('#waiting').innerHTML = 'Waiting for 2 players';
+                            document.querySelector('#waiting').style.display = 'block';
+                            var elements = document.querySelectorAll('.while-game');
+                            for (var i = 0; i < elements.length; i++) {
+                                elements[i].style.display = 'none';
+                            }
                         }
                     }
                 };
@@ -50,6 +69,67 @@ var reloadingSpellCast = false;
 (
     function () {
 
+        var socket = io.connect('http://localhost:3000');
+
+        socket.on('dataChange', function (data) {
+            players = data.players;
+            if (player) {
+                if (players.length === 2) {
+                    document.querySelector('#waiting').innerHTML = 'laule';
+                    document.querySelector('#waiting').style.display = 'none';
+                    var elements = document.querySelectorAll('.while-game');
+                    for (var i = 0; i < elements.length; i++) {
+                        elements[i].style.display = 'block';
+                    }
+                    for (var i = 0; i < players.length; i++) {
+                        if (players[i].id == player.id && players[i]) {
+                            player = players[i];
+                            if (players[i].power >= 10 && !reloadingSpellCast) {
+                                document.querySelector('#cast-spell button').removeAttribute("disabled");
+                            } else {
+                                document.querySelector('#cast-spell button').setAttribute("disabled", "");
+                            }
+                            break;
+                        }
+                    }
+                } else if (players.length == 1) {
+                    document.querySelector('#waiting').innerHTML = 'Waiting for 1 players';
+                    document.querySelector('#waiting').style.display = 'block';
+                    var elements = document.querySelectorAll('.while-game');
+                    for (var i = 0; i < elements.length; i++) {
+                        elements[i].style.display = 'none';
+                    }
+                } else {
+                    document.querySelector('#waiting').innerHTML = 'Waiting for 2 players';
+                    document.querySelector('#waiting').style.display = 'block';
+                    var elements = document.querySelectorAll('.while-game');
+                    for (var i = 0; i < elements.length; i++) {
+                        elements[i].style.display = 'none';
+                    }
+                }
+            } else {
+                document.querySelector('#waiting').style.display = 'none';
+                var elements = document.querySelectorAll('.while-game');
+                for (var i = 0; i < elements.length; i++) {
+                    elements[i].style.display = 'none';
+                }
+            }
+
+        });
+
+        socket.on('start', function () {
+            displayTimer(60);
+            beginGame();
+        });
+
+        socket.on('end', function () {
+            location.reload();
+        });
+
+        socket.on('break', function () {
+            endGame();
+        });
+
         function go (x, y) {
             if (x !== 0 && y !== 0 && player) {
                 var http = getAjax();
@@ -59,11 +139,22 @@ var reloadingSpellCast = false;
             }
         }
 
+        var timerTimeout = null;
+        function displayTimer(number) {
+            document.querySelector('#timer').innerHTML = number;
+            if (number > 0) {
+                timerTimeout = setTimeout(function () {
+                    displayTimer(number - 1);
+                    console.log(number);
+                }, 1000);
+            }
+        }
+
+        /////////////////// JOYSTICK PART ///////////////////
         var joystick = new VirtualJoystick({
             container: document.getElementById('joystick'),
             mouseSupport: true
         });
-
         var interval = null;
         function beginGame() {
             interval = setInterval(function(){
@@ -76,12 +167,10 @@ var reloadingSpellCast = false;
                 }
             }, 30);
         }
-        beginGame();
+        function endGame() { clearInterval(interval); clearTimeout(timerTimeout); }
+        /////////////////// JOYSTICK PART (END) ///////////////////
 
-        function endGame() {
-            clearInterval(interval);
-        }
-
+        /////////////////// CAST SPELL PART ///////////////////
         document.querySelector('#cast-spell button').addEventListener('mousedown', _castSpell, false);
         document.querySelector('#cast-spell button').addEventListener('touchstart', _castSpell, false);
         function _castSpell() {
@@ -97,13 +186,14 @@ var reloadingSpellCast = false;
                         document.querySelector('#cast-spell button').setAttribute("disabled", "");
                         setTimeout(function () {
                             reloadingSpellCast = false;
-                            document.querySelector('#cast-spell button').removeAttribute("disabled");
+                            if (player.score >= 10) document.querySelector('#cast-spell button').removeAttribute("disabled");
                         }, 3000);
                     }
                 };
                 http.send();
             }
         }
+        /////////////////// CAST SPELL PART (END) ///////////////////
 
         /////////////////// GESTURE PART ///////////////////
         var clicked = false;

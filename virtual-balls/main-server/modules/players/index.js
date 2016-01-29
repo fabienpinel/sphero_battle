@@ -5,6 +5,8 @@ var GAME_HORIZONTAL = 1000;
 var GAME_VERTICAL = 1000;
 var BALL_RADIUS = 50;
 
+var GAME_DURATION = 60 * 1000;
+
 var SPELLS = {
     SLOW_DOWN: 'SLOW_DOWN',
     CONTROL_REVERSAL: 'CONTROL_REVERSAL',
@@ -41,6 +43,7 @@ var players = [/*{
     ],
     spell: SPELLS.SLOW_DOWN
 }/**/];
+var timeout = null;
 
 function _findNewPosition(player, newX, newY) {
 
@@ -167,6 +170,7 @@ var moduleToExports = {
                 spell: spellType
             };
             players.push(player);
+            if (players.length == 2) this.launchGame();
             return player;
         }
         return false;
@@ -176,6 +180,12 @@ var moduleToExports = {
         for (var i in players) {
             if (players[i].id == id) {
                 players.splice(i, 1);
+                if (players.length == 1) {
+                    this.interruptGame();
+                    var stayedPlayer = JSON.parse(JSON.stringify(players[0]));
+                    players = [];
+                    this.registerPlayer(stayedPlayer.id, stayedPlayer.name, stayedPlayer.spell)
+                }
                 return true;
             }
         }
@@ -259,16 +269,21 @@ var moduleToExports = {
         var player = this.getPlayerById(playerId);
         var otherPlayer = this.getOtherPlayerById(playerId);
         var now = Date.now();
-        if (player && player.power > 10 && (now - (player.lastCast ? player.lastCast : 0) > 3000) ) {
+        if (player && player.power >= 10 && (now - (player.lastCast ? player.lastCast : 0) > 3000) ) {
             player.power -= 10;
             player.lastCast = now;
             if (player.spell == SPELLS.CONTROL_REVERSAL && otherPlayer) {
+                sockets.cast(playerId, SPELLS.CONTROL_REVERSAL);
                 spells.castSpell(player.spell, otherPlayer);
             } else if (player.spell == SPELLS.SLOW_DOWN && otherPlayer) {
+                sockets.cast(playerId, SPELLS.SLOW_DOWN);
                 spells.castSpell(player.spell, otherPlayer);
             } else if (player.spell == SPELLS.HEAL) {
+                // TODO HERE : add life to player
+                sockets.cast(playerId, SPELLS.HEAL);
                 spells.castSpell(player.spell, player);
             } else if (player.spell == SPELLS.IMMUNITY) {
+                sockets.cast(playerId, SPELLS.IMMUNITY);
                 spells.castSpell(player.spell, player);
             }
             return true;
@@ -285,12 +300,25 @@ var moduleToExports = {
                 }];
             }
         }, 60);
+    },
+
+    launchGame: function () {
+        sockets.start();
+        timeout = setTimeout(function () {
+            sockets.end(players);
+            players = [];
+            sockets.emitChanges();
+        }, GAME_DURATION);
+    },
+
+    interruptGame: function () {
+        clearTimeout(timeout);
+        sockets.break();
     }
 
 };
 module.exports = moduleToExports;
 
-var sockets = require('../sockets');
 function _recurseImpact(player, deltaX, deltaY, index) {
     if (player) {
         player.position.x -= deltaX;
