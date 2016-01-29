@@ -36,7 +36,7 @@
     </div>
 </div>
 -->
-
+<div>
 <table id="table">
     <tr><td>
         <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="player1">
@@ -54,7 +54,6 @@
             </div>
         </button>
     </td></tr>
-        <img class="versus center" src="vs.png" alt=""/>
     <tr><td>
         <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="player2">
             <div class="player2 demo-card-event mdl-card mdl-shadow--2dp mdl-cell mdl-cell--2-col-phone mdl-cell--4-col-tablet mdl-cell--6-col">
@@ -72,8 +71,11 @@
         </button>
     </td></tr>
 </table>
+</div>
+<div id="info"><div class="center">Waiting for...</div></div>
+<img class="versus center" src="vs.png" alt=""/>
 
-<script src="http://134.59.214.67:3000/socket.io/socket.io.js"></script>
+<script src="http://localhost:3000/socket.io/socket.io.js"></script>
 <script src="./bower_components/material-design-lite/material.min.js"></script>
 <script src="main.js"></script>
 </body>

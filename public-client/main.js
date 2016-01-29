@@ -11,17 +11,14 @@
     socket.on('dataChange', function (data) {
         players = data.players;
         if (players.length === 0) {
-            document.getElementById('info').innerHTML = 'Waiting for 2 players...';
+            document.getElementById('info').innerHTML = "<div class='center'>Waiting for 2 players...</div";
             document.getElementById('info').style.display = 'block';
-            document.getElementById('table').style.display = 'none';
         } else if (players.length === 1) {
-            document.getElementById('info').innerHTML = 'Waiting for 1 players...';
+            document.getElementById('info').innerHTML = "<div class='center'>Waiting for 1 players...</div>";
             document.getElementById('info').style.display = 'block';
-            document.getElementById('table').style.display = 'none';
         } else if (players.length === 2) {
-            document.getElementById('info').innerHTML = 'osef';
+            document.getElementById('info').innerHTML = "<div class='center'>osef</div>";
             document.getElementById('info').style.display = 'none';
-            document.getElementById('table').style.display = 'block';
         }
     });
 
