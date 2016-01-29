@@ -78,10 +78,6 @@ public class MainActivity extends Activity implements RobotPickerDialog.RobotPic
      */
     private ColorPickerFragment _colorPicker;
 
-    /**
-     * The button to set developer mode
-     */
-    private Switch _developerModeSwitch;
 
     /**
      * Reference to the layout containing the developer mode switch and label
@@ -216,11 +212,6 @@ public class MainActivity extends Activity implements RobotPickerDialog.RobotPic
                 // Robot#sendCommand() method, but Ollie#drive() reads a bit better.
                 if (robot instanceof RobotLE) {
                     _connectedRobot = new Ollie(robot);
-
-                    // Ollie has a developer mode that will allow a developer to poke at Bluetooth LE data manually
-                    // without being disconnected. Here we set up the button to be able to enable or disable
-                    // developer mode on the robot.
-                    setupDeveloperModeButton();
                 }
                 else if (robot instanceof RobotClassic) {
                     _connectedRobot = new Sphero(robot);
@@ -412,25 +403,6 @@ public class MainActivity extends Activity implements RobotPickerDialog.RobotPic
             }
         });
 
-    }
-
-    private void setupDeveloperModeButton() {
-        // Getting the developer mode button
-        if (_developerModeLayout == null)
-        {
-            _developerModeSwitch = (Switch)findViewById(R.id.developerModeSwitch);
-            _developerModeLayout = (LinearLayout)findViewById(R.id.developerModeLayout);
-
-            _developerModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    // We need to get the raw robot, as setting developer mode is an advanced function, and is not
-                    // available on the Ollie object.
-                    ((RobotLE)_connectedRobot.getRobot()).setDeveloperMode(isChecked);
-                }
-            });
-        }
-        _developerModeLayout.setVisibility(View.VISIBLE);
     }
 
     /**
