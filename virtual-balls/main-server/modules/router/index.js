@@ -14,5 +14,8 @@ module.exports = function (router) {
     // vote for a player
     router.post('/api/players/:id/power', callbacks.voteForPlayer);
 
+    // player cast spell
+    router.post('/api/players/:id/cast-spell', callbacks.castSpell);
+
     return router;
 };

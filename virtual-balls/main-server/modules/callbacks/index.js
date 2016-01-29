@@ -10,10 +10,10 @@ module.exports = {
 
     registerPlayer: function (req, res) {
         var playerId = uniqid();
-        var player = playerFactory.registerPlayer(playerId);
+        var player = playerFactory.registerPlayer(playerId, req.body.name, req.body.spell);
         if (player) {
             sockets.emitChanges();
-            res.status(201).json(playerId);
+            res.status(201).json(player);
         } else {
             res.status(409).end();
         }
@@ -43,6 +43,15 @@ module.exports = {
         var hasMoved = playerFactory.movePlayer(req.params.id, req.params.deltaX, req.params.deltaY);
         if (hasMoved) {
             sockets.emitChanges();
+            res.status(201).end();
+        } else {
+            res.status(404).end();
+        }
+    },
+
+    castSpell: function (req, res) {
+        var hasSpelled = playerFactory.castSpell(req.params.id);
+        if (hasSpelled) {
             res.status(201).end();
         } else {
             res.status(404).end();

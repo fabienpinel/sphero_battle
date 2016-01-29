@@ -12,7 +12,7 @@ var SPELLS = {
     IMMUNITY: 'IMMUNITY'
 };
 
-var players = [{
+var players = [/*{
     id: "player1",
     score: 0,
     power: 0,
@@ -40,7 +40,7 @@ var players = [{
         { x: GAME_HORIZONTAL - BALL_RADIUS, y: GAME_VERTICAL - BALL_RADIUS }
     ],
     spell: SPELLS.SLOW_DOWN
-}];
+}/**/];
 
 function _findNewPosition(player, newX, newY) {
 
@@ -150,7 +150,7 @@ var moduleToExports = {
         return null;
     },
 
-    registerPlayer: function (id, spellType) {
+    registerPlayer: function (id, name, spellType) {
         if (players.length < 2) {
             var initPosition = {
                 x: players.length == 1 ? GAME_HORIZONTAL - BALL_RADIUS : BALL_RADIUS,
@@ -159,6 +159,7 @@ var moduleToExports = {
             var player = {
                 id: id,
                 score: 0,
+                name: name,
                 power: 0,
                 position: initPosition,
                 lastImpact: Date.now(),
@@ -257,7 +258,10 @@ var moduleToExports = {
     castSpell: function (playerId) {
         var player = this.getPlayerById(playerId);
         var otherPlayer = this.getOtherPlayerById(playerId);
-        if (player) {
+        var now = Date.now();
+        if (player && player.power > 10 && (now - (player.lastCast ? player.lastCast : 0) > 3000) ) {
+            player.power -= 10;
+            player.lastCast = now;
             if (player.spell == SPELLS.CONTROL_REVERSAL && otherPlayer) {
                 spells.castSpell(player.spell, otherPlayer);
             } else if (player.spell == SPELLS.SLOW_DOWN && otherPlayer) {

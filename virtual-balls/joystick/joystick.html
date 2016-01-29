@@ -1,122 +1,69 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="./bower_components/material-design-lite/material.min.css">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <style>
-        body {
-            overflow	: hidden;
-            padding		: 0;
-            margin		: 0;
-            background-color: #BBB;
-        }
-        #info {
-            position	: absolute;
-            top		: 0px;
-            width		: 100%;
-            padding		: 5px;
-            text-align	: center;
-        }
-        #info a {
-            color		: #66F;
-            text-decoration	: none;
-        }
-        #info a:hover {
-            text-decoration	: underline;
-        }
-        #container {
-            width		: 100%;
-            height		: 100%;
-            overflow	: hidden;
-            padding		: 0;
-            margin		: 0;
-            -webkit-user-select	: none;
-            -moz-user-select	: none;
-        }
-    </style>
+    <script src="./bower_components/material-design-lite/material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+    <script src="./virtualjoystick.js"></script>
+    <link rel="stylesheet" href="main.css" type="text/css">
 </head>
 <body>
-<div id="container"></div>
-<script src="./virtualjoystick.js"></script>
 
-<!--<script src="http://localhost:8080/socket.io/socket.io.js"></script>-->
+<div id="login-form" class="center">
+    <div class="container demo-card-wide mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Connexion</h2>
+        </div>
+        <form>
+            <div class="mdl-card__supporting-text">
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input class="mdl-textfield__input" type="text" id="sample1" required>
+                    <label class="mdl-textfield__label" for="sample1">Choisissez votre nom</label>
+                </div>
+                <br>
+                <div class="text-info">
+                    Choisissez votre pouvoir
+                </div>
+                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
+                    <input type="radio" id="option-1" class="mdl-radio__button" name="options" value="1" checked>
+                    <span class="mdl-radio__label">Ralentissement</span>
+                </label>
+                <br>
+                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2">
+                    <input type="radio" id="option-2" class="mdl-radio__button" name="options" value="2">
+                    <span class="mdl-radio__label">Inversion de commande</span>
+                </label>
+                <br>
+                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-3">
+                    <input type="radio" id="option-3" class="mdl-radio__button" name="options" value="3">
+                    <span class="mdl-radio__label">Bonus de vie</span>
+                </label>
+                <br>
+                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-4">
+                    <input type="radio" id="option-4" class="mdl-radio__button" name="options" value="4">
+                    <span class="mdl-radio__label">Immunité</span>
+                </label>
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+                    Connexion
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
-<script>
+<div id="joystick" class="while-game"></div>
+<div id="timer" class="while-game"></div>
+<div id="cast-spell" class="while-game">
+    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+        <i class="material-icons">gesture</i>
+    </button>
+</div>
 
-    //var socket = io('http://localhost:8080');
+<script src="main.js?0.0.1"></script>
 
-    var departureAngle = 0;
-    var begin = true;
-
-    function go (x, y) {
-        if (begin) {
-            //socket.emit('move', parseInt(angle + departureAngle), parseInt(distance));
-
-            var http = getAjax();
-            http.open('POST', 'http://localhost:3000/api/players/player1/deltaX/' + x + '/deltaY/' + y, true);
-            http.setRequestHeader("Content-type","application/json");
-            http.send();
-        }
-    }
-
-    function stop() {
-        /*if (begin) {
-            var http = getAjax();
-            http.open('POST', 'http://134.59.214.67:3000/spheros/RPP/move/0/0', true);
-            http.setRequestHeader("Content-type","application/json");
-            //http.send();
-        }*/
-    }
-
-    function getAjax () {
-        if (window.XMLHttpRequest)
-        {// code for IE7+, Firefox, Chrome, Opera, Safari
-            return xmlhttp=new XMLHttpRequest();
-        }
-        else
-        {// code for IE6, IE5
-            return xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-        }
-    }
-
-
-
-
-    var joystick	= new VirtualJoystick({
-        container	: document.getElementById('container'),
-        mouseSupport	: true
-    });
-
-    var clicked = false;
-    var originalPoint = null;
-    var actualPoint = null;
-
-    document.addEventListener('mousedown', function (e) { clicked = true; originalPoint = {x: e.clientX,y: e.clientY }; });
-    document.addEventListener('mouseup', function () {
-        clicked = false;actualPoint = null;originalPoint = null;
-        stop();
-    });
-    document.addEventListener('mousemove', function (e) { if (clicked) actualPoint = {x: e.clientX, y: e.clientY}; });
-
-    document.addEventListener('touchstart', function (e) { clicked = true; originalPoint = {x: e.touches[0].clientX,y: e.touches[0].clientY }; });
-    document.addEventListener('touchend', function () { clicked = false;actualPoint = null;originalPoint = null; stop(); });
-    document.addEventListener('touchmove', function (e) { if (clicked) actualPoint = {x: e.touches[0].clientX, y: e.touches[0].clientY}; });
-
-    setInterval(function(){
-        //var angle = (57.2958 * Math.atan((joystick.deltaY()) / (joystick.deltaX())));
-        //console.log(angle, joystick.deltaX(), joystick.deltaY());
-        if (actualPoint && originalPoint) {
-            //console.log('calculate');
-
-            var centerX = originalPoint.x;
-            var centerY = originalPoint.y;
-            var pointerX = actualPoint.x;
-            var pointerY = actualPoint.y;
-
-            console.log(parseInt((pointerX - centerX) / 10), parseInt((centerY - pointerY) / 10));
-            go(parseInt((pointerX - centerX) / 5), - parseInt((centerY - pointerY) / 5));
-        }
-    }, 30);
-
-</script>
 </body>
 </html>

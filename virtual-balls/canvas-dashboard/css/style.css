@@ -97,3 +97,25 @@ header {
 #content2 {
     text-align: right;
 }
+
+#content2.win md-card, #content1.win md-card {
+    background-color: green;
+}
+
+#content2.loose md-card, #content1.loose md-card {
+    background-color: red;
+}
+
+#info {
+    font-size: 24px;
+    color: white;
+    text-align:center;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    vertical-align: middle;
+    z-index:10;
+    background: #0099cc;
+    top: 0;
+    left: 0;
+}

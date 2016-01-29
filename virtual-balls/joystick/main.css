@@ -1,0 +1,76 @@
+body {
+    overflow	: hidden;
+    padding		: 0;
+    margin		: 0;
+    background-color: #BBB;
+}
+#joystick {
+    width		: 100%;
+    height		: 100%;
+    overflow	: hidden;
+    padding		: 0;
+    margin		: 0;
+    -webkit-user-select	: none;
+    -moz-user-select	: none;
+}
+
+.center {
+    top: 50%;
+    left: 50%;
+    display: block;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+.container {
+    background-color: #C5CAE9;
+}
+
+.mdl-button--raised.mdl-button--colored {
+    background-color: #3E4EB8;
+}
+
+.mdl-card__title{
+    color: #333;
+}
+
+#login-form {
+    display:block;
+}
+
+#login-form form {
+    max-width: 400px;
+    margin:auto;
+    width:100%;
+}
+
+form input, form label {
+    color: #333;
+}
+
+.mdl-radio .mdl-radio__ripple-container .mdl-ripple, .mdl-radio__inner-circle {
+    color: #3E4EB8 !important;
+    background:#3E4EB8 !important;
+    border-color: #3E4EB8 !important;
+}
+
+.mdl-radio__outer-circle {
+    border-color: #3E4EB8 !important;
+}
+
+.while-game {
+    display:none;
+}
+
+#cast-spell {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+
+#cast-spell .mdl-button.mdl-button--colored {
+    background: #3f51b5;
+}
+#cast-spell .mdl-button.mdl-button--colored[disabled] {
+    background: grey;
+}

@@ -1,9 +1,8 @@
 .demo-card-event.mdl-card {
-background: #3E4EB8;
+    background: #3E4EB8;
     display:inline-block;
-    min-height:0px;
-    display: block;
-    margin:0px;!important
+    margin:0 !important;
+    min-height: 100%;
 }
 .clear1px{
     clear: both;
@@ -61,8 +60,8 @@ table {
 table tr { width:33.333%; }
 
 button.mdl-button {
-    height: 114px;
-    width: 80%;
+    height: 80%;
+    width: 90%;
     padding-left:0px!important;
     padding-right:0px!important;
 }
@@ -71,16 +70,49 @@ button.mdl-button {
     z-index:10!important;
 }
 
+.player2 {
+    padding-top: 40px;
+}
+
+.player1 {
+    padding-bottom: 40px;
+}
+
+.versus {
+    left: 50.5%;
+    top: 50%;
+    right: 50%;
+    z-index: 2;
+    max-width: 45%;
+    max-height: 45%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+.center {
+    top: 50%;
+    left: 50%;
+    display: inline-block;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
 body {
     background-color: #C5CAE9;
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
 }
-
 #info {
     font-size: 24px;
     color: white;
-    margin-top:40px;
     text-align:center;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    vertical-align: middle;
+    z-index:10;
+    background: #0099cc;
+    top: 0;
+    left: 0;
 }

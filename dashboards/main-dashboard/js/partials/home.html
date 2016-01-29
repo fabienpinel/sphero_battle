@@ -34,7 +34,7 @@
                 <span class="center">{{home.players[0].power}}</span>
             </div>
         </div>
-        <div id="score2" flex="50" class="animated delay2" ng-class="{slideInLeft: home.init, wobble: home.collision2}">
+        <div id="score2" flex="50" class="animated delay2" ng-class="{slideInRight: home.init, wobble: home.collision2}">
             <div class="md-toolbar-tools">
                 <h3 flex>
                     <span>Pouvoir</span>
@@ -45,5 +45,8 @@
                 <span class="center">{{home.players[1].power}}</span>
             </div>
         </div>
+    </div>
+    <div id="info" ng-class="home.players.length == 2 ? 'hide' : ''">
+        <div class="center">Waiting for {{2 - home.players.length}} player(s)</div>
     </div>
 </md-content>
