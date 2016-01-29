@@ -25,5 +25,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: "js/partials/home.html",
             controller: "homeCtrl",
             controllerAs: "home"
+        })
+        .state('state2', {
+            url:"/endgames",
+            templateUrl: "js/partials/winView.html",
+            controller: "homeCtrl",
+            controllerAs: "home"
         });
 });
