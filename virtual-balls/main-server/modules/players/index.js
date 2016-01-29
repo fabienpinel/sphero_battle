@@ -12,7 +12,7 @@ var SPELLS = {
     IMMUNITY: 'IMMUNITY'
 };
 
-var players = [{
+var players = [/*{
     id: "player1",
     score: 0,
     power: 0,
@@ -40,7 +40,7 @@ var players = [{
         { x: GAME_HORIZONTAL - BALL_RADIUS, y: GAME_VERTICAL - BALL_RADIUS }
     ],
     spell: SPELLS.SLOW_DOWN
-}];
+}/**/];
 
 function _findNewPosition(player, newX, newY) {
 
@@ -150,7 +150,7 @@ var moduleToExports = {
         return null;
     },
 
-    registerPlayer: function (id, spellType) {
+    registerPlayer: function (id, name, spellType) {
         if (players.length < 2) {
             var initPosition = {
                 x: players.length == 1 ? GAME_HORIZONTAL - BALL_RADIUS : BALL_RADIUS,
@@ -159,6 +159,7 @@ var moduleToExports = {
             var player = {
                 id: id,
                 score: 0,
+                name: name,
                 power: 0,
                 position: initPosition,
                 lastImpact: Date.now(),

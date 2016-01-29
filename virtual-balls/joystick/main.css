@@ -14,7 +14,7 @@ body {
     -moz-user-select	: none;
 }
 #login-form {
-    display:none;
+    display:block;
 }
 
 #login-form form {
@@ -24,7 +24,7 @@ body {
 }
 
 .while-game {
-    display:block;
+    display:none;
 }
 
 #cast-spell {
