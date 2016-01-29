@@ -2,7 +2,7 @@ var VirtualJoystick	= function(opts)
 {
     opts			= opts			|| {};
     this._container		= opts.container	|| document.body;
-    this._strokeStyle	= opts.strokeStyle	|| "#3E4EB8";
+    this._strokeStyle	= opts.strokeStyle	|| "#0099CC";
     this._stickEl		= opts.stickElement	|| this._buildJoystickStick();
     this._baseEl		= opts.baseElement	|| this._buildJoystickBase();
     this._mouseSupport	= opts.mouseSupport !== undefined ? opts.mouseSupport : false;
