@@ -48,12 +48,12 @@
                 </h3>
             </div>
             <div layout="row" layout-sm="column" layout-align="space-around" class="center res">
-                <md-progress-circular md-diameter='180' md-mode="determinate" value="{{home.players[1].power}}" ng-click="home.up(1)"></md-progress-circular>
+                <md-progress-circular class="md-info md-hue-4" md-diameter='180' md-mode="determinate" value="{{home.players[1].power}}" ng-click="home.up(1)"></md-progress-circular>
                 <span class="center">{{home.players[1].power}}</span>
             </div>
         </div>
     </div>
-    <div id="info" ng-class="home.players.length == 2 ? 'hide' : ''">
+    <div id="info" style="display: none;"><!--ng-class="home.players.length == 2 ? 'hide' : ''">-->
         <div class="center">Waiting for {{2 - home.players.length}} player(s)</div>
     </div>
 </md-content>
