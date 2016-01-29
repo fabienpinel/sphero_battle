@@ -5,7 +5,7 @@
         else return xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
     }
 
-    var socket = io.connect('http://localhost:3000');
+    var socket = io.connect('http://192.168.43.128:3000');
     var players = [];
 
     socket.on('dataChange', function (data) {
