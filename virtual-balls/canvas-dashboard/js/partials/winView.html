@@ -1,0 +1,49 @@
+<md-content layout="column" layout-fill>
+    <header layout="row" flex="100" class="animated slideInDown">
+        <div id="content1" flex="50" ng-class="(home.players[0].score > home.players[1].score)?'win':'loose'">
+            <md-card layout-fill>
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">Player 1 : {{home.players[0].id}}</span>
+                    </md-card-title-text>
+                </md-card-title>
+                <md-card-content>
+                    <md-list>
+                        <md-list-item>
+                            <p>Score : {{home.players[0].score}}</p>
+                        </md-list-item>
+                        <md-list-item>
+                            <p>Power : {{home.players[0].power}}</p>
+                        </md-list-item>
+                    </md-list>
+                </md-card-content>
+            </md-card>
+        </div>
+        <div class="center">
+            <a class="md-raised md-button md-ink-ripple" ng-href="#/">Replay</a>
+        </div>
+        <div id="content2" ng-class="(home.players[1].score > home.players[0].score)?'win':'loose'" flex="50">
+            <md-card layout-fill>
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">Player 2 : {{home.players[1].id}}</span>
+                    </md-card-title-text>
+                </md-card-title>
+                <md-card-content>
+                    <md-list>
+                        <md-list-item>
+                            <p>Score : {{home.players[1].score}}</p>
+                        </md-list-item>
+                        <md-list-item>
+                            <p>Power : {{home.players[1].power}}</p>
+                        </md-list-item>
+                    </md-list>
+                </md-card-content>
+            </md-card>
+        </div>
+    </header>
+</md-content>
+
+<canvas id="world">
+
+</canvas>
