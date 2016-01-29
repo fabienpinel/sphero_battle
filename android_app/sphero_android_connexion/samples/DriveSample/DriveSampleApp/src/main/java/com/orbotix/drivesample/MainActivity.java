@@ -43,7 +43,8 @@ public class MainActivity extends Activity {
 
     private JoystickView _joystick;
 
-    private Robby _connectedRobot;
+    private ConvenienceRobot _connectedRobot;
+    private Robby robby;
 
     private CalibrationView _calibrationView;
 
@@ -59,8 +60,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         //get the connectedRobot
-        _connectedRobot = (Robby)getIntent().getSerializableExtra("theConnectedRobot");
-        //get the socket connection
+        robby = (Robby)getIntent().getSerializableExtra("theConnectedRobot");
+        _connectedRobot = robby.robot;
+                //get the socket connection
         mSocket = (CustomSocket)getIntent().getSerializableExtra("theSocketConnection");
 
         setContentView(R.layout.main);

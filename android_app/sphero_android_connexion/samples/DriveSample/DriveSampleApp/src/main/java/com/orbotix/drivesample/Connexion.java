@@ -46,13 +46,16 @@ public class Connexion extends Activity implements RobotPickerDialog.RobotPicker
     private DiscoveryAgent _currentDiscoveryAgent;
     private RobotPickerDialog _robotPickerDialog;
 
-    private Robby _connectedRobot;
+    private Robby robby;
+    private ConvenienceRobot _connectedRobot;
     private CustomSocket mSocket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        robby = new Robby();
+        _connectedRobot = robby.robot;
         //hide the actionbar
         ActionBar actionBar = getActionBar();
         actionBar.hide();
@@ -84,7 +87,7 @@ public class Connexion extends Activity implements RobotPickerDialog.RobotPicker
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Connexion.this, MainActivity.class);
-                intent.putExtra("theConnectedRobot", _connectedRobot);
+                intent.putExtra("theConnectedRobot", robby);
                 intent.putExtra("theSocketConnection", mSocket);
                 startActivity(intent);
             }
@@ -143,7 +146,7 @@ public class Connexion extends Activity implements RobotPickerDialog.RobotPicker
             case Online:
                 _currentDiscoveryAgent.stopDiscovery();
                 _currentDiscoveryAgent.removeDiscoveryListener(this);
-                _connectedRobot = (Robby) new Sphero(robot);
+                _connectedRobot = new Sphero(robot);
                     try {
                         Log.d("SPHERO", "ONLINELINEDFNKBGIROFGBRIEFF");
 
