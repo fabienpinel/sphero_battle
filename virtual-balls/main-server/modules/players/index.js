@@ -24,7 +24,8 @@ var players = [{
     history: [
         { x: BALL_RADIUS, y: BALL_RADIUS },
         { x: BALL_RADIUS, y: BALL_RADIUS }
-    ]
+    ],
+    spell: SPELLS.IMMUNITY
 }, {
     id: "player2",
     score: 0,
@@ -37,7 +38,8 @@ var players = [{
     history: [
         { x: GAME_HORIZONTAL - BALL_RADIUS, y: GAME_VERTICAL - BALL_RADIUS },
         { x: GAME_HORIZONTAL - BALL_RADIUS, y: GAME_VERTICAL - BALL_RADIUS }
-    ]
+    ],
+    spell: SPELLS.SLOW_DOWN
 }];
 
 function _findNewPosition(player, newX, newY) {
