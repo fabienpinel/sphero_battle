@@ -2,6 +2,25 @@ var io = null;
 
 module.exports = {
 
+    start: function () {
+        if (io) io.sockets.emit('start');
+    },
+
+    end: function (results) {
+        if (io) io.sockets.emit('end', results);
+    },
+
+    'break': function () {
+        if (io) io.sockets.emit('break');
+    },
+
+    cast: function (playerId, spellType) {
+        if (io)
+            io.sockets.emit('cast', {
+                playerId: playerId,
+                spellType: spellType
+            });
+    },
 
     collision: function (playerId) {
         if (io)

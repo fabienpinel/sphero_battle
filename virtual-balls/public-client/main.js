@@ -23,7 +23,6 @@
     });
 
     document.getElementById('player1').addEventListener('touchstart', function () {
-        console.log('coucou');
         if (players.length === 2) {
             var http = getAjax();
             http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
