@@ -23,7 +23,7 @@ app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket'
     };
 
     socket.on('collision', function (playerIds) {
-        console.log('collision', playerIds);
+        //console.log('collision', playerIds);
         if(playerIds.length == 2){
             vm.collision1 = vm.collision2 = true;
             $timeout(function(){
