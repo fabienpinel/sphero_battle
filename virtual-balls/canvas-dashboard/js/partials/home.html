@@ -1,28 +1,28 @@
 <md-content layout="column" layout-fill>
-    <header layout="row" class="animated slideInDown">
-        <div id="content1" flex="50">
+    <header layout="row" class="animated slideInDown" ng-class="(home.end)?'end':''">
+        <div id="content1" flex="50" ng-class="(home.resultats[0].score > home.resultats[1].score)?'win':'loose'">
             <md-card>
                 <md-card-title>
                     <md-card-title-text>
-                        <span class="md-headline">Player 1 : {{home.players[0].id}}</span>
-                        <span class="md-subhead">Score : {{home.players[0].score}}</span>
+                        <span class="md-headline">Player 1 : {{home.players[0].name}}{{home.resultats[0].name}}</span>
+                        <span class="md-subhead">Score : {{home.players[0].score}}{{home.resultats[0].score}}</span>
                     </md-card-title-text>
                 </md-card-title>
             </md-card>
         </div>
-        <img class="versus center" src="img/vs.png" alt=""/>
-        <div id="content2" flex="50">
+        <img ng-hide="home.end" class="versus center" src="img/vs.png" alt=""/>
+        <div id="content2" flex="50" ng-class="(home.resultats[1].score > home.resultats[0].score && home.end)?'win':'loose'">
             <md-card>
                 <md-card-title>
                     <md-card-title-text>
-                        <span class="md-headline">Player 2 : {{home.players[1].id}}</span>
-                        <span class="md-subhead">Score : {{home.players[1].score}}</span>
+                        <span class="md-headline">Player 2 : {{home.players[1].name}}{{home.resultats[1].name}}</span>
+                        <span class="md-subhead">Score : {{home.players[1].score}}{{home.resultats[1].score}}</span>
                     </md-card-title-text>
                 </md-card-title>
             </md-card>
         </div>
     </header>
-    <div class="md-padding" flex layout="row" ng-cloak layout-align="center none" >
+    <div class="md-padding" flex layout="row" ng-cloak layout-align="center none" ng-hide="home.end">
         <div id="score1" flex="25" class="animated delay2" ng-class="{slideInLeft: home.init, wobble: home.collision1}">
             <div class="md-toolbar-tools">
                 <h3 flex>
@@ -53,7 +53,12 @@
             </div>
         </div>
     </div>
-    <div id="info" ng-class="home.players.length == 2 ? 'hide' : ''">
+    <div id="info" ng-class="(home.players.length == 2 || home.end) ? 'hide' : ''">
         <div class="center">Waiting for {{2 - home.players.length}} player(s)</div>
+    </div>
+    <div id="end" ng-class="(home.end) ? '' : 'hide'">
+        <div class="center">
+            <a class="md-raised md-warn md-button md-ink-ripple" ng-click="home.replay()">Replay</a>
+        </div>
     </div>
 </md-content>
