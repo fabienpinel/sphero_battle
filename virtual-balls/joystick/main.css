@@ -2,7 +2,7 @@ body {
     overflow	: hidden;
     padding		: 0;
     margin		: 0;
-    background-color: #BBB;
+    background-color: #C5CAE9;
 }
 #joystick {
     width		: 100%;
@@ -23,11 +23,11 @@ body {
 }
 
 .container {
-    background-color: #C5CAE9;
+    background-color: #B3E5FC;
 }
 
 .mdl-button--raised.mdl-button--colored {
-    background-color: #3E4EB8;
+    background-color: #0099CC;
 }
 
 .mdl-card__title{
@@ -49,13 +49,13 @@ form input, form label {
 }
 
 .mdl-radio .mdl-radio__ripple-container .mdl-ripple, .mdl-radio__inner-circle {
-    color: #3E4EB8 !important;
-    background:#3E4EB8 !important;
-    border-color: #3E4EB8 !important;
+    color: #0099CC !important;
+    background:#0099CC !important;
+    border-color: #0099CC !important;
 }
 
 .mdl-radio__outer-circle {
-    border-color: #3E4EB8 !important;
+    border-color: #0099CC !important;
 }
 
 .while-game {
@@ -69,7 +69,7 @@ form input, form label {
 }
 
 #cast-spell .mdl-button.mdl-button--colored {
-    background: #3f51b5;
+    background: #0099cc;
 }
 #cast-spell .mdl-button.mdl-button--colored[disabled] {
     background: grey;
@@ -92,9 +92,14 @@ form input, form label {
 
 #timer {
     display: block;
+    background: #0099CC;
+    top: 25px;
+    left: 50%;
     position: fixed;
-    top: 0px;
-    background: red;
-    left: 0px;
-    padding: 15px;
+    font-weight: 600;
+    font-size: 3em;
+    color: #ffffff;
+    transform: translate(-50%, -50%);
+    padding: 20px 30px;
+    border-radius: 0 0 10px 10px;
 }

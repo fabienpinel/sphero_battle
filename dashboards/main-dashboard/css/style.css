@@ -2,6 +2,12 @@ md-content {
     background-color: #C5CAE9;
 }
 
+.md-subhead {
+    font-size: 24px !important;
+    line-height: 32px;
+    color: #64ffda;
+}
+
 .delay2 {
     animation-delay: 0.2s;
 }
@@ -15,26 +21,24 @@ md-content {
     animation-delay: 0.5s;
 }
 
-#info {
-    font-size: 24px;
-    color: white;
-    text-align:center;
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    vertical-align: middle;
-    z-index:10;
-    background: #0099cc;
-    top: 0;
-    left: 0;
-}
-
 .versus {
     left: 50.5%;
     top: 52px;
     max-width: 80px;
     position: absolute;
     transform: translate(-50%, -50%);
+}
+
+.canvas-container {
+    text-align: center;
+}
+
+.canvas-container .content {
+    background: #e1e1e1;
+    width: 480px;
+    height: 480px;
+    border: 2px solid #0099CC;
+    display: inline-block;
 }
 
 .center {
@@ -46,16 +50,19 @@ md-content {
 }
 
 #score1 {
-    margin-right: 5px;
+    margin-right: 15px;
 }
 
 #score2 {
-    margin-left: 0px;
-    border-left: 2px dashed #3E4EB8;
+    margin-left: 15px;
 }
 
 #score1, #score2 {
     position: relative;
+}
+
+#score1 h3, #score2 h3 {
+    font-size: 0.8em;
 }
 
 .res {
@@ -83,10 +90,32 @@ header {
 }
 
 #content1 md-card, #content2 md-card {
-    background-color: #3E4EB8;
+    background-color: #0099CC;
     color: #fff;
 }
 
 #content2 {
     text-align: right;
+}
+
+#content2.win md-card, #content1.win md-card {
+    background-color: green;
+}
+
+#content2.loose md-card, #content1.loose md-card {
+    background-color: red;
+}
+
+#info {
+    font-size: 24px;
+    color: white;
+    text-align:center;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    vertical-align: middle;
+    z-index:10;
+    background: #0099cc;
+    top: 0;
+    left: 0;
 }

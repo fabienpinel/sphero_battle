@@ -5,7 +5,7 @@ md-content {
 .md-subhead {
     font-size: 24px !important;
     line-height: 32px;
-    color: #FF9800;
+    color: #64ffda;
 }
 
 .delay2 {
@@ -37,7 +37,7 @@ md-content {
     background: #e1e1e1;
     width: 480px;
     height: 480px;
-    border: 2px solid #3E4EB8;
+    border: 2px solid #0099CC;
     display: inline-block;
 }
 
@@ -90,7 +90,7 @@ header {
 }
 
 #content1 md-card, #content2 md-card {
-    background-color: #3E4EB8;
+    background-color: #0099CC;
     color: #fff;
 }
 
@@ -98,12 +98,39 @@ header {
     text-align: right;
 }
 
-#content2.win md-card, #content1.win md-card {
-    background-color: green;
+.end {
+    color : #fff !important;
 }
 
-#content2.loose md-card, #content1.loose md-card {
-    background-color: red;
+.end #content2 md-card, .end #content2, .end #content1 md-card, .end #content1, .end {
+    height: 100%;
+}
+
+#content2 md-card, #content2, #content1 md-card, #content1 {
+    height: 0%;
+    -webkit-transition: height 1500ms, background-color 2s ease;
+    -moz-transition: height 1500ms, background-color 2s ease;
+    -ms-transition: height 1500ms, background-color 2s ease;
+    -o-transition: height 1500ms, background-color 2s ease;
+    transition: height 1500ms, background-color 2s ease;
+}
+
+.end .win md-card {
+    background-color: #2ecc71 !important;
+}
+
+.end .loose md-card {
+    background-color: #e74c3c !important;
+}
+
+#end .md-warn {
+    font-size: 3em;
+    padding: 15px;
+    background-color: #e67e22 !important;
+}
+
+#end {
+
 }
 
 #info {
