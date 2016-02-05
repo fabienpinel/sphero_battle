@@ -9,8 +9,9 @@
                 <md-card-title>
                     <md-card-title-text>
                         <span class="md-headline">Player 1 : {{home.players[0].name}}{{home.resultats[0].name}}</span>
-                        <span class="md-subhead">Vie :{{home.players[0].life/10 | number: 0}}
-                            <md-progress-linear md-mode="determinate" value="{{home.players[0].life/10 | number: 0}}"></md-progress-linear>
+                        <span class="md-subhead">
+                            <br/>
+                            <md-progress-linear class="life-bar" md-mode="determinate" value="{{home.players[0].life/10 | number: 0}}"></md-progress-linear>
                         </span>
                     </md-card-title-text>
                 </md-card-title>
@@ -25,8 +26,9 @@
                 <md-card-title>
                     <md-card-title-text>
                         <span class="md-headline">Player 2 : {{home.players[1].name}}{{home.resultats[1].name}}</span>
-                        <span class="md-subhead">Vie :{{home.players[1].life/10 | number: 0}}
-                            <md-progress-linear md-mode="determinate" value="{{home.players[1].life/10 | number: 0}}"></md-progress-linear>
+                        <span class="md-subhead">
+                            <br/>
+                            <md-progress-linear class="life-bar" md-mode="determinate" value="{{home.players[1].life/10 | number: 0}}"></md-progress-linear>
                         </span>
                     </md-card-title-text>
                 </md-card-title>
@@ -45,8 +47,14 @@
                 </h3>
             </div>
             <div layout="row" layout-sm="column" layout-align="space-around" class="center res">
-                <md-progress-circular class="md-warn" md-diameter='180' md-mode="determinate" value="{{home.players[0].power}}" ng-click="home.up(0)"></md-progress-circular>
+                <md-progress-circular class="md-accent md-hue-2" md-diameter='180' md-mode="determinate" value="{{home.players[0].power}}" ng-click="home.up(0)"></md-progress-circular>
                 <span class="center">{{home.players[0].power}}</span>
+            </div>
+            <div class="player-spell" ng-switch="home.power1" >
+                <img ng-switch-when="SLOW_DOWN" src="img/SLOW_DOWN.png"/>
+                <img ng-switch-when="CONTROL_REVERSAL" src="img/CONTROL_REVERSAL.png"/>
+                <img ng-switch-when="HEAL" src="img/HEAL.png"/>
+                <img ng-switch-when="IMMUNITY" src="img/IMMUNITY.png"/>
             </div>
         </div>
 
@@ -69,6 +77,12 @@
             <div layout="row" layout-sm="column" layout-align="space-around" class="center res">
                 <md-progress-circular class="md-info md-hue-4" md-diameter='180' md-mode="determinate" value="{{home.players[1].power}}" ng-click="home.up(1)"></md-progress-circular>
                 <span class="center">{{home.players[1].power}}</span>
+            </div>
+            <div class="player-spell" ng-switch="home.power2">
+                <img ng-switch-when="SLOW_DOWN" src="img/SLOW_DOWN.png"/>
+                <img ng-switch-when="CONTROL_REVERSAL" src="img/CONTROL_REVERSAL.png"/>
+                <img ng-switch-when="HEAL" src="img/HEAL.png"/>
+                <img ng-switch-when="IMMUNITY" src="img/IMMUNITY.png"/>
             </div>
         </div>
     </div>

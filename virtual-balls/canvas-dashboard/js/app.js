@@ -1,4 +1,4 @@
-var app = angular.module('dashboardPublic', ['ui.router', 'ngMaterial', 'btford.socket-io']);
+var app = angular.module('dashboardPublic', ['ui.router', 'ngMaterial', 'btford.socket-io', 'ngAudio']);
 
 app.config(function($stateProvider, $urlRouterProvider) {
 
