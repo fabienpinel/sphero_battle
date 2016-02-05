@@ -9,9 +9,10 @@ var i = 0;
 var IP = "134.59.215.166";
 var PORT="3000";
 
-var d, x = 0, y = 0 ,z = 0;
 var sphero;
 var INTERVAL_REQUESTS_MYO = 180;
+
+var x = 1, y = 0, signe = 0;
 
 
 function getAverageFromTable(table){
@@ -23,7 +24,7 @@ function getAverageFromTable(table){
 }
 
 function sendCommand(x,y){
-    if(x  && y && sphero){
+    if(sphero){
         var http = getAjax();
         http.open('POST', "http://"+IP+":"+PORT+"/spheros/"+sphero.id+"/move/"+x+"/"+y, true);
         xmlhttp.setRequestHeader("Content-type","application/json");
@@ -88,6 +89,16 @@ function launchDataIntervalSender(){
      }, INTERVAL_REQUESTS_MYO);
 
      */
+
+    setInterval(function () {
+        var coord = {
+            deltaX: x >= 1 ? 0 : 50 * (1 - x) * (signe >= 0 ? 1 : -1),
+            deltaY: - y * 50
+        };
+        sendCommand(coord.deltaX ,coord.deltaY)
+    }, 100);
+
+
 }
 
 function registerPlayer(){
@@ -193,6 +204,7 @@ function initMyo(){
 }
 
 function connect_myo(){
+
     console.log("Searching...");
     MyoApi.attachToAdjacentMyo(function(s){
         console.log("Connecting with adjacent Myo", s);
@@ -218,16 +230,23 @@ function orientationDataHandler(ev){
         + " Angle: " + d.angle.toFixed(NUM_PREC)
         + " NORME: " + d.norme.toFixed(NUM_PREC);
 
-    var x = -((( d.yaw > 0 ? d.yaw - 0.5 : d.yaw + 0.5) * 100));
-    var y = (d.pitch * 2 * 100);
-
-    sendCommand(x, y);
+    //var x = -((( d.yaw > 0 ? d.yaw - 0.5 : d.yaw + 0.5) * 100));
+    //var y = (d.pitch * 2 * 100);
+    signe = d.x;
+    // data.x -> négatif à gauche, positif à droite
+    //sendCommand(x, y);
     //console.log("XY",x,y);
 
 }
 function accelerometerDataHandler(ev){
     //NOT quaternion
     var d = ev["accel"];
+    x = d.z;
+    y = d.x;
+    //console.log(x);
+    // data.x = notre y
+    // data.z = notre x en tournant autour du bras
+    // if data.z > 1 alors on est stable, else -> commencer à bouger
 }
 function gyroscopeDataHandler(ev){
     d = ev["gyro"];
