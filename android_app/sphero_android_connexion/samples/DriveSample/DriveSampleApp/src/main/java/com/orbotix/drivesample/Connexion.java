@@ -97,8 +97,8 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
         connectMyoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(Connexion.this, Connexion.class);
-               // startActivity(intent);
+                Intent launchIntent = getContext().getPackageManager().getLaunchIntentForPackage("com.ihm.myoAndSphero");
+                getContext().startActivity(launchIntent);
             }
         });
 
