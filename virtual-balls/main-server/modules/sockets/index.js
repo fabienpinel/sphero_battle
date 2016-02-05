@@ -27,12 +27,19 @@ module.exports = {
             io.sockets.emit('collision', playerId);
         var players = require('../players').getPlayers();
         for (var i in players) {
-            if (players[i].id != playerId) {
-                players[i].score++;
+            if (players[i].id == playerId) {
+                players[i].life--;
+                if (players[i].life == 0) {
+                    // get all stats
+                    var results = {players:players};
+                    require('../players').clearGame();
+                    // send result
+                    this.end(results);
+                }
+                this.emitChanges();
+                break;
             }
         }
-        this.emitChanges();
-
     },
 
     emitChanges: function () {
