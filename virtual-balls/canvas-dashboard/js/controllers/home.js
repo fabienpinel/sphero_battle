@@ -1,5 +1,5 @@
 
-app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket', '$timeout', '$window', function ($scope,playersFactory,spherosFactory,socket,$timeout,$window) {
+app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket', '$timeout', '$window', 'ngAudio',function ($scope,playersFactory,spherosFactory,socket,$timeout,$window,ngAudio) {
 
     var vm = this;
     vm.end = false;
@@ -8,6 +8,11 @@ app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket'
     vm.players = playersFactory.getPlayers;
     vm.resultats = playersFactory.getPlayers;
     vm.spheros = spherosFactory.getSpheros;
+    vm.power1 = vm.power2 = null;
+
+    vm.collisionSound = ngAudio.load("./audio/collision.wav");
+    vm.replaySound = ngAudio.load("./audio/replay.wav");
+    vm.spellSound = ngAudio.load("./audio/spell.wav");
 
     $timeout(function(){
        vm.init = false;
@@ -24,11 +29,15 @@ app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket'
     };
 
     vm.replay = function() {
-        $window.location.reload();
+        vm.replaySound.play();
+        $timeout(function(){
+            $window.location.reload();
+        }, 1000);
     };
 
     socket.on('collision', function (playerIds) {
-        if(playerIds.length == 2){
+        vm.collisionSound.play();
+        /*if(playerIds.length == 2){
             vm.collision1 = vm.collision2 = true;
             $timeout(function(){
                 vm.collision1 = vm.collision2 = false;
@@ -43,12 +52,27 @@ app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket'
             $timeout(function(){
                 vm.collision2 = false;
             }, 300);
-        }
+        }*/
     });
 
     socket.on('end', function(results) {
         vm.end = true;
         vm.resultats = results;
+    });
+
+    socket.on('cast', function(player){
+        vm.spellSound.play();
+        if(vm.players[0].id == player.playerId) {
+            vm.power1 = player.spellType;
+            $timeout(function(){
+                vm.power1 = null;
+            }, 3000);
+        } else if (vm.players[1].id == player.playerId) {
+            vm.power2 = player.spellType;
+            $timeout(function(){
+                vm.power2 = null;
+            }, 3000);
+        }
     });
 
     // GESTION DU CANVAS

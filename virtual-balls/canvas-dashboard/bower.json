@@ -21,6 +21,7 @@
     "angular-ui-router": "~0.2.15",
     "angular-material": "~1.0.2",
     "angular-socket-io": "~0.7.0",
-    "animate.css": "~3.5.1"
+    "animate.css": "~3.5.1",
+    "angular-audio": "ngAudio#^1.7.1"
   }
 }
