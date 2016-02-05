@@ -161,7 +161,7 @@ var moduleToExports = {
             };
             var player = {
                 id: id,
-                score: 0,
+                life: 1000,
                 name: name,
                 power: 0,
                 position: initPosition,
@@ -195,7 +195,7 @@ var moduleToExports = {
     incrScore: function (playerId) {
         var player = this.getPlayerById(playerId);
         if (player) {
-            player.score++;
+            player.life--;
             return true;
         }
         return false;
@@ -279,7 +279,8 @@ var moduleToExports = {
                 sockets.cast(playerId, SPELLS.SLOW_DOWN);
                 spells.castSpell(player.spell, otherPlayer);
             } else if (player.spell == SPELLS.HEAL) {
-                // TODO HERE : add life to player
+                player.life += 20;
+                player.life = player.life > 1000 ? 1000 : player.life;
                 sockets.cast(playerId, SPELLS.HEAL);
                 spells.castSpell(player.spell, player);
             } else if (player.spell == SPELLS.IMMUNITY) {
@@ -314,6 +315,11 @@ var moduleToExports = {
     interruptGame: function () {
         clearTimeout(timeout);
         sockets.break();
+    },
+
+    clearGame: function () {
+        players = [];
+        clearTimeout(timeout);
     }
 
 };
