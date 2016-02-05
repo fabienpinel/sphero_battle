@@ -78,7 +78,7 @@ public class FirstScreen extends Activity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(FirstScreen.this, Connexion.class);
+                Intent intent = new Intent(FirstScreen.this, MainActivity.class);
                 startActivity(intent);
             }
         });
@@ -143,9 +143,5 @@ public class FirstScreen extends Activity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
-    }
-    public void goToConnexion(){
-        Intent intent = new Intent(FirstScreen.this, Connexion.class);
-        startActivity(intent);
     }
 }
