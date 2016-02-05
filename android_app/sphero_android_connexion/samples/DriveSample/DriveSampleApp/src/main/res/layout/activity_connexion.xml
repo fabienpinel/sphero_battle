@@ -102,6 +102,7 @@
         android:theme="@style/tealButton"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
-        android:enabled="true" />
+        android:enabled="true"
+        android:textSize="@dimen/abc_text_size_display_1_material" />
     </LinearLayout>
 </LinearLayout>
