@@ -1,17 +1,17 @@
+
 app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket', '$timeout', '$window', function ($scope,playersFactory,spherosFactory,socket,$timeout,$window) {
 
     var vm = this;
     vm.end = false;
     vm.init = true;
     vm.collision1 = vm.collision2 = false;
+    vm.players = playersFactory.getPlayers;
+    vm.resultats = playersFactory.getPlayers;
+    vm.spheros = spherosFactory.getSpheros;
 
     $timeout(function(){
        vm.init = false;
     }, 2000);
-
-    vm.players = playersFactory.getPlayers;
-    vm.resultats = playersFactory.getPlayers;
-    vm.spheros = spherosFactory.getSpheros;
 
     socket.on('dataChange', function (data) {
         vm.spheros = data.spheros;

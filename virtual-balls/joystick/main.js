@@ -36,21 +36,21 @@ var players = [];
                         player = JSON.parse(response.currentTarget.responseText);
                         document.querySelector('#login-form').style.display = 'none';
                         if (players.length === 2) {
-                            document.querySelector('#waiting').innerHTML = 'laule';
+                            document.querySelector('#waiting .center').innerHTML = 'laule';
                             document.querySelector('#waiting').style.display = 'none';
                             var elements = document.querySelectorAll('.while-game');
                             for (var i = 0; i < elements.length; i++) {
                                 elements[i].style.display = 'block';
                             }
                         } else if (players.length == 1) {
-                            document.querySelector('#waiting').innerHTML = 'Waiting for 1 players';
+                            document.querySelector('#waiting .center').innerHTML = 'Waiting for 1 players';
                             document.querySelector('#waiting').style.display = 'block';
                             var elements = document.querySelectorAll('.while-game');
                             for (var i = 0; i < elements.length; i++) {
                                 elements[i].style.display = 'none';
                             }
                         } else {
-                            document.querySelector('#waiting').innerHTML = 'Waiting for 2 players';
+                            document.querySelector('#waiting .center').innerHTML = 'Waiting for 2 players';
                             document.querySelector('#waiting').style.display = 'block';
                             var elements = document.querySelectorAll('.while-game');
                             for (var i = 0; i < elements.length; i++) {
@@ -75,7 +75,7 @@ var players = [];
             players = data.players;
             if (player) {
                 if (players.length === 2) {
-                    document.querySelector('#waiting').innerHTML = 'laule';
+                    document.querySelector('#waiting .center').innerHTML = 'laule';
                     document.querySelector('#waiting').style.display = 'none';
                     var elements = document.querySelectorAll('.while-game');
                     for (var i = 0; i < elements.length; i++) {
@@ -93,14 +93,14 @@ var players = [];
                         }
                     }
                 } else if (players.length == 1) {
-                    document.querySelector('#waiting').innerHTML = 'Waiting for 1 players';
+                    document.querySelector('#waiting .center').innerHTML = 'Waiting for 1 players';
                     document.querySelector('#waiting').style.display = 'block';
                     var elements = document.querySelectorAll('.while-game');
                     for (var i = 0; i < elements.length; i++) {
                         elements[i].style.display = 'none';
                     }
                 } else {
-                    document.querySelector('#waiting').innerHTML = 'Waiting for 2 players';
+                    document.querySelector('#waiting .center').innerHTML = 'Waiting for 2 players';
                     document.querySelector('#waiting').style.display = 'block';
                     var elements = document.querySelectorAll('.while-game');
                     for (var i = 0; i < elements.length; i++) {
