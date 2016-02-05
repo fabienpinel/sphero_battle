@@ -64,10 +64,12 @@ header {
 
 #content1 md-card {
     margin: 0 0 0 0;
+    background-color: #0099CC;
 }
 
 #content2 md-card {
     margin: 0 0 0 8px;
+    background-color: #ff5722;
 }
 
 #score1 span, #score2 span {
@@ -75,7 +77,6 @@ header {
 }
 
 #content1 md-card, #content2 md-card {
-    background-color: #0099CC;
     color: #fff;
 }
 
@@ -89,6 +90,23 @@ header {
     -moz-transition: height 1500ms, background-color 2s ease;
     -o-transition: height 1500ms, background-color 2s ease;
     transition: height 1500ms, background-color 2s ease;
+}
+
+.player-spell {
+    text-align: center;
+}
+
+.player-spell img {
+    height: 180px;
+}
+
+.life-bar *, .life-bar {
+    height: 30px !important;
+    background-color: #00796b !important;
+}
+
+.life-bar .md-dashed {
+    background-color: #e0f2f1 !important;
 }
 
 /* ---------------------------------------------- */
@@ -124,6 +142,37 @@ header {
 .md-toolbar-tools {
     text-align: center;
 }
+
+#score1 .md-right .md-half-circle {
+    border-right-color: #0099cc !important;
+    border-top-color: #0099cc !important;
+}
+
+#score1 .md-left .md-half-circle {
+    border-left-color: #0099cc !important;
+    border-top-color: #0099cc !important;
+}
+
+#score1 .md-gap {
+    border-top-color: #0099cc !important;
+    border-bottom-color: #0099cc !important;
+}
+
+#score2 .md-right .md-half-circle {
+    border-right-color: #ff5722 !important;
+    border-top-color: #ff5722 !important;
+}
+
+#score2 .md-left .md-half-circle {
+    border-left-color: #ff5722 !important;
+    border-top-color: #ff5722 !important;
+}
+
+#score2 .md-gap {
+    border-top-color: #ff5722 !important;
+    border-bottom-color: #ff5722 !important;
+}
+
 
 
 /* ---------------------------------------------- */

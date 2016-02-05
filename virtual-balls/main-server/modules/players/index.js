@@ -14,35 +14,7 @@ var SPELLS = {
     IMMUNITY: 'IMMUNITY'
 };
 
-var players = [/*{
-    id: "player1",
-    score: 0,
-    power: 0,
-    position: {
-        x: BALL_RADIUS,
-        y: BALL_RADIUS
-    },
-    lastImpact: Date.now(),
-    history: [
-        { x: BALL_RADIUS, y: BALL_RADIUS },
-        { x: BALL_RADIUS, y: BALL_RADIUS }
-    ],
-    spell: SPELLS.IMMUNITY
-}, {
-    id: "player2",
-    score: 0,
-    power: 0,
-    position: {
-        x: GAME_HORIZONTAL - BALL_RADIUS,
-        y: GAME_VERTICAL - BALL_RADIUS
-    },
-    lastImpact: Date.now(),
-    history: [
-        { x: GAME_HORIZONTAL - BALL_RADIUS, y: GAME_VERTICAL - BALL_RADIUS },
-        { x: GAME_HORIZONTAL - BALL_RADIUS, y: GAME_VERTICAL - BALL_RADIUS }
-    ],
-    spell: SPELLS.SLOW_DOWN
-}/**/];
+var players = [];
 var timeout = null;
 
 function _findNewPosition(player, newX, newY) {
@@ -204,7 +176,7 @@ var moduleToExports = {
     incrPower: function (playerId) {
         var player = this.getPlayerById(playerId);
         if (player) {
-            player.power++;
+            if (player.power < 100) player.power++;
             return true;
         }
         return false;
