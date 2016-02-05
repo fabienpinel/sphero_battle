@@ -341,7 +341,7 @@ public class JoystickView extends View implements Controller {
         {
             mJoystickDistanceFromCenter = (Math.sqrt(x_length * x_length + y_length * y_length) /
                     Math.min(mJoystickPadCenterX, mJoystickPadCenterY));
-            mJoystickDistanceFromCenter *= 1.1;
+            mJoystickDistanceFromCenter *= 4.0;
             mJoystickDistanceFromCenter = Value.clamp(mJoystickDistanceFromCenter, 0.0, 1.0);
         }
         else
