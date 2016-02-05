@@ -4,12 +4,14 @@
     <header layout="row" class="animated slideInDown" ng-class="(home.end)?'end':''">
 
         <!-- Joueur 1 -->
-        <div id="content1" flex="50" ng-class="(home.resultats[0].score > home.resultats[1].score)?'win':'loose'">
+        <div id="content1" flex="50" ng-class="(home.resultats[0].life > home.resultats[1].life)?'win':'loose'">
             <md-card>
                 <md-card-title>
                     <md-card-title-text>
                         <span class="md-headline">Player 1 : {{home.players[0].name}}{{home.resultats[0].name}}</span>
-                        <span class="md-subhead">Score : {{home.players[0].score}}{{home.resultats[0].score}}</span>
+                        <span class="md-subhead">Vie :{{home.players[0].life/10 | number: 0}}
+                            <md-progress-linear md-mode="determinate" value="{{home.players[0].life/10 | number: 0}}"></md-progress-linear>
+                        </span>
                     </md-card-title-text>
                 </md-card-title>
             </md-card>
@@ -18,12 +20,14 @@
         <img ng-hide="home.end" class="versus center" src="img/vs.png" alt=""/>
 
         <!-- Score joueur 2 -->
-        <div id="content2" flex="50" ng-class="(home.resultats[1].score > home.resultats[0].score && home.end)?'win':'loose'">
+        <div id="content2" flex="50" ng-class="(home.resultats[1].life > home.resultats[0].life && home.end)?'win':'loose'">
             <md-card>
                 <md-card-title>
                     <md-card-title-text>
                         <span class="md-headline">Player 2 : {{home.players[1].name}}{{home.resultats[1].name}}</span>
-                        <span class="md-subhead">Score : {{home.players[1].score}}{{home.resultats[1].score}}</span>
+                        <span class="md-subhead">Vie :{{home.players[1].life/10 | number: 0}}
+                            <md-progress-linear md-mode="determinate" value="{{home.players[1].life/10 | number: 0}}"></md-progress-linear>
+                        </span>
                     </md-card-title-text>
                 </md-card-title>
             </md-card>

@@ -1,3 +1,4 @@
+
 app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket', '$timeout', '$window', function ($scope,playersFactory,spherosFactory,socket,$timeout,$window) {
 
     var vm = this;
