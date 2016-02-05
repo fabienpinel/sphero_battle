@@ -1,5 +1,6 @@
 package com.orbotix.drivesample;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,23 +8,38 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.orbotix.ConvenienceRobot;
+import com.orbotix.Sphero;
 import com.orbotix.calibration.api.CalibrationEventListener;
 import com.orbotix.calibration.api.CalibrationImageButtonView;
 import com.orbotix.calibration.api.CalibrationView;
+import com.orbotix.classic.DiscoveryAgentClassic;
 import com.orbotix.colorpicker.api.ColorPickerEventListener;
 import com.orbotix.colorpicker.api.ColorPickerFragment;
+import com.orbotix.common.DiscoveryAgentEventListener;
+import com.orbotix.common.ResponseListener;
+import com.orbotix.common.Robot;
+import com.orbotix.common.RobotChangedStateListener;
+import com.orbotix.common.internal.AsyncMessage;
+import com.orbotix.common.internal.DeviceResponse;
 import com.orbotix.joystick.api.JoystickEventListener;
 import com.orbotix.joystick.api.JoystickView;
+import com.orbotix.le.DiscoveryAgentLE;
+import com.orbotix.robotpicker.RobotPickerDialog;
 
-public class MainActivity extends Activity {
+import java.net.URISyntaxException;
+import java.util.List;
+
+public class MainActivity extends Activity implements Connexion.RobotPickerListener{
+
 
     private static final String TAG = "MainActivity";
 
     private JoystickView _joystick;
 
     private ConvenienceRobot _connectedRobot;
-    private Robby robby;
 
     private CalibrationView _calibrationView;
 
@@ -31,20 +47,22 @@ public class MainActivity extends Activity {
 
     private ColorPickerFragment _colorPicker;
 
-    private CustomSocket mSocket;
+    private Socket mSocket;
+
     private String spheroId;
+    private Connexion co;
+
+    private  ActionBar actionBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //get the connectedRobot from the extra datas
-        robby = (Robby)getIntent().getSerializableExtra("theConnectedRobot");
-        _connectedRobot = robby.robot;
-        //get the socket connection from the extra datas
-        mSocket = (CustomSocket)getIntent().getSerializableExtra("theSocketConnection");
+        actionBar= getActionBar();
+        actionBar.hide();
 
         setContentView(R.layout.main);
+
 
         setupJoystick();
         setupCalibration();
@@ -61,7 +79,17 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected void onStart() {  super.onStart();    }
+    protected void onStart() {
+        super.onStart();
+        if (co == null) {
+            co = new Connexion(this, this);
+        }
+        // Show the picker only if it's not showing. This keeps multiple calls to onStart from showing too many pickers.
+        if (!co.isShowing()) {
+            co.show();
+        }
+
+    }
 
     @Override
     protected void onPause() {  super.onPause();    }
@@ -97,7 +125,7 @@ public class MainActivity extends Activity {
                 // Here you can use the joystick input to drive the connected robot. You can easily do this with the
                 // ConvenienceRobot#drive() method
                 // Note that the arguments do flip here from the order of parameters
-                _connectedRobot.drive((float)angle, (float)distanceFromCenter);
+                _connectedRobot.drive((float) angle, (float) distanceFromCenter);
             }
 
             /**
@@ -211,7 +239,7 @@ public class MainActivity extends Activity {
                     x += 360;
                     y += 360;
 
-                    Log.d("Receiving", "x: " + x + "y: " + y);
+                    //Log.d("Receiving", "x: " + x + "y: " + y);
                     if (!_calibrationView.isCalibrating() ) {
                         _joystick.sendDataToMyo(x, y);
 
@@ -222,4 +250,18 @@ public class MainActivity extends Activity {
             });
         }
     };
+
+    @Override
+    public void onRobotPicked(ConvenienceRobot robotPicked, Socket socket) {
+        co.dismiss();
+        _connectedRobot = robotPicked;
+        mSocket = socket;
+
+        Log.d("ROBOT NAME", "" + _connectedRobot.getRobot().getName());
+        Log.d("ROBOT NAME", ""+_connectedRobot.getRobot().isConnected());
+
+        _joystick.setEnabled(true);
+        _calibrationView.setEnabled(true);
+        _calibrationButtonView.setEnabled(true);
+    }
 }

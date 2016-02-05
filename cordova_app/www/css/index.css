@@ -29,6 +29,7 @@ body {
     margin:0px;
     padding:0px;
     text-transform:uppercase;
+    background-color: #0099cc;
 }
 
 /* Portrait layout (default) */
@@ -106,6 +107,7 @@ h1 {
     margin-bottom: 20px;
 }
 .title{
+    color: white;
     padding-top: 20px;
     padding-bottom: 20px;
 
