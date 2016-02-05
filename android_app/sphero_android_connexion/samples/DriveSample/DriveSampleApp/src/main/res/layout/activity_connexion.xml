@@ -1,11 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0099cc"
     tools:context="com.orbotix.drivesample.Connexion"
-    android:theme="@android:style/Theme.Material.Light"
-    android:orientation="vertical"
+    style="@style/Theme.AppCompat.Light.NoActionBar"
     >
 
 
@@ -63,10 +63,10 @@
             android:id="@+id/connectMyoButton"
             android:textSize="20dp"
             android:layout_weight="0.8"
-            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_gravity="center"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:textColor="#FFFFFF" />
 
         <CheckBox

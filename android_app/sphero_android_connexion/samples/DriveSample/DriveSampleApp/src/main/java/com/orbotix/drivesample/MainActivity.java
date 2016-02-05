@@ -1,5 +1,6 @@
 package com.orbotix.drivesample;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,9 +52,14 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
     private String spheroId;
     private Connexion co;
 
+    private  ActionBar actionBar;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        actionBar= getActionBar();
+        actionBar.hide();
 
         setContentView(R.layout.main);
 
@@ -233,7 +239,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                     x += 360;
                     y += 360;
 
-                    Log.d("Receiving", "x: " + x + "y: " + y);
+                    //Log.d("Receiving", "x: " + x + "y: " + y);
                     if (!_calibrationView.isCalibrating() ) {
                         _joystick.sendDataToMyo(x, y);
 
@@ -251,7 +257,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         _connectedRobot = robotPicked;
         mSocket = socket;
 
-        Log.d("ROBOT NAME", ""+_connectedRobot.getRobot().getName());
+        Log.d("ROBOT NAME", "" + _connectedRobot.getRobot().getName());
         Log.d("ROBOT NAME", ""+_connectedRobot.getRobot().isConnected());
 
         _joystick.setEnabled(true);

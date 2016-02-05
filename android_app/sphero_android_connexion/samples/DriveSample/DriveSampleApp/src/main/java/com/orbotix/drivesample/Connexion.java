@@ -9,8 +9,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -48,34 +50,50 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
     private Socket mSocket;
     RobotPickerListener _pickerListener;
 
+    Button connectSpheroButton;
+    Button connectMyoButton;
+    Button letsgoButton;
+
+    CheckBox checkBoxSPHERO;
+
     public Connexion(Context context, RobotPickerListener pickerListener) {
         super(context);
         this._pickerListener = pickerListener;
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         _currentDiscoveryAgent = DiscoveryAgentClassic.getInstance();
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_connexion);
+
         WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.height = WindowManager.LayoutParams.FILL_PARENT;
-        params.width = WindowManager.LayoutParams.FILL_PARENT;
+        params.height = WindowManager.LayoutParams.MATCH_PARENT;
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
         getWindow().setAttributes(params);
+        getWindow().setBackgroundDrawable(null);
 
 
-        final Button connectSpheroButton = (Button) findViewById(R.id.connectSpheroButton);
+        checkBoxSPHERO = (CheckBox) findViewById(R.id.checkBoxSPHERO);
+        checkBoxSPHERO.setChecked(false);
+
+
+        connectSpheroButton = (Button) findViewById(R.id.connectSpheroButton);
         connectSpheroButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("DISCO", "starting discovery");
+                connectSpheroButton.setText("Connecting...");
                 startDiscovery();
             }
         });
 
-        final Button connectMyoButton = (Button) findViewById(R.id.connectMyoButton);
+        connectMyoButton = (Button) findViewById(R.id.connectMyoButton);
         connectMyoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,12 +102,13 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
             }
         });
 
-        final Button letsgoButton = (Button) findViewById(R.id.buttonLetsGo);
+        letsgoButton = (Button) findViewById(R.id.buttonLetsGo);
+        letsgoButton.setEnabled(false);
         letsgoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //dismiss dialog
-                if(_pickerListener != null) _pickerListener.onRobotPicked(_connectedRobot, mSocket);
+                if(_pickerListener != null && _connectedRobot != null && mSocket != null) _pickerListener.onRobotPicked(_connectedRobot, mSocket);
             }
         });
     }
@@ -178,6 +197,10 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
                     Log.d("SPHERO ID", _connectedRobot.getRobot().getName());
                     mSocket.emit("spheroId", _connectedRobot.getRobot().getName());
 
+                    connectSpheroButton.setText(_connectedRobot.getRobot().getName() + "\n connected");
+                    connectSpheroButton.setEnabled(false);
+                    checkBoxSPHERO.setChecked(true);
+                    letsgoButton.setEnabled(true);
 
                 } catch (URISyntaxException e) {
                     Log.d("ERROR SOCKET", e.getMessage());
