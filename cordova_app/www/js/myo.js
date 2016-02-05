@@ -193,6 +193,7 @@ function initMyo(){
 }
 
 function connect_myo(){
+
     console.log("Searching...");
     MyoApi.attachToAdjacentMyo(function(s){
         console.log("Connecting with adjacent Myo", s);
