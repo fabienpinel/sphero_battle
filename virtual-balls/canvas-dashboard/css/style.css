@@ -3,7 +3,7 @@
 /* ---------------------------------------------- */
 
 md-content {
-    background-color: #C5CAE9;
+    background-color: #ededed;
 }
 
 .center {
@@ -31,9 +31,9 @@ header {
 }
 
 .versus {
-    left: 50.5%;
-    top: 52px;
-    max-width: 80px;
+    left: 50%;
+    top: 36px;
+    max-width: 72px;
     position: absolute;
     transform: translate(-50%, -50%);
 }
@@ -68,7 +68,7 @@ header {
 }
 
 #content2 md-card {
-    margin: 0 0 0 8px;
+    margin: 0 0 0 0;
     background-color: #ff5722;
 }
 
@@ -97,16 +97,56 @@ header {
 }
 
 .player-spell img {
-    height: 180px;
+    height: 100px;
+}
+
+
+.bottom {
+    bottom :0;
+    position: absolute;
+    width: 100%;
+}
+
+.vie2 {
+    transform: rotate(180deg);
+}
+
+.bottom .vie2, .bottom .vie1 {
+    padding: 5px;
+    width: 42%;
+    display: inline-block;
+}
+
+#timer {
+    width: calc(16% - 38px);
+    display: inline-block;
+    background: #000000;
+    font-weight: 600;
+    font-size: 3em;
+    color: #ffffff;
+    padding: 10px 5px;
+    border-radius: 10px 10px 0 0;
+    text-align: center;
 }
 
 .life-bar *, .life-bar {
     height: 30px !important;
-    background-color: #00796b !important;
 }
 
-.life-bar .md-dashed {
-    background-color: #e0f2f1 !important;
+.vie2 .life-bar *,.vie2 .life-bar {
+    background-color: #ff5722 !important;
+}
+
+.vie1 .life-bar *,.vie1 .life-bar {
+    background-color: #0099cc !important;
+}
+
+.vie2 .life-bar .md-dashed {
+    background-color: #ffccbc !important;
+}
+
+.vie1 .life-bar .md-dashed {
+    background-color: #b3e5fc !important;
 }
 
 /* ---------------------------------------------- */

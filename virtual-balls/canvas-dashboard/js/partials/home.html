@@ -9,16 +9,12 @@
                 <md-card-title>
                     <md-card-title-text>
                         <span class="md-headline">Player 1 : {{home.players[0].name}}{{home.resultats[0].name}}</span>
-                        <span class="md-subhead">
-                            <br/>
-                            <md-progress-linear class="life-bar" md-mode="determinate" value="{{home.players[0].life/10 | number: 0}}"></md-progress-linear>
-                        </span>
                     </md-card-title-text>
                 </md-card-title>
             </md-card>
         </div>
 
-        <img ng-hide="home.end" class="versus center" src="img/vs.png" alt=""/>
+        <img ng-hide="home.end" class="versus center" src="img/vs2.png" alt=""/>
 
         <!-- Score joueur 2 -->
         <div id="content2" flex="50" ng-class="(home.resultats[1].life > home.resultats[0].life && home.end)?'win':'loose'">
@@ -26,10 +22,6 @@
                 <md-card-title>
                     <md-card-title-text>
                         <span class="md-headline">Player 2 : {{home.players[1].name}}{{home.resultats[1].name}}</span>
-                        <span class="md-subhead">
-                            <br/>
-                            <md-progress-linear class="life-bar" md-mode="determinate" value="{{home.players[1].life/10 | number: 0}}"></md-progress-linear>
-                        </span>
                     </md-card-title-text>
                 </md-card-title>
             </md-card>
@@ -86,11 +78,20 @@
             </div>
         </div>
     </div>
+    <div class="bottom" ng-class="(home.end) ? 'hide' : ''">
+        <div class="vie1">
+            <md-progress-linear class="life-bar" md-mode="determinate" value="{{home.players[0].life/10 | number: 0}}"></md-progress-linear>
+        </div>
+        <div id="timer">{{home.timer}}</div>
+        <div class="vie2">
+            <md-progress-linear class="life-bar" md-mode="determinate" value="{{home.players[1].life/10 | number: 0}}"></md-progress-linear>
+        </div>
+    </div>
 
-    <!-- Div contenant les informations pour l'attente des joueurs en début de partie -->
+    <!-- Div contenant les informations pour l'attente des joueurs en début de partie --
     <div id="info" ng-class="(home.players.length == 2 || home.end) ? 'hide' : ''">
         <div class="center">Waiting for {{2 - home.players.length}} player(s)</div>
-    </div>
+    </div> -->
 
     <!-- Div permettant de relancer une partie -->
     <div id="end" ng-class="(home.end) ? '' : 'hide'">

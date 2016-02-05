@@ -9,10 +9,12 @@ app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket'
     vm.resultats = playersFactory.getPlayers;
     vm.spheros = spherosFactory.getSpheros;
     vm.power1 = vm.power2 = null;
+    vm.timer = 60;
 
     vm.collisionSound = ngAudio.load("./audio/collision.wav");
     vm.replaySound = ngAudio.load("./audio/replay.wav");
     vm.spellSound = ngAudio.load("./audio/spell.wav");
+    vm.endSound = ngAudio.load("./audio/end.wav");
 
     $timeout(function(){
        vm.init = false;
@@ -35,6 +37,21 @@ app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket'
         }, 1000);
     };
 
+    socket.on('start', function(){
+        vm.timer = 60;
+        decreaseTime();
+    });
+
+    var timerTimeout = null;
+    function decreaseTime() {
+        vm.timer--;
+        if (vm.timer > 0) {
+            timerTimeout = $timeout(function () {
+                decreaseTime();
+            }, 1000)
+        }
+    }
+
     socket.on('collision', function (playerIds) {
         vm.collisionSound.play();
         /*if(playerIds.length == 2){
@@ -56,8 +73,10 @@ app.controller('homeCtrl', ['$scope','playersFactory','spherosFactory', 'socket'
     });
 
     socket.on('end', function(results) {
+        vm.endSound.play();
         vm.end = true;
         vm.resultats = results;
+        $timeout.cancel(timerTimeout);
     });
 
     socket.on('cast', function(player){
