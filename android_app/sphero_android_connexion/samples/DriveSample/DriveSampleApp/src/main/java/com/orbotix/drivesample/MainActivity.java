@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
@@ -28,6 +30,14 @@ import com.orbotix.joystick.api.JoystickEventListener;
 import com.orbotix.joystick.api.JoystickView;
 import com.orbotix.le.DiscoveryAgentLE;
 import com.orbotix.robotpicker.RobotPickerDialog;
+import com.thalmic.myo.AbstractDeviceListener;
+import com.thalmic.myo.DeviceListener;
+import com.thalmic.myo.Hub;
+import com.thalmic.myo.Myo;
+import com.thalmic.myo.Pose;
+import com.thalmic.myo.Quaternion;
+import com.thalmic.myo.Vector3;
+import com.thalmic.myo.XDirection;
 
 import java.net.URISyntaxException;
 import java.util.List;
@@ -51,8 +61,11 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
 
     private String spheroId;
     private Connexion co;
+    private Hub hub;
 
     private  ActionBar actionBar;
+
+    double  myo_x, myo_y, myo_signe;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -256,11 +269,33 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         }
     };
 
+
+    public void sendToSphero(Double x,Double y,Double signe){
+        x = 360 * (1 - x) * (signe >= 0 ? 1 : -1);
+        y= - y * 360;
+
+      //  y *= -1;
+        //Log.d("AVAN MODIF","x="+x+" y="+y);
+
+        x += 360;
+        y += 360;
+       Log.d("APRES MODIF","x="+x+" y="+y);
+
+        //Log.d("Receiving", "x: " + x + "y: " + y);
+
+        if (!_calibrationView.isCalibrating() ) {
+            _joystick.sendDataToMyo(x, y);
+
+        }
+    }
     @Override
-    public void onRobotPicked(ConvenienceRobot robotPicked, Socket socket) {
+    public void onRobotPicked(ConvenienceRobot robotPicked, Hub myohub, Socket socket) {
         co.dismiss();
         _connectedRobot = robotPicked;
         mSocket = socket;
+        hub = myohub;
+        hub.addListener(mListener);
+        Log.d("WHAT ", ""+hub.getConnectedDevices().get(0).getName());
         _connectedRobot.addResponseListener(new ResponseListener() {
             @Override
             public void handleResponse(DeviceResponse deviceResponse, Robot robot) {
@@ -290,4 +325,95 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         _calibrationView.setEnabled(true);
         _calibrationButtonView.setEnabled(true);
     }
+
+    private DeviceListener mListener = new AbstractDeviceListener() {
+        @Override
+        public void onConnect(Myo myo, long timestamp) {
+            Toast.makeText(getApplicationContext(), "Myo Connected!", Toast.LENGTH_SHORT).show();
+
+            Log.d("MYO","co");
+        }
+
+        @Override
+        public void onDisconnect(Myo myo, long timestamp) {
+            Toast.makeText(getApplicationContext(), "Myo Disconnected!", Toast.LENGTH_SHORT).show();
+            Log.d("MYO", "disco");
+        }
+        @Override
+        public void onOrientationData(Myo myo, long timestamp, Quaternion rotation) {
+            // Calculate Euler angles (roll, pitch, and yaw) from the quaternion.
+            float roll = (float) Math.toDegrees(Quaternion.roll(rotation));
+            float pitch = (float) Math.toDegrees(Quaternion.pitch(rotation));
+            float yaw = (float) Math.toDegrees(Quaternion.yaw(rotation));
+            // Adjust roll and pitch for the orientation of the Myo on the arm.
+            if (myo.getXDirection() == XDirection.TOWARD_ELBOW) {
+                roll *= -1;
+                pitch *= -1;
+            }
+            //Log.d("ORIENTATION MTFCKR", "roll: " + roll + " pitch: " + pitch + " yaw: " + yaw);
+            myo_signe = rotation.x();
+            // Next, we apply a rotation to the text view using the roll, pitch, and yaw.
+
+        }
+        @Override
+        public void onGyroscopeData (Myo myo, long timestamp, Vector3 gyro){
+
+        }
+        @Override
+        public void onAccelerometerData (Myo myo, long timestamp, Vector3 accel){
+            myo_x = accel.z();
+            myo_y = accel.x();
+            sendToSphero(myo_x, myo_y, myo_signe);
+        }
+
+        @Override
+        public void onPose(Myo myo, long timestamp, Pose pose) {
+            Toast.makeText(getApplicationContext(), "Pose: " + pose, Toast.LENGTH_SHORT).show();
+            Log.d("MYO", "pose");
+            switch (pose) {
+                case UNKNOWN:
+                    //mTextView.setText(getString(R.string.hello_world));
+                    break;
+                case REST:
+                case DOUBLE_TAP:
+                   // int restTextId = R.string.hello_world;
+                    switch (myo.getArm()) {
+                        case LEFT:
+                            //restTextId = R.string.arm_left;
+                            break;
+                        case RIGHT:
+                            //restTextId = R.string.arm_right;
+                            break;
+                    }
+                    //mTextView.setText(getString(restTextId));
+                    break;
+                case FIST:
+                    //mTextView.setText(getString(R.string.pose_fist));
+                    break;
+                case WAVE_IN:
+                    //mTextView.setText(getString(R.string.pose_wavein));
+                    break;
+                case WAVE_OUT:
+                    //mTextView.setText(getString(R.string.pose_waveout));
+                    break;
+                case FINGERS_SPREAD:
+                    //mTextView.setText(getString(R.string.pose_fingersspread));
+                    break;
+            }
+            if (pose != Pose.UNKNOWN && pose != Pose.REST) {
+                // Tell the Myo to stay unlocked until told otherwise. We do that here so you can
+                // hold the poses without the Myo becoming locked.
+                myo.unlock(Myo.UnlockType.HOLD);
+                // Notify the Myo that the pose has resulted in an action, in this case changing
+                // the text on the screen. The Myo will vibrate.
+                myo.notifyUserAction();
+            } else {
+                // Tell the Myo to stay unlocked only for a short period. This allows the Myo to
+                // stay unlocked while poses are being performed, but lock after inactivity.
+                myo.unlock(Myo.UnlockType.TIMED);
+            }
+            //TODO: Do something awesome.
+        }
+    };
+
 }

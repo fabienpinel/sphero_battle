@@ -21,7 +21,13 @@ android {
 
 dependencies {
     compile fileTree(dir: '../../../library', include: ['RobotLibrary.jar'])
+    repositories {
+        maven {
+            url '/Users/fabienpinel/Documents/Projects/myo-android-sdk/myorepository'
+        }
+    }
 
+    compile('com.thalmic:myosdk:0.10.+@aar')
     compile project(':CalibrationLibrary')
     compile project(':ColorPickerLibrary')
     compile project(':JoystickLibrary')
@@ -33,4 +39,6 @@ dependencies {
 }
 
 
+dependencies {
 
+}

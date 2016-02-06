@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -29,6 +30,14 @@ import com.orbotix.common.internal.AsyncMessage;
 import com.orbotix.common.internal.DeviceResponse;
 import com.orbotix.le.DiscoveryAgentLE;
 import com.orbotix.robotpicker.RobotPickerDialog;
+import com.thalmic.myo.AbstractDeviceListener;
+import com.thalmic.myo.DeviceListener;
+import com.thalmic.myo.Hub;
+import com.thalmic.myo.Myo;
+import com.thalmic.myo.Pose;
+import com.thalmic.myo.Quaternion;
+import com.thalmic.myo.Vector3;
+import com.thalmic.myo.XDirection;
 
 import java.net.URISyntaxException;
 import java.util.List;
@@ -39,7 +48,7 @@ import java.util.List;
  */
 public class Connexion extends Dialog implements DiscoveryAgentEventListener , RobotChangedStateListener{
     public interface RobotPickerListener{
-        public void onRobotPicked(ConvenienceRobot robotPicked, Socket socket);
+        public void onRobotPicked(ConvenienceRobot robotPicked, Hub myoHUB, Socket socket);
     }
 
     private static final String TAG = "Connexion View";
@@ -54,12 +63,13 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
     Button connectMyoButton;
     Button letsgoButton;
 
-    CheckBox checkBoxSPHERO;
+    CheckBox checkBoxSPHERO, checkBoxMYO;
+    Hub hub;
+    double  myo_x, myo_y, myo_signe;
 
     public Connexion(Context context, RobotPickerListener pickerListener) {
         super(context);
         this._pickerListener = pickerListener;
-
     }
 
     @Override
@@ -82,6 +92,9 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
         checkBoxSPHERO = (CheckBox) findViewById(R.id.checkBoxSPHERO);
         checkBoxSPHERO.setChecked(false);
 
+        checkBoxMYO = (CheckBox) findViewById(R.id.checkBoxMYO);
+        checkBoxMYO.setChecked(false);
+
 
         connectSpheroButton = (Button) findViewById(R.id.connectSpheroButton);
         connectSpheroButton.setOnClickListener(new View.OnClickListener() {
@@ -97,8 +110,11 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
         connectMyoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent launchIntent = getContext().getPackageManager().getLaunchIntentForPackage("com.ihm.myoAndSphero");
-                getContext().startActivity(launchIntent);
+                //Intent launchIntent = getContext().getPackageManager().getLaunchIntentForPackage("com.ihm.myoAndSphero");
+                //getContext().startActivity(launchIntent);
+                Log.d("MYO","connecting to adjascent MYO");
+                connectMyoButton.setText("Connecting...");
+                Hub.getInstance().attachToAdjacentMyo();
             }
         });
 
@@ -107,10 +123,22 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
         letsgoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hub.removeListener(mListener);
                 //dismiss dialog
-                if(_pickerListener != null && _connectedRobot != null && mSocket != null) _pickerListener.onRobotPicked(_connectedRobot, mSocket);
+                //if(_pickerListener != null && _connectedRobot != null && mSocket != null)
+                    _pickerListener.onRobotPicked(_connectedRobot, hub, mSocket);
             }
         });
+
+        hub = Hub.getInstance();
+        if (!hub.init(this.getContext())) {
+            Log.e(TAG, "Could not initialize the Hub.");
+            return;
+        }else{
+            hub.addListener(mListener);
+        }
+
+
     }
 
     @Override
@@ -196,4 +224,70 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
         }
     }
 
+    private DeviceListener mListener = new AbstractDeviceListener() {
+        @Override
+        public void onConnect(Myo myo, long timestamp) {
+            Toast.makeText(getContext(), "Myo Connected!", Toast.LENGTH_SHORT).show();
+            connectMyoButton.setText(myo.getName() + "\n connected");
+            connectMyoButton.setEnabled(false);
+            checkBoxMYO.setChecked(true);
+            letsgoButton.setEnabled(true);
+            Log.d("MYO","co");
+        }
+
+        @Override
+        public void onDisconnect(Myo myo, long timestamp) {
+            Toast.makeText(getContext(), "Myo Disconnected!", Toast.LENGTH_SHORT).show();
+            Log.d("MYO", "disco");
+            connectMyoButton.setText("Connect MYO");
+
+        }
+        @Override
+        public void onOrientationData(Myo myo, long timestamp, Quaternion rotation) {
+            // Calculate Euler angles (roll, pitch, and yaw) from the quaternion.
+            float roll = (float) Math.toDegrees(Quaternion.roll(rotation));
+            float pitch = (float) Math.toDegrees(Quaternion.pitch(rotation));
+            float yaw = (float) Math.toDegrees(Quaternion.yaw(rotation));
+            // Adjust roll and pitch for the orientation of the Myo on the arm.
+            if (myo.getXDirection() == XDirection.TOWARD_ELBOW) {
+                roll *= -1;
+                pitch *= -1;
+            }
+            Log.d("ORIENTATION MTFCKR", "roll: " + roll + " pitch: " + pitch + " yaw: " + yaw);
+            myo_signe = rotation.x();
+            // Next, we apply a rotation to the text view using the roll, pitch, and yaw.
+
+        }
+        @Override
+        public void onGyroscopeData (Myo myo, long timestamp, Vector3 gyro){
+
+        }
+        @Override
+        public void onAccelerometerData (Myo myo, long timestamp, Vector3 accel){
+            myo_x = accel.z();
+            myo_y = accel.x();
+            sendToSphero(myo_x, myo_y, myo_signe);
+        }
+    };
+    public void sendToSphero(Double x,Double y,Double signe){
+        x = 50 * (1 - x) * (signe >= 0 ? 1 : -1);
+        y= - y * 50;
+
+        x *=7;
+        y *=7;
+
+        y *= -1;
+
+        x += 360;
+        y += 360;
+        Log.d("APRES MODIF","x="+x+" y="+y);
+
+        //Log.d("Receiving", "x: " + x + "y: " + y);
+
+//haut x=543.88671875 y=34.7802734375
+        //en face  x=343.935546875 y=385.1220703125
+        //bas x=10.0 y=710.68359375
+        //tourné droite x=135.2685546875 y=365.6396484375
+        //tourné gauche x=444.765625 y=408.7060546875
+    }
 }

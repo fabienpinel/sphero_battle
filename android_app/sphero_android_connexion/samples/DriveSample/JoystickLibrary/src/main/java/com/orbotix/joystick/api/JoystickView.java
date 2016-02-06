@@ -275,7 +275,7 @@ public class JoystickView extends View implements Controller {
      * Converts an x,y position in the joy stick control's area into a length and angle.
      */
     public void convert(double x, double y) {
-        Log.d("CONVERTING", "x:" + x + "y:" + y);
+        //Log.d("CONVERTING", "x:" + x + "y:" + y);
 
         double x_length = x - mJoystickPadCenterX;
         double y_length = mJoystickPadCenterY - y;
@@ -317,14 +317,14 @@ public class JoystickView extends View implements Controller {
 
 
     public void convertToMyo(double x, double y) {
-        Log.d("CONVERTING", "x:" + x + "y:" + y);
+       // Log.d("CONVERTING", "x:" + x + "y:" + y);
 
         double x_length = x - mJoystickPadCenterX;
         double y_length = mJoystickPadCenterY - y;
 
 
-        Log.d("PADCENTERX" , ""+mJoystickPadCenterX);
-        Log.d("PADCENTERY" , ""+mJoystickPadCenterY);
+       // Log.d("PADCENTERX" , ""+mJoystickPadCenterX);
+       // Log.d("PADCENTERY" , ""+mJoystickPadCenterY);
 
         // Need to scale x_length and y_length to make sure the coordinates are polar
         // instead of elliptical
