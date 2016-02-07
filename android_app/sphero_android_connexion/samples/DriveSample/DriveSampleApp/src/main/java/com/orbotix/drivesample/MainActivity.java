@@ -235,9 +235,14 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                     x = Double.parseDouble(args[0].toString());
                     y = Double.parseDouble(args[1].toString());
 
+                    x *=7;
+                    y *=7;
+
                     y *= -1;
+
                     x += 360;
                     y += 360;
+                    //Log.d("APRES MODIF","x="+x+" y="+y);
 
                     //Log.d("Receiving", "x: " + x + "y: " + y);
                     if (!_calibrationView.isCalibrating() ) {
@@ -256,10 +261,31 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         co.dismiss();
         _connectedRobot = robotPicked;
         mSocket = socket;
+        _connectedRobot.addResponseListener(new ResponseListener() {
+            @Override
+            public void handleResponse(DeviceResponse deviceResponse, Robot robot) {
 
+            }
+
+            @Override
+            public void handleStringResponse(String s, Robot robot) {
+
+            }
+
+            @Override
+            public void handleAsyncMessage(AsyncMessage asyncMessage, Robot robot) {
+                _connectedRobot.setLed(1, 0, 0);
+                Log.d("collision", "collision");
+                mSocket.emit("collision");
+                _connectedRobot.setLed(0, 1, 0);
+
+            }
+        });
         Log.d("ROBOT NAME", "" + _connectedRobot.getRobot().getName());
-        Log.d("ROBOT NAME", ""+_connectedRobot.getRobot().isConnected());
+        Log.d("ROBOT NAME", "" + _connectedRobot.getRobot().isConnected());
 
+        mSocket.on("command", onNewMessage);
+        Log.d("socket okay ?", ""+mSocket.connected());
         _joystick.setEnabled(true);
         _calibrationView.setEnabled(true);
         _calibrationButtonView.setEnabled(true);

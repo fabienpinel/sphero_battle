@@ -164,47 +164,26 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
                 _currentDiscoveryAgent.removeDiscoveryListener(this);
                 _connectedRobot = new Sphero(robot);
                 _connectedRobot.setLed(0f, 1f, 0f);
-                try {
                     Log.d("SPHERO", "ONLINELINEDFNKBGIROFGBRIEFF");
 
                     _connectedRobot.enableCollisions(true);
-                    _connectedRobot.addResponseListener(new ResponseListener() {
-                        @Override
-                        public void handleResponse(DeviceResponse deviceResponse, Robot robot) {
 
-                        }
-
-                        @Override
-                        public void handleStringResponse(String s, Robot robot) {
-
-                        }
-
-                        @Override
-                        public void handleAsyncMessage(AsyncMessage asyncMessage, Robot robot) {
-                            _connectedRobot.setLed(1, 0, 0);
-                            Log.d("collision", "collision");
-                            mSocket.emit("collision");
-                            _connectedRobot.setLed(0, 1, 0);
-
-                        }
-                    });
+                try {
                     Log.d("SOCKET", "Trying to create socket");
 
                     mSocket = IO.socket("http://134.59.215.166:3000/");
                     //mSocket.emit("spheroId", spheroId);
                     mSocket.connect();
-                    //mSocket.on('connection')
                     Log.d("SPHERO ID", _connectedRobot.getRobot().getName());
                     mSocket.emit("spheroId", _connectedRobot.getRobot().getName());
-
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
                     connectSpheroButton.setText(_connectedRobot.getRobot().getName() + "\n connected");
                     connectSpheroButton.setEnabled(false);
                     checkBoxSPHERO.setChecked(true);
                     letsgoButton.setEnabled(true);
 
-                } catch (URISyntaxException e) {
-                    Log.d("ERROR SOCKET", e.getMessage());
-                }
 
                 break;
             case Disconnected:
