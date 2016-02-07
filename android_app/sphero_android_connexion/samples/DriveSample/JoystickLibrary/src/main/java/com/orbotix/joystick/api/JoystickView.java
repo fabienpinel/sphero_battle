@@ -37,8 +37,8 @@ public class JoystickView extends View implements Controller {
 
     private final Point center_point = new Point();
 
-    private double mJoystickPadCenterX = 0;
-    private double mJoystickPadCenterY = 0;
+    public double mJoystickPadCenterX = 0;
+    public double mJoystickPadCenterY = 0;
 
     private boolean mEnabled = true;
 	private volatile boolean draggingPuck = false;
@@ -323,8 +323,8 @@ public class JoystickView extends View implements Controller {
         double y_length = mJoystickPadCenterY - y;
 
 
-       // Log.d("PADCENTERX" , ""+mJoystickPadCenterX);
-       // Log.d("PADCENTERY" , ""+mJoystickPadCenterY);
+        Log.d("PADCENTERX" , ""+mJoystickPadCenterX);
+        Log.d("PADCENTERY" , ""+mJoystickPadCenterY);
 
         // Need to scale x_length and y_length to make sure the coordinates are polar
         // instead of elliptical
@@ -341,7 +341,7 @@ public class JoystickView extends View implements Controller {
         {
             mJoystickDistanceFromCenter = (Math.sqrt(x_length * x_length + y_length * y_length) /
                     Math.min(mJoystickPadCenterX, mJoystickPadCenterY));
-            mJoystickDistanceFromCenter *= 4.0;
+            //mJoystickDistanceFromCenter *= 2.0;
             mJoystickDistanceFromCenter = Value.clamp(mJoystickDistanceFromCenter, 0.0, 1.0);
         }
         else

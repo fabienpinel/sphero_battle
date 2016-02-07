@@ -269,23 +269,33 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         }
     };
 
+    public Double max = 0.0;
 
     public void sendToSphero(Double x,Double y,Double signe){
-        x = 360 * (1 - x) * (signe >= 0 ? 1 : -1);
-        y= - y * 360;
+        if (x > max) max = x;
+        //Log.d("AVANT MODIF","x="+(x*(signe >= 0 ? 1 : -1))+"\ty="+y + "\tmax="+  max);
+
+        //x = 360 * (1 - x) * (signe >= 0 ? 1 : -1);
+        x = _joystick.mJoystickPadCenterX * x ;
+
+        y= - y * _joystick.mJoystickPadCenterX;
 
       //  y *= -1;
-        //Log.d("AVAN MODIF","x="+x+" y="+y);
 
-        x += 360;
-        y += 360;
-       Log.d("APRES MODIF","x="+x+" y="+y);
+        x += _joystick.mJoystickPadCenterX;
+        y += _joystick.mJoystickPadCenterX;
+       //Log.d("APRES MODIF","x="+x+" y="+y);
 
         //Log.d("Receiving", "x: " + x + "y: " + y);
 
         if (!_calibrationView.isCalibrating() ) {
-            _joystick.sendDataToMyo(x, y);
+            if ((x > _joystick.mJoystickPadCenterX - 10 && x < _joystick.mJoystickPadCenterX + 10) && (y > _joystick.mJoystickPadCenterX - 10 && y < _joystick.mJoystickPadCenterX + 10)) {
 
+            } else {
+                if (x > _joystick.mJoystickPadCenterX - 10 && x < _joystick.mJoystickPadCenterX + 10) x = _joystick.mJoystickPadCenterX;
+                if (y > _joystick.mJoystickPadCenterX - 10 && y < _joystick.mJoystickPadCenterX + 10) y = _joystick.mJoystickPadCenterX;
+                _joystick.sendDataToMyo(x, y);
+            }
         }
     }
     @Override
@@ -361,8 +371,9 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         }
         @Override
         public void onAccelerometerData (Myo myo, long timestamp, Vector3 accel){
-            myo_x = accel.z();
+            myo_x = accel.y();
             myo_y = accel.x();
+            Log.d("ACCEL Y", "" + myo_x);
             sendToSphero(myo_x, myo_y, myo_signe);
         }
 
