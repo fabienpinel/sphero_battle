@@ -1,9 +1,27 @@
 .demo-card-event.mdl-card {
-    background: #0099CC;
     display:inline-block;
     margin:0 !important;
     min-height: 100%;
 }
+
+#player1 .demo-card-event.mdl-card {
+    background-color: #0099cc;
+}
+
+#player2 .demo-card-event.mdl-card {
+    background-color: #ff5722;
+}
+
+.life-bar *, .life-bar {
+    height: 30px !important;
+    width: 100%;
+    background-color: #a1cc39 !important;
+}
+
+.life-bar .md-dashed {
+    background-color: #daf29f !important;
+}
+
 .clear1px{
     clear: both;
     height: 1px;

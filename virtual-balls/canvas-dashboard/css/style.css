@@ -120,7 +120,7 @@ header {
 #timer {
     width: calc(16% - 38px);
     display: inline-block;
-    background: #000000;
+    background: #333;
     font-weight: 600;
     font-size: 3em;
     color: #ffffff;
@@ -181,6 +181,7 @@ header {
 
 .md-toolbar-tools {
     text-align: center;
+    color: #333;
 }
 
 #score1 .md-right .md-half-circle {
