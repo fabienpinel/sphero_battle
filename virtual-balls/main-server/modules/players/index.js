@@ -135,7 +135,7 @@ var moduleToExports = {
                 id: id,
                 life: 1000,
                 name: name,
-                power: 0,
+                power: 100,
                 position: initPosition,
                 lastImpact: Date.now(),
                 history: [initPosition,initPosition],
