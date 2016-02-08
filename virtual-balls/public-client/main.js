@@ -5,7 +5,7 @@
         else return xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
     }
 
-    var socket = io.connect('http://134.59.215.166:3000');
+    var socket = io.connect('http://localhost:3000');
     var players = [];
 
     socket.on('dataChange', function (data) {
@@ -26,11 +26,9 @@
     });
 
     document.getElementById('player1').addEventListener('touchstart', function () {
-        console.log('coucou');
         if (players.length === 2) {
-            console.log('coucou2');
             var http = getAjax();
-            http.open('POST', 'http://134.59.215.166:3000/api/players/' + players[0].id + '/power', true);
+            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
             http.setRequestHeader("Content-type","application/json");
             http.send();
         }
@@ -39,10 +37,133 @@
     document.getElementById('player2').addEventListener('touchstart', function () {
         if (players.length === 2) {
             var http = getAjax();
-            http.open('POST', 'http://134.59.215.166:3000/api/players/' + players[1].id + '/power', true);
+            http.open('POST', 'http://localhost:3000/api/players/' + players[1].id + '/power', true);
             http.setRequestHeader("Content-type","application/json");
             http.send();
         }
     }, false);
 
+    document.getElementById('im1').addEventListener("touchstart", function(){
+        var toRemove = document.getElementsByClassName("selected1");
+        for(var i = 0; i < toRemove.length; i++) {
+            toRemove[i].className = toRemove[i].className.replace(/\bselected1\b/,'');
+        };
+        document.getElementById('im1').className += " selected1";
+        if (players.length === 2) {
+            var http = getAjax();
+            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
+            http.setRequestHeader("Content-type","application/json");
+            http.send();
+        }
+    });
+    document.getElementById('im2').addEventListener("touchstart", function(){
+        var toRemove = document.getElementsByClassName("selected2");
+        for(var i = 0; i < toRemove.length; i++) {
+            toRemove[i].className = toRemove[i].className.replace(/\bselected2\b/,'');
+        };
+        document.getElementById('im2').className += " selected2";
+        if (players.length === 2) {
+            var http = getAjax();
+            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
+            http.setRequestHeader("Content-type","application/json");
+            http.send();
+        }
+    });
+
+    document.getElementById('hl1').addEventListener("touchstart", function(){
+        var toRemove = document.getElementsByClassName("selected1");
+        for(var i = 0; i < toRemove.length; i++) {
+            toRemove[i].className = toRemove[i].className.replace(/\bselected1\b/,'');
+        };
+        document.getElementById('hl1').className += " selected1";
+        if (players.length === 2) {
+            var http = getAjax();
+            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
+            http.setRequestHeader("Content-type","application/json");
+            http.send();
+        }
+     });
+    document.getElementById('hl2').addEventListener("touchstart", function(){
+        var toRemove = document.getElementsByClassName("selected2");
+        for(var i = 0; i < toRemove.length; i++) {
+            toRemove[i].className = toRemove[i].className.replace(/\bselected2\b/,'');
+        };
+        document.getElementById('hl2').className += " selected2";
+        if (players.length === 2) {
+            var http = getAjax();
+            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
+            http.setRequestHeader("Content-type","application/json");
+            http.send();
+        }
+    });
+
+    document.getElementById('sl1').addEventListener("touchstart", function(){
+        var toRemove = document.getElementsByClassName("selected1");
+        for(var i = 0; i < toRemove.length; i++) {
+            toRemove[i].className = toRemove[i].className.replace(/\bselected1\b/,'');
+        };
+        document.getElementById('sl1').className += " selected1";
+        if (players.length === 2) {
+            var http = getAjax();
+            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
+            http.setRequestHeader("Content-type","application/json");
+            http.send();
+        }
+     });
+    document.getElementById('sl2').addEventListener("touchstart", function(){
+        var toRemove = document.getElementsByClassName("selected2");
+        for(var i = 0; i < toRemove.length; i++) {
+            toRemove[i].className = toRemove[i].className.replace(/\bselected2\b/,'');
+        };
+        document.getElementById('sl2').className += " selected2";
+        if (players.length === 2) {
+            var http = getAjax();
+            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
+            http.setRequestHeader("Content-type","application/json");
+            http.send();
+        }
+    });
+
+    document.getElementById('cr1').addEventListener("touchstart", function(){
+        var toRemove = document.getElementsByClassName("selected1");
+        for(var i = 0; i < toRemove.length; i++) {
+            toRemove[i].className = toRemove[i].className.replace(/\bselected1\b/,'');
+        };
+        document.getElementById('cr1').className += " selected1";
+        if (players.length === 2) {
+            var http = getAjax();
+            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
+            http.setRequestHeader("Content-type","application/json");
+            http.send();
+        }
+    });
+    document.getElementById('cr2').addEventListener("touchstart", function(){
+        var toRemove = document.getElementsByClassName("selected2");
+        for(var i = 0; i < toRemove.length; i++) {
+            toRemove[i].className = toRemove[i].className.replace(/\bselected2\b/,'');
+        };
+        document.getElementById('cr2').className += " selected2";
+        if (players.length === 2) {
+            var http = getAjax();
+            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
+            http.setRequestHeader("Content-type","application/json");
+            http.send();
+        }
+    });
+
 })();
+
+
+
+/*function fitHeight() {
+ var divHeight = 0;
+ var toGetSize = document.getElementsByClassName('power');
+ for(var i = 0; i < toGetSize.length; i++) {
+ divHeight = toGetSize[i].offsetHeight;
+ };
+
+ var toFitSize = document.getElementsByClassName('selectable');
+ for(var i = 0; i < toFitSize.length; i++) {
+ toFitSize[i].style.height = divHeight +"px";
+ };
+ };*/
