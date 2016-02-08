@@ -17,7 +17,7 @@ public class Player {
     private boolean powerAvailable;
 
 
-    public Player(String id, String name, String color){
+    public Player(String id, String name){
         if(name.equals("Player 1")){
             this.setColor("blue");
         }else{
