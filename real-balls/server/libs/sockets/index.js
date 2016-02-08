@@ -143,7 +143,7 @@ module.exports = {
                         if (error) return socket.emit('player:register', {status: 'error', error: error});
                         if (response.statusCode === 201) {
                             player = JSON.parse(body);
-                            socket.emit('player:register', {status: 'success', player: body});
+                            socket.emit('player:register', {status: 'success', player: JSON.parse(body)});
                         } else {
                             return socket.emit('player:register', {status: 'error', statusCode:response.statusCode, error:body});
                         }
