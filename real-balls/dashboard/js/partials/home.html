@@ -1,0 +1,91 @@
+<div>
+    <!-- Nom et score des joueurs 72px -->
+    <header layout="row" class="animated slideInDown" ng-class="(home.end)?'end':''">
+
+        <!-- Joueur 1 -->
+        <div id="content1" flex="50" ng-class="(home.resultats[0].life > home.resultats[1].life)?'win':'loose'">
+            <md-card>
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">{{home.players[0].name}}{{home.resultats[0].name}}</span>
+                    </md-card-title-text>
+                </md-card-title>
+            </md-card>
+        </div>
+
+        <img ng-hide="home.end" class="versus center" src="img/vs2.png" alt=""/>
+
+        <!-- Score joueur 2 -->
+        <div id="content2" flex="50" ng-class="(home.resultats[1].life > home.resultats[0].life && home.end)?'win':'loose'">
+            <md-card>
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">{{home.players[1].name}}{{home.resultats[1].name}}</span>
+                    </md-card-title-text>
+                </md-card-title>
+            </md-card>
+        </div>
+    </header>
+
+    <!-- conteneur général du jeu -->
+    <div id="game-container" ng-cloak ng-hide="home.end">
+
+        <!-- Score joueur 1 -->
+        <div id="score1" class="animated delay2" ng-class="{slideInLeft: home.init, wobble: home.collision1}">
+            <div class="center res">
+                <md-progress-circular class="md-accent md-hue-2" md-diameter='180' md-mode="determinate" value="{{home.players[0].power}}" ng-click="home.up(0)"></md-progress-circular>
+                <span class="center">{{home.players[0].power}}</span>
+            </div>
+            <div class="player-spell" ng-switch="home.power1" >
+                <img ng-switch-when="SLOW_DOWN" src="img/SLOW_DOWN.png"/>
+                <img ng-switch-when="CONTROL_REVERSAL" src="img/CONTROL_REVERSAL.png"/>
+                <img ng-switch-when="HEAL" src="img/HEAL.png"/>
+                <img ng-switch-when="IMMUNITY" src="img/IMMUNITY.png"/>
+            </div>
+        </div>
+
+        <!-- Canvas contenant les boules virtuels -->
+        <div class="canvas-container">
+            <div class="content animated delay5 zoomIn">
+                <video autoplay="true" id="videoElement"></video>
+            </div>
+        </div>
+
+        <!-- Score joueur 2 -->
+        <div id="score2" class="animated delay2" ng-class="{slideInRight: home.init, wobble: home.collision2}">
+            <div class="center res">
+                <md-progress-circular class="md-info md-hue-4" md-diameter='180' md-mode="determinate" value="{{home.players[1].power}}" ng-click="home.up(1)"></md-progress-circular>
+                <span class="center">{{home.players[1].power}}</span>
+            </div>
+            <div class="player-spell" ng-switch="home.power2">
+                <img ng-switch-when="SLOW_DOWN" src="img/SLOW_DOWN.png"/>
+                <img ng-switch-when="CONTROL_REVERSAL" src="img/CONTROL_REVERSAL.png"/>
+                <img ng-switch-when="HEAL" src="img/HEAL.png"/>
+                <img ng-switch-when="IMMUNITY" src="img/IMMUNITY.png"/>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom bar with player life and timer 68px -->
+    <div class="bottom" ng-class="(home.end) ? 'hide' : ''">
+        <div class="vie1">
+            <md-progress-linear class="life-bar" md-mode="determinate" value="{{home.players[0].life | number: 0}}"></md-progress-linear>
+        </div>
+        <div id="timer">{{home.timer}}</div>
+        <div class="vie2">
+            <md-progress-linear class="life-bar" md-mode="determinate" value="{{home.players[1].life | number: 0}}"></md-progress-linear>
+        </div>
+    </div>
+
+    <!-- Div contenant les informations pour l'attente des joueurs en début de partie -->
+    <div id="info" ng-class="(home.players.length == 2 || home.end) ? 'hide' : ''">
+        <div class="center">Waiting for {{2 - home.players.length}} player(s)</div>
+    </div>
+
+    <!-- Div permettant de relancer une partie -->
+    <div id="end" ng-class="(home.end) ? '' : 'hide'">
+        <div class="center">
+            <a class="md-raised md-warn md-button md-ink-ripple" ng-click="home.replay()">Replay</a>
+        </div>
+    </div>
+</div>
