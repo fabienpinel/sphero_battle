@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 import com.orbotix.ConvenienceRobot;
@@ -65,7 +66,6 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
 
     CheckBox checkBoxSPHERO, checkBoxMYO;
     Hub hub;
-    double  myo_x, myo_y, myo_signe;
 
     public Connexion(Context context, RobotPickerListener pickerListener) {
         super(context);
@@ -87,6 +87,7 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
         params.width = WindowManager.LayoutParams.MATCH_PARENT;
         getWindow().setAttributes(params);
         getWindow().setBackgroundDrawable(null);
+
 
 
         checkBoxSPHERO = (CheckBox) findViewById(R.id.checkBoxSPHERO);
@@ -137,8 +138,6 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
         }else{
             hub.addListener(mListener);
         }
-
-
     }
 
     @Override
@@ -242,5 +241,4 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
 
         }
     };
-
 }
