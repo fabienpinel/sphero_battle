@@ -70,8 +70,8 @@ var players = [];
     function () {
 
         var socket = io.connect('http://localhost:3000');
-
         socket.on('dataChange', function (data) {
+            console.log(data.players);
             players = data.players;
             if (player) {
                 if (players.length === 2) {
