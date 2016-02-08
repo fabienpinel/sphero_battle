@@ -39,6 +39,8 @@ import com.thalmic.myo.Quaternion;
 import com.thalmic.myo.Vector3;
 import com.thalmic.myo.XDirection;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -99,11 +101,28 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
             }
         });
 
+
+
+
+        //TODO remove this socket init
+        try {
+            mSocket = IO.socket("http://192.168.1.69:3000/");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        mSocket.connect();
+        mSocket.on("player:register", onNewMessage);
+
+
+
+
+
+
         powerButton = (Button)findViewById(R.id.powerButton);
         powerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registerPlayer();
+                registerPlayerSocket();
             }
         });
 
@@ -262,28 +281,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                 @Override
                 public void run() {
                     //JSONObject data = (JSONObject) args;
-                    Double x;
-                    Double y;
 
-                    x = Double.parseDouble(args[0].toString());
-                    y = Double.parseDouble(args[1].toString());
-
-                    x *=7;
-                    y *=7;
-
-                    y *= -1;
-
-                    x += 360;
-                    y += 360;
-                    //Log.d("APRES MODIF","x="+x+" y="+y);
-
-                    //Log.d("Receiving", "x: " + x + "y: " + y);
-                    if (!_calibrationView.isCalibrating() ) {
-                        _joystick.sendDataToMyo(x, y);
-
-                    }
-                    // add the message to view
-                    //addMessage(username, message);
                 }
             });
         }
@@ -433,7 +431,14 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         MainActivity.this.runOnUiThread(new AjaxRunnable(uri, damnQuery));
     }
     public void registerPlayer(){
-        this.callPostAjax("","/players");
+        this.callPostAjax("", "/players");
     }
+    public void registerPlayerSocket(){
+        Log.d("Try to get player", "try to get player");
+        Log.d("socket connected", "" + mSocket.connected());
+
+        mSocket.emit("player:register");
+    }
+
 
 }
