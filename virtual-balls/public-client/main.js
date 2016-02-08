@@ -5,7 +5,7 @@
         else return xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
     }
 
-    var socket = io.connect('http://localhost:3000');
+    var socket = io.connect('http://134.59.215.166:3000');
     var players = [];
 
     socket.on('dataChange', function (data) {
@@ -23,9 +23,11 @@
     });
 
     document.getElementById('player1').addEventListener('touchstart', function () {
+        console.log('coucou');
         if (players.length === 2) {
+            console.log('coucou2');
             var http = getAjax();
-            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
+            http.open('POST', 'http://134.59.215.166:3000/api/players/' + players[0].id + '/power', true);
             http.setRequestHeader("Content-type","application/json");
             http.send();
         }
@@ -34,7 +36,7 @@
     document.getElementById('player2').addEventListener('touchstart', function () {
         if (players.length === 2) {
             var http = getAjax();
-            http.open('POST', 'http://localhost:3000/api/players/' + players[1].id + '/power', true);
+            http.open('POST', 'http://134.59.215.166:3000/api/players/' + players[1].id + '/power', true);
             http.setRequestHeader("Content-type","application/json");
             http.send();
         }

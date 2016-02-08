@@ -27,7 +27,7 @@ var players = [];
             };
             if (!player) {
                 var http = getAjax();
-                http.open('POST', 'http://134.59.214.67:3000/api/players/', true);
+                http.open('POST', 'http://localhost:3000/api/players/', true);
                 http.setRequestHeader("Content-type","application/json");
                 http.onload = function (response) {
                     if (response.currentTarget.status == 409) {
@@ -69,8 +69,7 @@ var players = [];
 (
     function () {
 
-        var socket = io.connect('http://134.59.214.67:3000');
-
+        var socket = io.connect('http://localhost:3000');
         socket.on('dataChange', function (data) {
             console.log(data.players);
             players = data.players;
@@ -134,7 +133,7 @@ var players = [];
         function go (x, y) {
             if (x !== 0 && y !== 0 && player) {
                 var http = getAjax();
-                http.open('POST', 'http://134.59.214.67:3000/api/players/' + player.id + '/deltaX/' + x + '/deltaY/' + y, true);
+                http.open('POST', 'http://localhost:3000/api/players/' + player.id + '/deltaX/' + x + '/deltaY/' + y, true);
                 http.setRequestHeader("Content-type","application/json");
                 http.send();
             }
@@ -177,7 +176,7 @@ var players = [];
         function _castSpell() {
             if (player) {
                 var http = getAjax();
-                http.open('POST', 'http://134.59.214.67:3000/api/players/' + player.id + '/cast-spell', true);
+                http.open('POST', 'http://localhost:3000/api/players/' + player.id + '/cast-spell', true);
                 http.setRequestHeader("Content-type","application/json");
                 http.onload = function (response) {
                     if (response.currentTarget.status == 404) {
@@ -213,7 +212,7 @@ var players = [];
 window.onbeforeunload = function () {
     if (player) {
         var http = getAjax();
-        http.open('DELETE', 'http://134.59.214.67:3000/api/players/' + player.id, true);
+        http.open('DELETE', 'http://localhost:3000/api/players/' + player.id, true);
         http.setRequestHeader("Content-type","application/json");
         http.send();
     }

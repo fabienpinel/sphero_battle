@@ -92,11 +92,11 @@ function launchDataIntervalSender(){
 
     setInterval(function () {
         var coord = {
-            deltaX: x >= 1 ? 0 : 50 * (1 - x) * (signe >= 0 ? 1 : -1),
+            deltaX: 50 * (1 - x) * (signe >= 0 ? 1 : -1),
             deltaY: - y * 50
         };
         sendCommand(coord.deltaX ,coord.deltaY)
-    }, 100);
+    }, 5);
 
 
 }
@@ -111,7 +111,7 @@ function registerPlayer(){
         if (http.readyState == 4 && http.status == 201) {
             sphero = JSON.parse(http.responseText);
             console.log(sphero);
-            document.getElementById("infosSphero").innerHTML = ""+sphero.id;
+            //document.getElementById("infosSphero").innerHTML = ""+sphero.id;
             //SPHERO_NAME = sphero;
         }
     };
