@@ -37,8 +37,15 @@ public class JoystickView extends View implements Controller {
 
     private final Point center_point = new Point();
 
+    public static final double JOYSTICK_REFERENCE_VALUE = 170.0;
+
     public double mJoystickPadCenterX = 0;
     public double mJoystickPadCenterY = 0;
+
+    public double margin_X = 0;
+    public double margin_Y = 0;
+
+
 
     private boolean mEnabled = true;
 	private volatile boolean draggingPuck = false;
@@ -168,6 +175,9 @@ public class JoystickView extends View implements Controller {
         // Adjust the Joystick Pad Size
         mJoystickPadCenterX = (this.mWheel.getBounds().width() / 2.0);
         mJoystickPadCenterY = (this.mWheel.getBounds().height() / 2.0);
+
+        margin_X = (mJoystickPadCenterX/100)*10;
+        margin_Y = (mJoystickPadCenterY/100)*10;
     }
 
     @Override
@@ -342,6 +352,7 @@ public class JoystickView extends View implements Controller {
             mJoystickDistanceFromCenter = (Math.sqrt(x_length * x_length + y_length * y_length) /
                     Math.min(mJoystickPadCenterX, mJoystickPadCenterY));
             //mJoystickDistanceFromCenter *= 2.0;
+            mJoystickDistanceFromCenter /= ((this.mJoystickPadCenterX/JOYSTICK_REFERENCE_VALUE) >1 )? (this.mJoystickPadCenterX/JOYSTICK_REFERENCE_VALUE) : 1;
             mJoystickDistanceFromCenter = Value.clamp(mJoystickDistanceFromCenter, 0.0, 1.0);
         }
         else
