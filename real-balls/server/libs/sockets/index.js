@@ -1,5 +1,6 @@
 var uniqid = require('uniqid');
 var SPELLS = require('../config').SPELLS;
+var request = require('request');
 var io = null;
 
 module.exports = {
@@ -49,6 +50,9 @@ module.exports = {
                 players: api._getPlayers()
             });
 
+            /**
+             * Voter section
+             */
             var voterId = uniqid();
             socket.on('voteForPower', function (data) {
 
@@ -106,7 +110,6 @@ module.exports = {
                     }
                 }
             });
-
             socket.on('disconnect', function () {
                 var players = api._getPlayers();
                 for (var i = 0; i < players.length; i++) {
@@ -124,6 +127,24 @@ module.exports = {
                     self.emitChanges();
                 }
             });
+
+            /**
+             * Player section
+             */
+            socket.on('registerPlayer', function () {
+                request.post('http://localhost:3000/api/players', function (error, response, body) {
+                    if (error) return socket.emit('registerPlayer', {status: 'error', error: error});
+                    if (response.statusCode === 201) {
+                        socket.emit('registerPlayer', {status: 'success', player: body});
+                    } else {
+                        return socket.emit('registerPlayer', {status: 'error', statusCode:response.statusCode, error:body});
+                    }
+                });
+            });
+            /*socket.on('collision', function () {
+
+            });*/
+
         }
     }
 };
