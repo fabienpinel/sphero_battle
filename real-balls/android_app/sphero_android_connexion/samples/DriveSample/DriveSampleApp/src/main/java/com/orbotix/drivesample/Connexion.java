@@ -159,7 +159,6 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
     public void connectSphero(){
         //launch the connection with the sphero
         startDiscovery();
-
     }
 
     public void connectMyo(){
@@ -242,52 +241,6 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
             connectMyoButton.setText("Connect MYO");
 
         }
-        @Override
-        public void onOrientationData(Myo myo, long timestamp, Quaternion rotation) {
-            // Calculate Euler angles (roll, pitch, and yaw) from the quaternion.
-            float roll = (float) Math.toDegrees(Quaternion.roll(rotation));
-            float pitch = (float) Math.toDegrees(Quaternion.pitch(rotation));
-            float yaw = (float) Math.toDegrees(Quaternion.yaw(rotation));
-            // Adjust roll and pitch for the orientation of the Myo on the arm.
-            if (myo.getXDirection() == XDirection.TOWARD_ELBOW) {
-                roll *= -1;
-                pitch *= -1;
-            }
-            Log.d("ORIENTATION MTFCKR", "roll: " + roll + " pitch: " + pitch + " yaw: " + yaw);
-            myo_signe = rotation.x();
-            // Next, we apply a rotation to the text view using the roll, pitch, and yaw.
-
-        }
-        @Override
-        public void onGyroscopeData (Myo myo, long timestamp, Vector3 gyro){
-
-        }
-        @Override
-        public void onAccelerometerData (Myo myo, long timestamp, Vector3 accel){
-            myo_x = accel.z();
-            myo_y = accel.x();
-            sendToSphero(myo_x, myo_y, myo_signe);
-        }
     };
-    public void sendToSphero(Double x,Double y,Double signe){
-        x = 50 * (1 - x) * (signe >= 0 ? 1 : -1);
-        y= - y * 50;
 
-        x *=7;
-        y *=7;
-
-        y *= -1;
-
-        x += 360;
-        y += 360;
-        Log.d("APRES MODIF","x="+x+" y="+y);
-
-        //Log.d("Receiving", "x: " + x + "y: " + y);
-
-//haut x=543.88671875 y=34.7802734375
-        //en face  x=343.935546875 y=385.1220703125
-        //bas x=10.0 y=710.68359375
-        //tourné droite x=135.2685546875 y=365.6396484375
-        //tourné gauche x=444.765625 y=408.7060546875
-    }
 }

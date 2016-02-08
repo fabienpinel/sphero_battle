@@ -59,13 +59,16 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
 
     private Socket mSocket;
 
-    private String spheroId;
     private Connexion co;
     private Hub hub;
 
     private  ActionBar actionBar;
 
-    double  myo_x, myo_y, myo_signe;
+    double  myo_x, myo_y;
+
+    private Button powerButton;
+    private boolean powerAvailable;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,6 +93,16 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
             }
         });
 
+        powerButton = (Button)findViewById(R.id.powerButton);
+        powerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                useThePower();
+            }
+        });
+
+        powerAvailable = false;
+
         if (co == null) {
             co = new Connexion(this, this);
         }
@@ -109,6 +122,12 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
 
     @Override
     public void onResume() {    super.onResume();   }
+
+    private void useThePower(){
+        if(powerAvailable){
+
+        }
+    }
 
     /**
      * Sets up the joystick from scratch
@@ -271,7 +290,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
 
     public Double max = 0.0;
 
-    public void sendToSphero(Double x,Double y,Double signe){
+    public void sendToSphero(Double x,Double y){
         if (x > max) max = x;
         //Log.d("AVANT MODIF","x="+(x*(signe >= 0 ? 1 : -1))+"\ty="+y + "\tmax="+  max);
 
@@ -284,16 +303,18 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
 
         x += _joystick.mJoystickPadCenterX;
         y += _joystick.mJoystickPadCenterY;
+
+
        //Log.d("APRES MODIF","x="+x+" y="+y);
 
         //Log.d("Receiving", "x: " + x + "y: " + y);
 
         if (!_calibrationView.isCalibrating() ) {
-            if ((x > _joystick.mJoystickPadCenterX - 10 && x < _joystick.mJoystickPadCenterX + 10) && (y > _joystick.mJoystickPadCenterY - 10 && y < _joystick.mJoystickPadCenterY + 10)) {
+            if ((x > _joystick.mJoystickPadCenterX - _joystick.margin_X && x < _joystick.mJoystickPadCenterX + _joystick.margin_X) && (y > _joystick.mJoystickPadCenterY - _joystick.margin_Y && y < _joystick.mJoystickPadCenterY + _joystick.margin_Y)) {
 
             } else {
-                if (x > _joystick.mJoystickPadCenterX - 10 && x < _joystick.mJoystickPadCenterX + 10) x = _joystick.mJoystickPadCenterX;
-                if (y > _joystick.mJoystickPadCenterY - 10 && y < _joystick.mJoystickPadCenterY + 10) y = _joystick.mJoystickPadCenterY;
+                if (x > _joystick.mJoystickPadCenterX - _joystick.margin_X && x < _joystick.mJoystickPadCenterX + _joystick.margin_X) x = _joystick.mJoystickPadCenterX;
+                if (y > _joystick.mJoystickPadCenterY - _joystick.margin_Y && y < _joystick.mJoystickPadCenterY + _joystick.margin_Y) y = _joystick.mJoystickPadCenterY;
                 _joystick.sendDataToMyo(x, y);
             }
         }
@@ -361,7 +382,6 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                 pitch *= -1;
             }
             //Log.d("ORIENTATION MTFCKR", "roll: " + roll + " pitch: " + pitch + " yaw: " + yaw);
-            myo_signe = rotation.x();
             // Next, we apply a rotation to the text view using the roll, pitch, and yaw.
 
         }
@@ -374,7 +394,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
             myo_x = accel.y();
             myo_y = accel.x();
             Log.d("ACCEL Y", "" + myo_x);
-            sendToSphero(myo_x, myo_y, myo_signe);
+            sendToSphero(myo_x, myo_y);
         }
 
         @Override
@@ -383,32 +403,14 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
             Log.d("MYO", "pose");
             switch (pose) {
                 case UNKNOWN:
-                    //mTextView.setText(getString(R.string.hello_world));
-                    break;
                 case REST:
                 case DOUBLE_TAP:
-                   // int restTextId = R.string.hello_world;
-                    switch (myo.getArm()) {
-                        case LEFT:
-                            //restTextId = R.string.arm_left;
-                            break;
-                        case RIGHT:
-                            //restTextId = R.string.arm_right;
-                            break;
-                    }
-                    //mTextView.setText(getString(restTextId));
-                    break;
                 case FIST:
-                    //mTextView.setText(getString(R.string.pose_fist));
-                    break;
                 case WAVE_IN:
-                    //mTextView.setText(getString(R.string.pose_wavein));
-                    break;
                 case WAVE_OUT:
-                    //mTextView.setText(getString(R.string.pose_waveout));
-                    break;
                 case FINGERS_SPREAD:
-                    //mTextView.setText(getString(R.string.pose_fingersspread));
+                    //send pouvoir action
+                    mSocket.emit("usePower");
                     break;
             }
             if (pose != Pose.UNKNOWN && pose != Pose.REST) {

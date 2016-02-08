@@ -36,6 +36,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.github.nkzawa:socket.io-client:0.3.0'
     compile 'com.android.support:support-v4:21.0.3'
+
 }
 
 
