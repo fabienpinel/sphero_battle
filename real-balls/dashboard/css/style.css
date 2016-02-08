@@ -1,0 +1,276 @@
+/* ---------------------------------------------- */
+/* ------------------ General ------------------- */
+/* ---------------------------------------------- */
+
+md-content {
+    background-color: #ededed;
+}
+
+.center {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+}
+
+.delay2 {
+    animation-delay: 0.2s;
+}
+
+.delay5 {
+    animation-delay: 0.5s;
+}
+
+/* ---------------------------------------------- */
+/* ------------------- Header ------------------- */
+/* ---------------------------------------------- */
+
+header {
+    position: relative;
+}
+
+.versus {
+    left: 50%;
+    top: 36px;
+    max-width: 72px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+/* ------------------- Player ------------------- */
+
+.md-subhead {
+    font-size: 24px !important;
+    line-height: 32px;
+    color: #64ffda;
+}
+
+#score1 {
+    margin-right: 15px;
+}
+
+#score2 {
+    margin-left: 15px;
+}
+
+#score1, #score2 {
+    position: relative;
+}
+
+#score1 h3, #score2 h3 {
+    font-size: 0.8em;
+}
+
+#content1 md-card {
+    margin: 0 0 0 0;
+    background-color: #0099CC;
+}
+
+#content2 md-card {
+    margin: 0 0 0 0;
+    background-color: #ff5722;
+}
+
+#score1 span, #score2 span {
+    font-size: 3em;
+}
+
+#content1 md-card, #content2 md-card {
+    color: #fff;
+}
+
+#content2 {
+    text-align: right;
+}
+
+#content2 md-card, #content2, #content1 md-card, #content1 {
+    height: 0%;
+    -webkit-transition: height 1500ms, background-color 2s ease;
+    -moz-transition: height 1500ms, background-color 2s ease;
+    -o-transition: height 1500ms, background-color 2s ease;
+    transition: height 1500ms, background-color 2s ease;
+}
+
+.player-spell {
+    text-align: center;
+}
+
+.player-spell img {
+    height: 100px;
+}
+
+
+.bottom {
+    bottom :0;
+    position: absolute;
+    width: 100%;
+}
+
+.vie2 {
+    transform: rotate(180deg);
+}
+
+.bottom .vie2, .bottom .vie1 {
+    padding: 5px;
+    width: 42%;
+    display: inline-block;
+}
+
+#timer {
+    width: calc(16% - 38px);
+    display: inline-block;
+    background: #000000;
+    font-weight: 600;
+    font-size: 3em;
+    color: #ffffff;
+    padding: 10px 5px;
+    border-radius: 10px 10px 0 0;
+    text-align: center;
+}
+
+.life-bar *, .life-bar {
+    height: 30px !important;
+}
+
+.vie2 .life-bar *,.vie2 .life-bar {
+    background-color: #ff5722 !important;
+}
+
+.vie1 .life-bar *,.vie1 .life-bar {
+    background-color: #0099cc !important;
+}
+
+.vie2 .life-bar .md-dashed {
+    background-color: #ffccbc !important;
+}
+
+.vie1 .life-bar .md-dashed {
+    background-color: #b3e5fc !important;
+}
+
+/* ---------------------------------------------- */
+/* ------------------ Main Area ----------------- */
+/* ---------------------------------------------- */
+
+
+/* ------------------- Canvas ------------------- */
+
+.canvas-container {
+    text-align: center;
+}
+
+.canvas-container .content {
+    background: #e1e1e1;
+    height: 480px;
+    border: 2px solid #0099CC;
+    display: inline-block;
+}
+
+/* ----------------- Power Bar ------------------ */
+
+.delay2.wobble {
+    animation-delay: 0s;
+    animation-duration: 0.3s;
+}
+
+.res {
+    margin-top:50px;
+}
+
+.md-toolbar-tools {
+    text-align: center;
+}
+
+#score1 .md-right .md-half-circle {
+    border-right-color: #0099cc !important;
+    border-top-color: #0099cc !important;
+}
+
+#score1 .md-left .md-half-circle {
+    border-left-color: #0099cc !important;
+    border-top-color: #0099cc !important;
+}
+
+#score1 .md-gap {
+    border-top-color: #0099cc !important;
+    border-bottom-color: #0099cc !important;
+}
+
+#score2 .md-right .md-half-circle {
+    border-right-color: #ff5722 !important;
+    border-top-color: #ff5722 !important;
+}
+
+#score2 .md-left .md-half-circle {
+    border-left-color: #ff5722 !important;
+    border-top-color: #ff5722 !important;
+}
+
+#score2 .md-gap {
+    border-top-color: #ff5722 !important;
+    border-bottom-color: #ff5722 !important;
+}
+
+
+
+/* ---------------------------------------------- */
+/* --------------- Start/End Game --------------- */
+/* ---------------------------------------------- */
+
+#info {
+    font-size: 24px;
+    color: white;
+    text-align:center;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    vertical-align: middle;
+    z-index:10;
+    background: #0099cc;
+    top: 0;
+    left: 0;
+}
+
+.end {
+    color : #fff !important;
+}
+
+.end #content2 md-card, .end #content2, .end #content1 md-card, .end #content1, .end {
+    height: 100%;
+}
+
+.end .win md-card {
+    background-color: #2ecc71 !important;
+}
+
+.end .loose md-card {
+    background-color: #e74c3c !important;
+}
+
+#end .md-warn {
+    font-size: 3em;
+    padding: 15px;
+    background-color: #e67e22 !important;
+}
+
+#game-container {
+    position:fixed;
+    height: calc(100% - 72px - 68px);
+    width:100%;
+    display:table;
+}
+#game-container > div{
+    display: table-cell;
+    width: calc(50% - 320px);
+    text-align:center;
+}
+#game-container > div:nth-child(2){
+    width: 640px;
+    vertical-align: middle;
+}
+
+
+#game-container .canvas-container > .content {
+
+}
