@@ -25,7 +25,8 @@
             android:name=".FirstScreen"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="MyoSphero Battle"
-            android:theme="@style/FullscreenTheme">
+            android:theme="@style/FullscreenTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
