@@ -253,3 +253,24 @@ header {
     padding: 15px;
     background-color: #e67e22 !important;
 }
+
+#game-container {
+    position:fixed;
+    height: calc(100% - 72px - 68px);
+    width:100%;
+    display:table;
+}
+#game-container > div{
+    display: table-cell;
+    width: calc(50% - 320px);
+    text-align:center;
+}
+#game-container > div:nth-child(2){
+    width: 640px;
+    vertical-align: middle;
+}
+
+
+#game-container .canvas-container > .content {
+
+}

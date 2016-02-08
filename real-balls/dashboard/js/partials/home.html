@@ -1,6 +1,5 @@
-<md-content layout="column" layout-fill>
-
-    <!-- Nom et score des joueurs -->
+<div>
+    <!-- Nom et score des joueurs 72px -->
     <header layout="row" class="animated slideInDown" ng-class="(home.end)?'end':''">
 
         <!-- Joueur 1 -->
@@ -29,16 +28,11 @@
     </header>
 
     <!-- conteneur général du jeu -->
-    <div class="md-padding" flex layout="row" ng-cloak layout-align="center none" ng-hide="home.end">
+    <div id="game-container" ng-cloak ng-hide="home.end">
 
         <!-- Score joueur 1 -->
-        <div id="score1" flex="20" class="animated delay2" ng-class="{slideInLeft: home.init, wobble: home.collision1}">
-            <div class="md-toolbar-tools">
-                <h3 flex>
-                    <span>Pouvoir</span>
-                </h3>
-            </div>
-            <div layout="row" layout-sm="column" layout-align="space-around" class="center res">
+        <div id="score1" class="animated delay2" ng-class="{slideInLeft: home.init, wobble: home.collision1}">
+            <div class="center res">
                 <md-progress-circular class="md-accent md-hue-2" md-diameter='180' md-mode="determinate" value="{{home.players[0].power}}" ng-click="home.up(0)"></md-progress-circular>
                 <span class="center">{{home.players[0].power}}</span>
             </div>
@@ -51,20 +45,15 @@
         </div>
 
         <!-- Canvas contenant les boules virtuels -->
-        <div class="canvas-container" flex="60" >
+        <div class="canvas-container">
             <div class="content animated delay5 zoomIn">
                 <video autoplay="true" id="videoElement"></video>
             </div>
         </div>
 
         <!-- Score joueur 2 -->
-        <div id="score2" flex="20" class="animated delay2" ng-class="{slideInRight: home.init, wobble: home.collision2}">
-            <div class="md-toolbar-tools">
-                <h3 flex>
-                    <span>Pouvoir</span>
-                </h3>
-            </div>
-            <div layout="row" layout-sm="column" layout-align="space-around" class="center res">
+        <div id="score2" class="animated delay2" ng-class="{slideInRight: home.init, wobble: home.collision2}">
+            <div class="center res">
                 <md-progress-circular class="md-info md-hue-4" md-diameter='180' md-mode="determinate" value="{{home.players[1].power}}" ng-click="home.up(1)"></md-progress-circular>
                 <span class="center">{{home.players[1].power}}</span>
             </div>
@@ -76,6 +65,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Bottom bar with player life and timer 68px -->
     <div class="bottom" ng-class="(home.end) ? 'hide' : ''">
         <div class="vie1">
             <md-progress-linear class="life-bar" md-mode="determinate" value="{{home.players[0].life | number: 0}}"></md-progress-linear>
@@ -97,4 +88,4 @@
             <a class="md-raised md-warn md-button md-ink-ripple" ng-click="home.replay()">Replay</a>
         </div>
     </div>
-</md-content>
+</div>
