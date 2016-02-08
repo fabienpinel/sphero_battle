@@ -167,6 +167,15 @@ module.exports = {
                     request.post('http://localhost:3000/api/players/' + player.id + '/cast', function (error, response, body) {
                         if (error) return socket.emit('player:cast', {status: 'error', error: error});
                         if (response.statusCode === 201) {
+                            setTimeout(function () {
+                                var players = api._getPlayers();
+                                for (var i = 0; i < players.length; i++) {
+                                    if (players[i].id == player.id && players[i].power >= 20) {
+                                        socket.emit('player:castIsReady');
+                                        break;
+                                    }
+                                }
+                            }, 3000);
                             socket.emit('player:cast', {status: 'success'});
                         } else {
                             return socket.emit('player:cast', {status: 'error', statusCode:response.statusCode, error:body});
