@@ -126,8 +126,11 @@ module.exports = {
                         sockets.cast(player.id, SPELLS.IMMUNITY);
                         _castSpell(player.spell, player);
                     }
+                    return res.status(201).end();
+                } else {
+                    return res.status(409).end();
                 }
-                return res.status(201).end();
+
             }
         }
         return res.status(404).json(new Error('no such player'));
