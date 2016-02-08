@@ -89,11 +89,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                 return true;
             }
         });
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
         if (co == null) {
             co = new Connexion(this, this);
         }
@@ -101,7 +97,11 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         if (!co.isShowing()) {
             co.show();
         }
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -278,22 +278,22 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         //x = 360 * (1 - x) * (signe >= 0 ? 1 : -1);
         x = _joystick.mJoystickPadCenterX * x ;
 
-        y= - y * _joystick.mJoystickPadCenterX;
+        y= - y * _joystick.mJoystickPadCenterY;
 
       //  y *= -1;
 
         x += _joystick.mJoystickPadCenterX;
-        y += _joystick.mJoystickPadCenterX;
+        y += _joystick.mJoystickPadCenterY;
        //Log.d("APRES MODIF","x="+x+" y="+y);
 
         //Log.d("Receiving", "x: " + x + "y: " + y);
 
         if (!_calibrationView.isCalibrating() ) {
-            if ((x > _joystick.mJoystickPadCenterX - 10 && x < _joystick.mJoystickPadCenterX + 10) && (y > _joystick.mJoystickPadCenterX - 10 && y < _joystick.mJoystickPadCenterX + 10)) {
+            if ((x > _joystick.mJoystickPadCenterX - 10 && x < _joystick.mJoystickPadCenterX + 10) && (y > _joystick.mJoystickPadCenterY - 10 && y < _joystick.mJoystickPadCenterY + 10)) {
 
             } else {
                 if (x > _joystick.mJoystickPadCenterX - 10 && x < _joystick.mJoystickPadCenterX + 10) x = _joystick.mJoystickPadCenterX;
-                if (y > _joystick.mJoystickPadCenterX - 10 && y < _joystick.mJoystickPadCenterX + 10) y = _joystick.mJoystickPadCenterX;
+                if (y > _joystick.mJoystickPadCenterY - 10 && y < _joystick.mJoystickPadCenterY + 10) y = _joystick.mJoystickPadCenterY;
                 _joystick.sendDataToMyo(x, y);
             }
         }
