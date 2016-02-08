@@ -39,6 +39,7 @@ import com.thalmic.myo.Quaternion;
 import com.thalmic.myo.Vector3;
 import com.thalmic.myo.XDirection;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -80,14 +81,15 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
 
     long lastTimeUsedPower;
 
-    JSONObject[] allThePlayers;
+    JSONArray allThePlayers;
+    public static final float ORANGE = (float)(165.0/255.0);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         lastTimeUsedPower = 0;
-        allThePlayers = new JSONObject[0];
+        allThePlayers = new JSONArray();
         actionBar = getActionBar();
         actionBar.hide();
 
@@ -129,7 +131,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                 mSocket.connect();
                 mSocket.on("player:register", newPlayer);
                 mSocket.on("player:castIsReady", castIsReady);
-                mSocket.on("datachange", onDataChange);
+                mSocket.on("dataChange", onDataChange);
 
                 registerPlayerSocket();
             }
@@ -306,6 +308,11 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                         if (data.get("status").equals("success")) {
                             playerjson = (JSONObject) data.get("player");
                             player = new Player((String) playerjson.get("id"), (String) playerjson.get("name"));
+                            if(player.getColor().equals("blue")){
+                                _connectedRobot.setLed(0, 0, 1);
+                            }else{
+                                _connectedRobot.setLed(1, ORANGE, 0);
+                           }
                         } else {
                             //displayToast("Problème de connexion");
                         }
@@ -326,11 +333,14 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                 @Override
                 public void run() {
                     try {
-                        JSONObject[] data = (JSONObject[]) args[0];
+                        JSONArray data = (JSONArray)(((JSONObject)args[0]).get("players"));
+
                         allThePlayers = data;
-                        for (int i = 0; i < data.length; i++) {
-                            if (data[i].get("id").equals(player.getId())) {
-                                if ((int) data[i].get("power") >= 20 && (System.currentTimeMillis() - lastTimeUsedPower >= 3000)) {
+                        for (int i = 0; i < data.length(); i++) {
+                            if ( player != null && data.getJSONObject(i).get("id").equals(player.getId())) {
+                                Log.d("datachange",""+data.getJSONObject(i));
+                                Log.d("datachange","power: "+(int) data.getJSONObject(i).get("power"));
+                                if ((int) data.getJSONObject(i).get("power") >= 20 && (System.currentTimeMillis() - lastTimeUsedPower >= 3000)) {
                                     powerButton.setEnabled(true);
                                 }
                             }
@@ -350,10 +360,10 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                 @Override
                 public void run() {
                     try {
-                        JSONObject[] data = (JSONObject[]) args[0];
-                        for (int i = 0; i < data.length; i++) {
-                            if (data[i].get("id").equals(player.getId())) {
-                                if ((int) data[i].get("power") >= 20) {
+                        Log.d("CastIsReady", "CastIsReady");
+                        for (int i = 0; i < allThePlayers.length(); i++) {
+                            if (player != null && allThePlayers.getJSONObject(i).get("id").equals(player.getId())) {
+                                if ((int) allThePlayers.getJSONObject(i).get("power") >= 20) {
                                     powerButton.setEnabled(true);
                                 }
                             }
@@ -392,13 +402,14 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
 
     @Override
     public void onRobotPicked(ConvenienceRobot robotPicked, Hub myohub, Socket socket) {
+        Log.d("onRobotPicked", "onRobotPicked");
         co.dismiss();
         _connectedRobot = robotPicked;
 
         mSocket = socket;
         mSocket.on("player:register", newPlayer);
         mSocket.on("player:castIsReady", castIsReady);
-        mSocket.on("datachange", onDataChange);
+        mSocket.on("dataChange", onDataChange);
 
         registerPlayerSocket();
 
@@ -422,8 +433,14 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
             public void handleAsyncMessage(AsyncMessage asyncMessage, Robot robot) {
                 _connectedRobot.setLed(1, 0, 0);
                 Log.d("collision", "collision");
-                mSocket.emit("collision");
-                _connectedRobot.setLed(0, 1, 0);
+                mSocket.emit("player:collision");
+                if(player != null){
+                    if(player.getColor().equals("blue")){
+                        _connectedRobot.setLed(0, 0, 1);
+                    }else{
+                        _connectedRobot.setLed(1, ORANGE, 0);
+                    }
+                }
 
             }
         });
