@@ -116,6 +116,27 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         });
         powerButton.setEnabled(false);
 
+        Button power = (Button) findViewById(R.id.power);
+        power.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mSocket = IO.socket("http://192.168.1.69:3000/");
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                //mSocket.emit("spheroId", spheroId);
+                mSocket.connect();
+                mSocket.on("player:register", newPlayer);
+                mSocket.on("player:castIsReady", castIsReady);
+                mSocket.on("datachange", onDataChange);
+
+                registerPlayerSocket();
+            }
+        });
+
+
+
 
         if (co == null) {
             co = new Connexion(this, this);
@@ -373,12 +394,14 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
     public void onRobotPicked(ConvenienceRobot robotPicked, Hub myohub, Socket socket) {
         co.dismiss();
         _connectedRobot = robotPicked;
+
         mSocket = socket;
         mSocket.on("player:register", newPlayer);
         mSocket.on("player:castIsReady", castIsReady);
         mSocket.on("datachange", onDataChange);
 
         registerPlayerSocket();
+
 
         hub = myohub;
         hub.addListener(mListener);
