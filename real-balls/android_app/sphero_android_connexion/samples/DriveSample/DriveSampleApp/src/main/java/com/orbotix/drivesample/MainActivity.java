@@ -39,7 +39,12 @@ import com.thalmic.myo.Quaternion;
 import com.thalmic.myo.Vector3;
 import com.thalmic.myo.XDirection;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 public class MainActivity extends Activity implements Connexion.RobotPickerListener{
@@ -69,6 +74,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
     private Button powerButton;
     private boolean powerAvailable;
 
+    private Player player;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,7 +103,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         powerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                useThePower();
+                registerPlayer();
             }
         });
 
@@ -123,11 +129,6 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
     @Override
     public void onResume() {    super.onResume();   }
 
-    private void useThePower(){
-        if(powerAvailable){
-
-        }
-    }
 
     /**
      * Sets up the joystick from scratch
@@ -428,5 +429,11 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
             //TODO: Do something awesome.
         }
     };
+    public void callPostAjax(String damnQuery, String uri){
+        MainActivity.this.runOnUiThread(new AjaxRunnable(uri, damnQuery));
+    }
+    public void registerPlayer(){
+        this.callPostAjax("","/players");
+    }
 
 }

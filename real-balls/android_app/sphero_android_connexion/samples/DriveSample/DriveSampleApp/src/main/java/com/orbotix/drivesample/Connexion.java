@@ -89,6 +89,7 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
         getWindow().setBackgroundDrawable(null);
 
 
+
         checkBoxSPHERO = (CheckBox) findViewById(R.id.checkBoxSPHERO);
         checkBoxSPHERO.setChecked(false);
 
@@ -112,9 +113,11 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
             public void onClick(View v) {
                 //Intent launchIntent = getContext().getPackageManager().getLaunchIntentForPackage("com.ihm.myoAndSphero");
                 //getContext().startActivity(launchIntent);
-                Log.d("MYO","connecting to adjascent MYO");
+                /*Log.d("MYO","connecting to adjascent MYO");
                 connectMyoButton.setText("Connecting...");
-                Hub.getInstance().attachToAdjacentMyo();
+                Hub.getInstance().attachToAdjacentMyo();*/
+
+
             }
         });
 
@@ -137,6 +140,7 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
         }else{
             hub.addListener(mListener);
         }
+
 
 
     }
