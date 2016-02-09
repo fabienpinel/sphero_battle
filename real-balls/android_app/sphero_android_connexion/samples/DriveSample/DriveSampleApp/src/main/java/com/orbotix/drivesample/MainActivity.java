@@ -39,10 +39,19 @@ import com.thalmic.myo.Quaternion;
 import com.thalmic.myo.Vector3;
 import com.thalmic.myo.XDirection;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
-public class MainActivity extends Activity implements Connexion.RobotPickerListener{
+public class MainActivity extends Activity implements Connexion.RobotPickerListener {
 
 
     private static final String TAG = "MainActivity";
@@ -62,19 +71,26 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
     private Connexion co;
     private Hub hub;
 
-    private  ActionBar actionBar;
+    private ActionBar actionBar;
 
-    double  myo_x, myo_y;
+    double myo_x, myo_y;
 
     private Button powerButton;
-    private boolean powerAvailable;
 
+    private Player player;
+
+    long lastTimeUsedPower;
+
+    JSONArray allThePlayers;
+    public static final float ORANGE = (float)(165.0/255.0);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        actionBar= getActionBar();
+        lastTimeUsedPower = 0;
+        allThePlayers = new JSONArray();
+        actionBar = getActionBar();
         actionBar.hide();
 
         setContentView(R.layout.main);
@@ -93,15 +109,36 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
             }
         });
 
-        powerButton = (Button)findViewById(R.id.powerButton);
+        powerButton = (Button) findViewById(R.id.powerButton);
         powerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                useThePower();
+                usePower();
+            }
+        });
+        powerButton.setEnabled(false);
+
+        Button power = (Button) findViewById(R.id.power);
+        power.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mSocket = IO.socket("http://192.168.1.69:3000/");
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                //mSocket.emit("spheroId", spheroId);
+                mSocket.connect();
+                mSocket.on("player:register", newPlayer);
+                mSocket.on("player:castIsReady", castIsReady);
+                mSocket.on("dataChange", onDataChange);
+
+                registerPlayerSocket();
             }
         });
 
-        powerAvailable = false;
+
+
 
         if (co == null) {
             co = new Connexion(this, this);
@@ -118,23 +155,22 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
     }
 
     @Override
-    protected void onPause() {  super.onPause();    }
+    protected void onPause() {
+        super.onPause();
+    }
 
     @Override
-    public void onResume() {    super.onResume();   }
-
-    private void useThePower(){
-        if(powerAvailable){
-
-        }
+    public void onResume() {
+        super.onResume();
     }
+
 
     /**
      * Sets up the joystick from scratch
      */
     private void setupJoystick() {
         // Get a reference to the joystick view so that we can use it to send roll commands
-        _joystick = (JoystickView)findViewById(R.id.joystickView);
+        _joystick = (JoystickView) findViewById(R.id.joystickView);
         // In order to get the events from the joystick, you need to implement the JoystickEventListener interface
         // (or declare it anonymously) and set the listener.
         _joystick.setJoystickEventListener(new JoystickEventListener() {
@@ -177,7 +213,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
      */
     private void setupCalibration() {
         // Get the view from the xml file
-        _calibrationView = (CalibrationView)findViewById(R.id.calibrationView);
+        _calibrationView = (CalibrationView) findViewById(R.id.calibrationView);
         // Set the glow. You might want to not turn this on if you're using any intense graphical elements.
         _calibrationView.setShowGlow(true);
         // Register anonymously for the calibration events here. You could also have this class implement the interface
@@ -249,84 +285,139 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
 
     }
 
-    private void myoCommandReceived(int angle, int speed){
+    private void myoCommandReceived(int angle, int speed) {
         Log.d("command reveived", "Angle: " + angle + " ,Speed: " + speed);
     }
 
-    private Emitter.Listener onNewMessage = new Emitter.Listener() {
+    private Emitter.Listener newPlayer = new Emitter.Listener() {
+
         @Override
         public void call(final Object... args) {
-            Log.d("call socket ", "call socket onNewMessage" + args[0].toString());
             MainActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    //JSONObject data = (JSONObject) args;
-                    Double x;
-                    Double y;
+                    /*
+                    * {"status":"success","player":"{\"id\":\"ikedwkra\",\"life\":100,\"name\":\"Player 1\",\"power\":0,\"spell\":\"SLOW_DOWN\",\"voteForSlowDown\":[],\"voteForControlReversal\":[],\"voteForHeal\":[],\"voteForImmunity\":[]}"}
+02-08 20:41:21.866 8674-8674/com.orbotix.drivesample D/JSON DATA: {"status":"success","player":"{\"id\":\"ikedwkra\",\"life\":100,\"name\":\"Player 1\",\"power\":0,\"spell\":\"SLOW_DOWN\",\"voteForSlowDown\":[],\"voteForControlReversal\":[],\"voteForHeal\":[],\"voteForImmunity\":[]}"}
+                    *
+                    * */
 
-                    x = Double.parseDouble(args[0].toString());
-                    y = Double.parseDouble(args[1].toString());
-
-                    x *=7;
-                    y *=7;
-
-                    y *= -1;
-
-                    x += 360;
-                    y += 360;
-                    //Log.d("APRES MODIF","x="+x+" y="+y);
-
-                    //Log.d("Receiving", "x: " + x + "y: " + y);
-                    if (!_calibrationView.isCalibrating() ) {
-                        _joystick.sendDataToMyo(x, y);
-
+                    try {
+                        JSONObject data = (JSONObject) args[0];
+                        JSONObject playerjson;
+                        if (data.get("status").equals("success")) {
+                            playerjson = (JSONObject) data.get("player");
+                            player = new Player((String) playerjson.get("id"), (String) playerjson.get("name"));
+                            if(player.getColor().equals("blue")){
+                                _connectedRobot.setLed(0, 0, 1);
+                            }else{
+                                _connectedRobot.setLed(1, ORANGE, 0);
+                           }
+                        } else {
+                            //displayToast("Problème de connexion");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    // add the message to view
-                    //addMessage(username, message);
+
                 }
             });
         }
     };
 
-    public Double max = 0.0;
+    private Emitter.Listener onDataChange = new Emitter.Listener() {
 
-    public void sendToSphero(Double x,Double y){
-        if (x > max) max = x;
+        @Override
+        public void call(final Object... args) {
+            MainActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        JSONArray data = (JSONArray)(((JSONObject)args[0]).get("players"));
+
+                        allThePlayers = data;
+                        for (int i = 0; i < data.length(); i++) {
+                            if ( player != null && data.getJSONObject(i).get("id").equals(player.getId())) {
+                                Log.d("datachange",""+data.getJSONObject(i));
+                                Log.d("datachange","power: "+(int) data.getJSONObject(i).get("power"));
+                                if ((int) data.getJSONObject(i).get("power") >= 20 && (System.currentTimeMillis() - lastTimeUsedPower >= 3000)) {
+                                    powerButton.setEnabled(true);
+                                }
+                            }
+                        }
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
+    private Emitter.Listener castIsReady = new Emitter.Listener() {
+
+        @Override
+        public void call(final Object... args) {
+            MainActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Log.d("CastIsReady", "CastIsReady");
+                        for (int i = 0; i < allThePlayers.length(); i++) {
+                            if (player != null && allThePlayers.getJSONObject(i).get("id").equals(player.getId())) {
+                                if ((int) allThePlayers.getJSONObject(i).get("power") >= 20) {
+                                    powerButton.setEnabled(true);
+                                }
+                            }
+                        }
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
+
+    public void sendToSphero(Double x, Double y) {
         //Log.d("AVANT MODIF","x="+(x*(signe >= 0 ? 1 : -1))+"\ty="+y + "\tmax="+  max);
 
         //x = 360 * (1 - x) * (signe >= 0 ? 1 : -1);
-        x = _joystick.mJoystickPadCenterX * x ;
-
-        y= - y * _joystick.mJoystickPadCenterY;
-
-      //  y *= -1;
+        x = _joystick.mJoystickPadCenterX * x;
+        y = -y * _joystick.mJoystickPadCenterY;
 
         x += _joystick.mJoystickPadCenterX;
         y += _joystick.mJoystickPadCenterY;
+        //Log.d("APRES MODIF","x="+x+" y="+y);
 
-
-       //Log.d("APRES MODIF","x="+x+" y="+y);
-
-        //Log.d("Receiving", "x: " + x + "y: " + y);
-
-        if (!_calibrationView.isCalibrating() ) {
+        if (!_calibrationView.isCalibrating()) {
             if ((x > _joystick.mJoystickPadCenterX - _joystick.margin_X && x < _joystick.mJoystickPadCenterX + _joystick.margin_X) && (y > _joystick.mJoystickPadCenterY - _joystick.margin_Y && y < _joystick.mJoystickPadCenterY + _joystick.margin_Y)) {
 
             } else {
-                if (x > _joystick.mJoystickPadCenterX - _joystick.margin_X && x < _joystick.mJoystickPadCenterX + _joystick.margin_X) x = _joystick.mJoystickPadCenterX;
-                if (y > _joystick.mJoystickPadCenterY - _joystick.margin_Y && y < _joystick.mJoystickPadCenterY + _joystick.margin_Y) y = _joystick.mJoystickPadCenterY;
+                if (x > _joystick.mJoystickPadCenterX - _joystick.margin_X && x < _joystick.mJoystickPadCenterX + _joystick.margin_X)
+                    x = _joystick.mJoystickPadCenterX;
+                if (y > _joystick.mJoystickPadCenterY - _joystick.margin_Y && y < _joystick.mJoystickPadCenterY + _joystick.margin_Y)
+                    y = _joystick.mJoystickPadCenterY;
                 _joystick.sendDataToMyo(x, y);
             }
         }
     }
+
     @Override
     public void onRobotPicked(ConvenienceRobot robotPicked, Hub myohub, Socket socket) {
+        Log.d("onRobotPicked", "onRobotPicked");
         co.dismiss();
         _connectedRobot = robotPicked;
+
         mSocket = socket;
+        mSocket.on("player:register", newPlayer);
+        mSocket.on("player:castIsReady", castIsReady);
+        mSocket.on("dataChange", onDataChange);
+
+        registerPlayerSocket();
+
+
         hub = myohub;
         hub.addListener(mListener);
-        Log.d("WHAT ", ""+hub.getConnectedDevices().get(0).getName());
+
+
         _connectedRobot.addResponseListener(new ResponseListener() {
             @Override
             public void handleResponse(DeviceResponse deviceResponse, Robot robot) {
@@ -342,16 +433,21 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
             public void handleAsyncMessage(AsyncMessage asyncMessage, Robot robot) {
                 _connectedRobot.setLed(1, 0, 0);
                 Log.d("collision", "collision");
-                mSocket.emit("collision");
-                _connectedRobot.setLed(0, 1, 0);
+                mSocket.emit("player:collision");
+                if(player != null){
+                    if(player.getColor().equals("blue")){
+                        _connectedRobot.setLed(0, 0, 1);
+                    }else{
+                        _connectedRobot.setLed(1, ORANGE, 0);
+                    }
+                }
 
             }
         });
         Log.d("ROBOT NAME", "" + _connectedRobot.getRobot().getName());
         Log.d("ROBOT NAME", "" + _connectedRobot.getRobot().isConnected());
+        Log.d("socket okay ?", "" + mSocket.connected());
 
-        mSocket.on("command", onNewMessage);
-        Log.d("socket okay ?", ""+mSocket.connected());
         _joystick.setEnabled(true);
         _calibrationView.setEnabled(true);
         _calibrationButtonView.setEnabled(true);
@@ -361,8 +457,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         @Override
         public void onConnect(Myo myo, long timestamp) {
             Toast.makeText(getApplicationContext(), "Myo Connected!", Toast.LENGTH_SHORT).show();
-
-            Log.d("MYO","co");
+            Log.d("MYO", "co");
         }
 
         @Override
@@ -370,6 +465,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
             Toast.makeText(getApplicationContext(), "Myo Disconnected!", Toast.LENGTH_SHORT).show();
             Log.d("MYO", "disco");
         }
+
         @Override
         public void onOrientationData(Myo myo, long timestamp, Quaternion rotation) {
             // Calculate Euler angles (roll, pitch, and yaw) from the quaternion.
@@ -381,19 +477,18 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                 roll *= -1;
                 pitch *= -1;
             }
-            //Log.d("ORIENTATION MTFCKR", "roll: " + roll + " pitch: " + pitch + " yaw: " + yaw);
-            // Next, we apply a rotation to the text view using the roll, pitch, and yaw.
 
         }
+
         @Override
-        public void onGyroscopeData (Myo myo, long timestamp, Vector3 gyro){
+        public void onGyroscopeData(Myo myo, long timestamp, Vector3 gyro) {
 
         }
+
         @Override
-        public void onAccelerometerData (Myo myo, long timestamp, Vector3 accel){
+        public void onAccelerometerData(Myo myo, long timestamp, Vector3 accel) {
             myo_x = accel.y();
             myo_y = accel.x();
-            Log.d("ACCEL Y", "" + myo_x);
             sendToSphero(myo_x, myo_y);
         }
 
@@ -425,8 +520,25 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                 // stay unlocked while poses are being performed, but lock after inactivity.
                 myo.unlock(Myo.UnlockType.TIMED);
             }
-            //TODO: Do something awesome.
         }
     };
 
+    public void registerPlayerSocket() {
+        Log.d("Try to get player", "try to get player");
+        Log.d("socket connected", "" + mSocket.connected());
+
+        mSocket.emit("player:register");
+    }
+
+    public void displayToast(String text) {
+        Toast.makeText(getApplicationContext(), "" + text, Toast.LENGTH_SHORT).show();
+    }
+
+    private void usePower() {
+        if (System.currentTimeMillis() - this.lastTimeUsedPower >= 3000) {
+            this.lastTimeUsedPower = System.currentTimeMillis();
+            mSocket.emit("player:cast");
+            powerButton.setEnabled(false);
+        }
+    }
 }

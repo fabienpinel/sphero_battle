@@ -1,5 +1,6 @@
 var uniqid = require('uniqid');
 var SPELLS = require('../config').SPELLS;
+var request = require('request');
 var io = null;
 
 module.exports = {
@@ -49,6 +50,9 @@ module.exports = {
                 players: api._getPlayers()
             });
 
+            /**
+             * Voter section
+             */
             var voterId = uniqid();
             socket.on('voteForPower', function (data) {
 
@@ -106,7 +110,6 @@ module.exports = {
                     }
                 }
             });
-
             socket.on('disconnect', function () {
                 var players = api._getPlayers();
                 for (var i = 0; i < players.length; i++) {
@@ -123,7 +126,71 @@ module.exports = {
                     // emit change
                     self.emitChanges();
                 }
+                if (player) {
+                    request.del('http://localhost:3000/api/players/' + player.id, function () {
+                        player = null;
+                    });
+                }
             });
+
+            /**
+             * Player section
+             */
+            var player = null;
+            socket.on('player:register', function () {
+                if (!player) {
+                    request.post('http://localhost:3000/api/players', function (error, response, body) {
+                        if (error) return socket.emit('player:register', {status: 'error', error: error});
+                        if (response.statusCode === 201) {
+                            player = JSON.parse(body);
+                            socket.emit('player:register', {status: 'success', player: JSON.parse(body)});
+                        } else {
+                            return socket.emit('player:register', {status: 'error', statusCode:response.statusCode, error:body});
+                        }
+                    });
+                }
+            });
+            socket.on('player:collision', function () {
+                if (player) {
+                    request.post('http://localhost:3000/api/players/' + player.id + '/collision', function (error, response, body) {
+                        if (error) return socket.emit('player:collision', {status: 'error', error: error});
+                        if (response.statusCode === 201) {
+                            socket.emit('player:collision', {status: 'success'});
+                        } else {
+                            return socket.emit('player:collision', {status: 'error', statusCode:response.statusCode, error:body});
+                        }
+                    });
+                }
+            });
+            socket.on('player:cast', function () {
+                if (player) {
+                    request.post('http://localhost:3000/api/players/' + player.id + '/cast', function (error, response, body) {
+                        if (error) return socket.emit('player:cast', {status: 'error', error: error});
+                        if (response.statusCode === 201) {
+                            setTimeout(function () {
+                                var players = api._getPlayers();
+                                for (var i = 0; i < players.length; i++) {
+                                    if (players[i].id == player.id && players[i].power >= 20) {
+                                        socket.emit('player:castIsReady');
+                                        break;
+                                    }
+                                }
+                            }, 3000);
+                            socket.emit('player:cast', {status: 'success'});
+                        } else {
+                            return socket.emit('player:cast', {status: 'error', statusCode:response.statusCode, error:body});
+                        }
+                    });
+                }
+            });
+            socket.on('player:delete', function () {
+                if (player) {
+                    request.del('http://localhost:3000/api/players/' + player.id, function () {
+                        player = null;
+                    });
+                }
+            });
+
         }
     }
 };
