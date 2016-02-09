@@ -46,7 +46,7 @@ module.exports = {
                 id: uniqid(),
                 life: 100,
                 name: 'Player ' + (players.length === 0 ? '1' : '2') ,
-                power: 0,
+                power: 50,
                 spell: SPELLS.SLOW_DOWN,
                 voteForSlowDown: [],
                 voteForControlReversal: [],

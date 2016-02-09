@@ -18,11 +18,20 @@ module.exports = {
     },
 
     cast: function (playerId, spellType) {
-        if (io)
+        if (io) {
             io.sockets.emit('cast', {
                 playerId: playerId,
                 spellType: spellType
+
             });
+            setTimeout(function () {
+                io.sockets.emit('cast:cancel', {
+                    playerId: playerId,
+                    spellType: spellType
+                });
+            }, 3000);
+        }
+
     },
 
     collision: function (playerId) {
