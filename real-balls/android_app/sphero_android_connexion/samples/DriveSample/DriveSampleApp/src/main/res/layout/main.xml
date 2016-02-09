@@ -74,8 +74,8 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="power"
-            android:id="@+id/power"
+            android:text="replay"
+            android:id="@+id/replay"
             android:layout_gravity="left|top" />
     </FrameLayout>
 

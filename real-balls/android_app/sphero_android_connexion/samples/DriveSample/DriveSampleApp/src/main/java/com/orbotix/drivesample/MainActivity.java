@@ -84,6 +84,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
     public static final float ORANGE = (float)(165.0/255.0);
 
     public boolean immunity, control_reversal,slow_down;
+    boolean stopTheBall;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,6 +99,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         control_reversal = false;
         slow_down = false;
 
+        stopTheBall = true;
         setContentView(R.layout.main);
 
 
@@ -123,22 +125,13 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         });
         powerButton.setEnabled(false);
 
-        Button power = (Button) findViewById(R.id.power);
-        power.setOnClickListener(new View.OnClickListener() {
+        Button replay = (Button) findViewById(R.id.replay);
+        replay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    mSocket = IO.socket("http://192.168.1.69:3000/");
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
+                if (!co.isShowing()) {
+                    co.show();
                 }
-                //mSocket.emit("spheroId", spheroId);
-                mSocket.connect();
-                mSocket.on("player:register", newPlayer);
-                mSocket.on("player:castIsReady", castIsReady);
-                mSocket.on("dataChange", onDataChange);
-
-                registerPlayerSocket();
             }
         });
 
@@ -343,11 +336,12 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                         allThePlayers = data;
                         for (int i = 0; i < data.length(); i++) {
                             if ( player != null && data.getJSONObject(i).get("id").equals(player.getId())) {
-                                Log.d("datachange",""+data.getJSONObject(i));
-                                Log.d("datachange","power: "+(int) data.getJSONObject(i).get("power"));
+                                //Log.d("datachange",""+data.getJSONObject(i));
+                                //Log.d("datachange","power: "+(int) data.getJSONObject(i).get("power"));
                                 if ((int) data.getJSONObject(i).get("power") >= 20 && (System.currentTimeMillis() - lastTimeUsedPower >= 3000)) {
                                     powerButton.setEnabled(true);
                                 }
+                            }else {
                             }
                         }
                     } catch (JSONException e1) {
@@ -438,8 +432,63 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
             });
         }
     };
+    private Emitter.Listener onEnd = new Emitter.Listener() {
+
+        @Override
+        public void call(final Object... args) {
+            MainActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        JSONArray data = (JSONArray)args[0];
+                        allThePlayers = data;
+                        int myScore = 0;
+                        int hisScore = 0;
+                        for (int i = 0; i < data.length(); i++) {
+                            if ( player != null && data.getJSONObject(i).get("id").equals(player.getId())) {
+                                myScore = (int)data.getJSONObject(i).get("life");
+                            }else {
+                                hisScore =  (int)data.getJSONObject(i).get("life");
+                            }
+                        }
+                        if(myScore <= hisScore){
+                            //red
+                            _connectedRobot.setLed(1, 0, 0);
+                        }else{
+                            //green
+                            _connectedRobot.setLed(0, 1, 0);
+                        }
+                        //stop the ball
+                        stopTheBall  =true;
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onStart = new Emitter.Listener() {
+
+        @Override
+        public void call(final Object... args) {
+            MainActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    //start the ball
+                    stopTheBall = false;
+                }
+            });
+        }
+    };
+
+
+
 
     public void sendToSphero(Double x, Double y) {
+        if(stopTheBall){
+            return;
+        }
         //Log.d("AVANT MODIF","x="+(x*(signe >= 0 ? 1 : -1))+"\ty="+y + "\tmax="+  max);
 
         //x = 360 * (1 - x) * (signe >= 0 ? 1 : -1);
@@ -453,8 +502,8 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
             y *= -1.0;
         }else if(slow_down){
             Log.d("slow_down","slow_down");
-            x/=10.0;
-            y/=10.0;
+            x/=5.0;
+            y/=5.0;
         }
 
         x += _joystick.mJoystickPadCenterX;
@@ -486,12 +535,18 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         mSocket.on("dataChange", onDataChange);
         mSocket.on("cast", onCast);
         mSocket.on("cast:cancel", onCastCancel);
+        mSocket.on("end", onEnd);
+        mSocket.on("start", onStart);
 
         registerPlayerSocket();
 
 
         hub = myohub;
-        hub.addListener(mListener);
+        try{
+            hub.addListener(mListener);
+        }catch(Exception e){
+
+        }
 
 
         _connectedRobot.addResponseListener(new ResponseListener() {
@@ -507,7 +562,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
 
             @Override
             public void handleAsyncMessage(AsyncMessage asyncMessage, Robot robot) {
-                if(!immunity){
+                if(!immunity && !stopTheBall){
                     _connectedRobot.setLed(1, 0, 0);
                     mSocket.emit("player:collision");
                     if(player != null){
@@ -517,8 +572,6 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                             _connectedRobot.setLed(1, ORANGE, 0);
                         }
                     }
-                }else{
-                    Log.d("IMMUNITY","IMMUNITY");
                 }
             }
         });

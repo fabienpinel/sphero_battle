@@ -124,10 +124,18 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
         letsgoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    Log.d("SOCKET", "Trying to create socket");
+
+                    mSocket = IO.socket("http://192.168.1.69:3000/");
+                    //mSocket.emit("spheroId", spheroId);
+                    mSocket.connect();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+
                 hub.removeListener(mListener);
-                //dismiss dialog
-                //if(_pickerListener != null && _connectedRobot != null && mSocket != null)
-                    _pickerListener.onRobotPicked(_connectedRobot, hub, mSocket);
+                _pickerListener.onRobotPicked(_connectedRobot, hub, mSocket);
             }
         });
 
@@ -143,7 +151,6 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
     @Override
     protected void onStart() {
         super.onStart();
-
     }
 
 
@@ -186,29 +193,8 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
     public void handleRobotChangedState(Robot robot, RobotChangedStateListener.RobotChangedStateNotificationType type) {
         switch (type) {
             case Online:
-                _currentDiscoveryAgent.stopDiscovery();
-                _currentDiscoveryAgent.removeDiscoveryListener(this);
                 _connectedRobot = new Sphero(robot);
-                _connectedRobot.setLed(0f, 1f, 0f);
-                    Log.d("SPHERO", "ONLINELINEDFNKBGIROFGBRIEFF");
-
-                    _connectedRobot.enableCollisions(true);
-
-                try {
-                    Log.d("SOCKET", "Trying to create socket");
-
-                    mSocket = IO.socket("http://192.168.1.69:3000/");
-                    //mSocket.emit("spheroId", spheroId);
-                    mSocket.connect();
-                    Log.d("SPHERO ID", _connectedRobot.getRobot().getName());
-                    mSocket.emit("spheroId", _connectedRobot.getRobot().getName());
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-                    connectSpheroButton.setText(_connectedRobot.getRobot().getName() + "\n connected");
-                    connectSpheroButton.setEnabled(false);
-                    checkBoxSPHERO.setChecked(true);
-                    letsgoButton.setEnabled(true);
+               sphero_online(_connectedRobot);
 
 
                 break;
@@ -243,4 +229,14 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
 
         }
     };
+    public void sphero_online(ConvenienceRobot _connectedRobot){
+        _currentDiscoveryAgent.stopDiscovery();
+        _currentDiscoveryAgent.removeDiscoveryListener(this);
+        _connectedRobot.setLed(0f, 1f, 0f);
+        _connectedRobot.enableCollisions(true);
+        connectSpheroButton.setText(_connectedRobot.getRobot().getName() + "\n connected");
+        connectSpheroButton.setEnabled(false);
+        checkBoxSPHERO.setChecked(true);
+        letsgoButton.setEnabled(true);
+    }
 }
