@@ -448,11 +448,13 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
 
         //sort inversion des commandes
         if(control_reversal){
-            x *= -1;
-            y *= -1;
+            Log.d("control_reversal","control_reversal");
+            x *= -1.0;
+            y *= -1.0;
         }else if(slow_down){
-            x/=2;
-            y/=2;
+            Log.d("slow_down","slow_down");
+            x/=10.0;
+            y/=10.0;
         }
 
         x += _joystick.mJoystickPadCenterX;
@@ -515,6 +517,8 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                             _connectedRobot.setLed(1, ORANGE, 0);
                         }
                     }
+                }else{
+                    Log.d("IMMUNITY","IMMUNITY");
                 }
             }
         });

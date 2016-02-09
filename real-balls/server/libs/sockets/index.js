@@ -22,7 +22,7 @@ module.exports = {
             io.sockets.emit('cast', {
                 playerId: playerId,
                 spellType: spellType
-            });
+            });©
     },
 
     collision: function (playerId) {
