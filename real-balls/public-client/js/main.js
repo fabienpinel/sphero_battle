@@ -22,9 +22,28 @@
         }
     });
 
-    socket.on('end', function (data) {
-            document.getElementById('info').innerHTML = "<div class='center'>Waiting for 2 players...</div>";
-            document.getElementById('info').style.display = 'block';
+    socket.on('end', function () {
+        document.getElementById('info').innerHTML = "<div class='center'>Waiting for 2 players...</div>";
+        document.getElementById('info').style.display = 'block';
+    });
+
+    socket.on('start', function(){
+        var toRemove = document.getElementsByClassName("selected1");
+        for(var i = 0; i < toRemove.length; i++) {
+            toRemove[i].className = toRemove[i].className.replace(/\bselected1\b/,'');
+        }
+        document.getElementById('sl1').className += " selected1";
+        if (players.length === 2) {
+            socket.emit("voteForPower", {"playerId" : players[0].id, "spellType": "SLOW_DOWN"});
+        }
+        var toRemove2 = document.getElementsByClassName("selected2");
+        for(var i = 0; i < toRemove.length; i++) {
+            toRemove2[i].className = toRemove2[i].className.replace(/\bselected2\b/,'');
+        }
+        document.getElementById('sl2').className += " selected2";
+        if (players.length === 2) {
+            socket.emit("voteForPower", {"playerId" : players[1].id, "spellType": "SLOW_DOWN"});
+        }
     });
 
     document.getElementById('player1').addEventListener('touchstart', function () {
@@ -70,7 +89,7 @@
         var toRemove = document.getElementsByClassName("selected1");
         for(var i = 0; i < toRemove.length; i++) {
             toRemove[i].className = toRemove[i].className.replace(/\bselected1\b/,'');
-        };
+        }
         document.getElementById('hl1').className += " selected1";
         if (players.length === 2) {
             socket.emit("voteForPower", {"playerId" : players[0].id, "spellType": "HEAL"});
@@ -101,7 +120,7 @@
         var toRemove = document.getElementsByClassName("selected2");
         for(var i = 0; i < toRemove.length; i++) {
             toRemove[i].className = toRemove[i].className.replace(/\bselected2\b/,'');
-        };
+        }
         document.getElementById('sl2').className += " selected2";
         if (players.length === 2) {
             socket.emit("voteForPower", {"playerId" : players[1].id, "spellType": "SLOW_DOWN"});
