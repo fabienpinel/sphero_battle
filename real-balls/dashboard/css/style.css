@@ -6,6 +6,10 @@ md-content {
     background-color: #ededed;
 }
 
+.main {
+    height: 100%;
+}
+
 .center {
     position: absolute;
     transform: translate(-50%, -50%);
@@ -147,6 +151,10 @@ header {
 
 .vie1 .life-bar .md-dashed {
     background-color: #b3e5fc !important;
+}
+
+.opaque {
+    opacity: 0.2;
 }
 
 /* ---------------------------------------------- */

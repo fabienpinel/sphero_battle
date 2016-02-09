@@ -25,6 +25,7 @@ function ($scope, socket, $timeout, $window, ngAudio) {
 
     socket.on('dataChange', function (data) {
         vm.players = data.players;
+        //if (vm.players.length == 2)console.log(vm.players[0]);
     });
 
     vm.replay = function() {
@@ -67,14 +68,14 @@ function ($scope, socket, $timeout, $window, ngAudio) {
     socket.on('cast', function(player){
         vm.spellSound.play();
         if(vm.players[0].id == player.playerId) {
-            vm.power1 = player.spellType;
+            vm.power1 = true;
             $timeout(function() {
                 vm.power1 = null;
             }, 3000);
         } else if (vm.players[1].id == player.playerId) {
-            vm.power2 = player.spellType;
+            vm.power2 = true;
             $timeout(function(){
-                vm.power2 = null;
+                vm.power2 = false;
             }, 3000);
         }
     });

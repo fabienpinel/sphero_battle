@@ -73,13 +73,13 @@ module.exports = {
                     if (players[i].id == playerId) {
                         // delete if exists
                         var controlReversalIndex = players[i].voteForControlReversal.indexOf(voterId);
-                        if (controlReversalIndex) players[i].voteForControlReversal.splice(controlReversalIndex, 1);
+                        if (controlReversalIndex >= 0) players[i].voteForControlReversal.splice(controlReversalIndex, 1);
                         var slowDownIndex = players[i].voteForSlowDown.indexOf(voterId);
-                        if (slowDownIndex) players[i].voteForSlowDown.splice(slowDownIndex, 1);
+                        if (slowDownIndex >= 0) players[i].voteForSlowDown.splice(slowDownIndex, 1);
                         var immunityIndex = players[i].voteForImmunity.indexOf(voterId);
-                        if (immunityIndex) players[i].voteForImmunity.splice(immunityIndex, 1);
+                        if (immunityIndex >= 0) players[i].voteForImmunity.splice(immunityIndex, 1);
                         var healIndex = players[i].voteForHeal.indexOf(voterId);
-                        if (healIndex) players[i].voteForHeal.splice(healIndex, 1);
+                        if (healIndex >= 0) players[i].voteForHeal.splice(healIndex, 1);
 
                         // add it
                         if (spellType == SPELLS.CONTROL_REVERSAL) {
@@ -97,22 +97,22 @@ module.exports = {
                             players[i].voteForControlReversal.length > players[i].voteForSlowDown.length
                             && players[i].voteForControlReversal.length > players[i].voteForImmunity.length
                             && players[i].voteForControlReversal.length > players[i].voteForHeal.length
-                        ) { players[i].spellType = SPELLS.CONTROL_REVERSAL; }
+                        ) { players[i].spell = SPELLS.CONTROL_REVERSAL; }
                         else if (
                             players[i].voteForSlowDown.length > players[i].voteForControlReversal.length
                             && players[i].voteForSlowDown.length > players[i].voteForImmunity.length
                             && players[i].voteForSlowDown.length > players[i].voteForHeal.length
-                        ) { players[i].spellType = SPELLS.SLOW_DOWN; }
+                        ) { players[i].spell = SPELLS.SLOW_DOWN; }
                         else if (
                             players[i].voteForImmunity.length > players[i].voteForControlReversal.length
                             && players[i].voteForImmunity.length > players[i].voteForSlowDown.length
                             && players[i].voteForImmunity.length > players[i].voteForHeal.length
-                        ) { players[i].spellType = SPELLS.IMMUNITY; }
+                        ) { players[i].spell = SPELLS.IMMUNITY; }
                         else if (
                             players[i].voteForHeal.length > players[i].voteForControlReversal.length
                             && players[i].voteForHeal.length > players[i].voteForSlowDown.length
                             && players[i].voteForHeal.length > players[i].voteForImmunity.length
-                        ) { players[i].spellType = SPELLS.HEAL; }
+                        ) { players[i].spell = SPELLS.HEAL; }
 
                         // emit change
                         self.emitChanges();
