@@ -191,7 +191,9 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                 // Here you can use the joystick input to drive the connected robot. You can easily do this with the
                 // ConvenienceRobot#drive() method
                 // Note that the arguments do flip here from the order of parameters
-                _connectedRobot.drive((float) angle, (float) distanceFromCenter);
+                if(!stopTheBall){
+                    _connectedRobot.drive((float) angle, (float) distanceFromCenter);
+                }
             }
 
             /**
