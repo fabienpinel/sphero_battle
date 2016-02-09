@@ -1,9 +1,31 @@
 .demo-card-event.mdl-card {
-    background: #0099CC;
     display:inline-block;
     margin:0 !important;
     min-height: 100%;
 }
+
+tr.mdl-list {
+    position: relative !important;
+}
+
+#player1 .demo-card-event.mdl-card {
+    background-color: #0099cc;
+}
+
+#player2 .demo-card-event.mdl-card {
+    background-color: #ff5722;
+}
+
+.life-bar *, .life-bar {
+    height: 30px !important;
+    width: 100%;
+    background-color: #a1cc39 !important;
+}
+
+.life-bar .md-dashed {
+    background-color: #daf29f !important;
+}
+
 .clear1px{
     clear: both;
     height: 1px;
@@ -60,22 +82,76 @@ table {
 table tr { width:33.333%; }
 
 button.mdl-button {
-    height: 80%;
-    width: 90%;
+    height: 100%;
+    width: 100%;
+    margin: 0;
     padding-left:0px!important;
     padding-right:0px!important;
+    border-radius: 0 !important;
 }
 
 .mdl-button__ripple-container {
     z-index:10!important;
 }
 
-.player2 {
-    padding-top: 40px;
+.relative {
+    position: relative;
 }
 
-.player1 {
-    padding-bottom: 40px;
+.power {
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    max-width: 20%;
+}
+
+.mdl-grid {
+    padding: 0!important;
+}
+
+.vote-zone .mdl-cell {
+    padding-top: 0;
+}
+
+.mdl-cell {
+    padding: 30px 0;
+    text-align: center;
+    color: #424242;
+    font-weight: bold;
+}
+
+.relative .mdl-cell {
+    background: #ffe0b2;
+    padding: 0;
+    height: 60px;
+}
+
+.mdl-grid:first-child .mdl-cell:first-child {
+    background-color: #0099cc;
+}
+
+.mdl-grid:first-child .mdl-cell {
+    background-color: #ff5722;
+    color: #fafafa;
+}
+
+.relative .mdl-cell:first-child {
+    background-color: #e1f5fe;
+}
+
+.selected1 {
+    background-color: #4fc3f7 !important;
+}
+
+.selected2 {
+    background-color: #ffb74d !important;
+}
+
+.power1 img {
+    position: relative;
+    max-width: 20%;
 }
 
 .versus {
@@ -103,7 +179,9 @@ body {
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
+    overflow: hidden;
 }
+
 #info {
     font-size: 24px;
     color: white;

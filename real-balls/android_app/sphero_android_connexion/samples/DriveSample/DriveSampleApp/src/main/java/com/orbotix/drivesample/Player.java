@@ -24,6 +24,7 @@ public class Player {
             this.setColor("orange");
         }
         this.setId(id);
+        Log.d("PLAYER ID",""+this.getId());
         this.setName(name);
         this.setPowerAvailable(false);
 
