@@ -6,5 +6,20 @@
 </head>
 <body>
 
+<button onclick="registerPlayer()">register player</button>
+<button onclick="collision()">collision</button>
+<button onclick="castSpell()">cast spell</button>
+<button onclick="deletePlayer()">delete</button>
+
+<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script>
+    var socket = io.connect('http://localhost:3000');
+
+    function registerPlayer () { socket.emit('player:register'); }
+    function collision () { socket.emit('player:collision'); }
+    function castSpell () { socket.emit('player:cast') }
+    function deletePlayer() { socket.emit('player:delete') }
+
+</script>
 </body>
 </html>

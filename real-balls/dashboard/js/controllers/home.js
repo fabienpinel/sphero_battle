@@ -12,6 +12,8 @@ function ($scope, socket, $timeout, $window, ngAudio) {
     vm.power1 = vm.power2 = null;
     vm.timer = 120;
 
+    vm.imgSrc = 'http://192.168.1.16:8080/video';
+
     vm.collisionSound = ngAudio.load("./audio/collision.wav");
     vm.replaySound = ngAudio.load("./audio/replay.wav");
     vm.spellSound = ngAudio.load("./audio/spell.wav");
