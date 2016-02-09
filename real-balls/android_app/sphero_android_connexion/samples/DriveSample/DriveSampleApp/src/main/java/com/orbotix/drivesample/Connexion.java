@@ -238,6 +238,8 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
             Toast.makeText(getContext(), "Myo Disconnected!", Toast.LENGTH_SHORT).show();
             Log.d("MYO", "disco");
             connectMyoButton.setText("Connect MYO");
+            checkBoxMYO.setChecked(false);
+
 
         }
     };

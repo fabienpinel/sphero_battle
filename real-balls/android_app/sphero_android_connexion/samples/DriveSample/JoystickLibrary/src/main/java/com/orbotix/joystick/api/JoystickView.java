@@ -333,8 +333,8 @@ public class JoystickView extends View implements Controller {
         double y_length = mJoystickPadCenterY - y;
 
 
-        Log.d("PADCENTERX" , ""+mJoystickPadCenterX);
-        Log.d("PADCENTERY" , ""+mJoystickPadCenterY);
+        //Log.d("PADCENTERX" , ""+mJoystickPadCenterX);
+        //Log.d("PADCENTERY" , ""+mJoystickPadCenterY);
 
         // Need to scale x_length and y_length to make sure the coordinates are polar
         // instead of elliptical

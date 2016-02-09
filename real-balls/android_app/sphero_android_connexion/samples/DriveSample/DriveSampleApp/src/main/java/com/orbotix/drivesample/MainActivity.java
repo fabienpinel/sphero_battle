@@ -53,7 +53,6 @@ import java.util.List;
 
 public class MainActivity extends Activity implements Connexion.RobotPickerListener {
 
-
     private static final String TAG = "MainActivity";
 
     private JoystickView _joystick;
@@ -84,6 +83,8 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
     JSONArray allThePlayers;
     public static final float ORANGE = (float)(165.0/255.0);
 
+    public boolean immunity, control_reversal,slow_down;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +93,10 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         allThePlayers = new JSONArray();
         actionBar = getActionBar();
         actionBar.hide();
+
+        immunity = false;
+        control_reversal = false;
+        slow_down = false;
 
         setContentView(R.layout.main);
 
@@ -376,12 +381,79 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         }
     };
 
+    private Emitter.Listener onCast = new Emitter.Listener() {
+
+        @Override
+        public void call(final Object... args) {
+            MainActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        if(((String)data.get("playerId")).equals(player.getId())){
+                            if(((String)data.get("spellType")).equals("IMMUNITY")){
+                                immunity = true;
+                            }
+                        }else{
+                            if(((String)data.get("spellType")).equals("SLOW_DOWN")){
+                                slow_down=true;
+                            }else if(((String)data.get("spellType")).equals("CONTROL_REVERSAL")){
+                                control_reversal = true;
+                            }
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onCastCancel = new Emitter.Listener() {
+
+        @Override
+        public void call(final Object... args) {
+            MainActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        if (((String) data.get("playerId")).equals(player.getId())) {
+                            if (((String) data.get("spellType")).equals("IMMUNITY")) {
+                                immunity = false;
+                            }
+                        } else {
+                            if (((String) data.get("spellType")).equals("SLOW_DOWN")) {
+                                slow_down = false;
+                            } else if (((String) data.get("spellType")).equals("CONTROL_REVERSAL")) {
+                                control_reversal = false;
+                            }
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
+
     public void sendToSphero(Double x, Double y) {
         //Log.d("AVANT MODIF","x="+(x*(signe >= 0 ? 1 : -1))+"\ty="+y + "\tmax="+  max);
 
         //x = 360 * (1 - x) * (signe >= 0 ? 1 : -1);
         x = _joystick.mJoystickPadCenterX * x;
         y = -y * _joystick.mJoystickPadCenterY;
+
+        //sort inversion des commandes
+        if(control_reversal){
+            x *= -1;
+            y *= -1;
+        }else if(slow_down){
+            x/=2;
+            y/=2;
+        }
 
         x += _joystick.mJoystickPadCenterX;
         y += _joystick.mJoystickPadCenterY;
@@ -410,6 +482,8 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         mSocket.on("player:register", newPlayer);
         mSocket.on("player:castIsReady", castIsReady);
         mSocket.on("dataChange", onDataChange);
+        mSocket.on("cast", onCast);
+        mSocket.on("cast:cancel", onCastCancel);
 
         registerPlayerSocket();
 
@@ -431,17 +505,17 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
 
             @Override
             public void handleAsyncMessage(AsyncMessage asyncMessage, Robot robot) {
-                _connectedRobot.setLed(1, 0, 0);
-                Log.d("collision", "collision");
-                mSocket.emit("player:collision");
-                if(player != null){
-                    if(player.getColor().equals("blue")){
-                        _connectedRobot.setLed(0, 0, 1);
-                    }else{
-                        _connectedRobot.setLed(1, ORANGE, 0);
+                if(!immunity){
+                    _connectedRobot.setLed(1, 0, 0);
+                    mSocket.emit("player:collision");
+                    if(player != null){
+                        if(player.getColor().equals("blue")){
+                            _connectedRobot.setLed(0, 0, 1);
+                        }else{
+                            _connectedRobot.setLed(1, ORANGE, 0);
+                        }
                     }
                 }
-
             }
         });
         Log.d("ROBOT NAME", "" + _connectedRobot.getRobot().getName());
@@ -505,7 +579,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                 case WAVE_OUT:
                 case FINGERS_SPREAD:
                     //send pouvoir action
-                    mSocket.emit("usePower");
+                    usePower();
                     break;
             }
             if (pose != Pose.UNKNOWN && pose != Pose.REST) {
