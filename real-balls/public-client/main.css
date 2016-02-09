@@ -4,6 +4,10 @@
     min-height: 100%;
 }
 
+.head {
+    font-size: 2em;
+}
+
 tr.mdl-list {
     position: relative !important;
 }
@@ -152,6 +156,11 @@ button.mdl-button {
 .power1 img {
     position: relative;
     max-width: 20%;
+}
+
+span.big {
+    font-size: 3.2em;
+    font-weight: 600;
 }
 
 .versus {

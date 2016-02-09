@@ -10,70 +10,85 @@
     <script>
         function fitHeight() {
              var divHeight = 0;
+             var totalHeight = 0;
              var i;
+
              var toGetSize = document.getElementsByClassName('power');
              for(i = 0; i < toGetSize.length; i++) {
                 divHeight = toGetSize[i].offsetHeight;
              }
 
-            console.log(divHeight);
              var toFitSize = document.getElementsByClassName('selectable');
              for(i = 0; i < toFitSize.length; i++) {
-                toFitSize[i].style.height = divHeight +"px";
+                 toFitSize[i].style.height = divHeight + "px";
              }
-            var otherWillFit = (screen.height - (divHeight * 4));
+
+            var calcBodyHeight = document.getElementsByTagName('body');
+            for(i = 0; i < calcBodyHeight.length; i++) {
+                totalHeight = calcBodyHeight[i].offsetHeight;
+            }
+            console.log(totalHeight);
+            var otherWillFit = (totalHeight - (divHeight * 4) - 80);
+
+            console.log(otherWillFit - 30);
 
             var toFitSizeOther = document.getElementsByClassName('other');
             for(i = 0; i < toFitSizeOther.length; i++) {
-                toFitSizeOther[i].style.height = otherWillFit +30 +"px";
+                toFitSizeOther[i].style.height = otherWillFit - 30 +"px";
             }
          }
     </script>
 </head>
 <body onload="fitHeight()">
     <div class="mdl-grid mdl-grid--no-spacing">
-        <div id="name1" class=" mdl-cell mdl-cell--6-col mdl-cell--2-col-phone">
+        <div id="name1" class="head mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
             Joueur 1
         </div>
-        <div id="name2" class=" mdl-cell mdl-cell--6-col mdl-cell--2-col-phone">
+        <div id="name2" class="head mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
             Joueur 2
         </div>
     </div>
     <div class="relative mdl-grid mdl-grid--no-spacing">
-        <div id="im1" class="selectable mdl-cell mdl-cell--6-col mdl-cell--2-col-phone"></div>
-        <div id="im2" class="selectable mdl-cell mdl-cell--6-col mdl-cell--2-col-phone"></div>
+        <div id="im1" class="selectable mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone"></div>
+        <div id="im2" class="selectable mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone"></div>
         <img class="power" src="./img/IMMUNITY.png" alt=""/>
     </div>
     <div class="relative mdl-grid mdl-grid--no-spacing">
-        <div id="cr1" class="selectable mdl-cell mdl-cell--6-col mdl-cell--2-col-phone"></div>
-        <div id="cr2" class="selectable mdl-cell mdl-cell--6-col mdl-cell--2-col-phone"></div>
+        <div id="cr1" class="selectable mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone"></div>
+        <div id="cr2" class="selectable mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone"></div>
         <img class="power" src="./img/CONTROL_REVERSAL.png" alt=""/>
     </div>
     <div class="relative mdl-grid mdl-grid--no-spacing">
-        <div id="hl1" class="selectable mdl-cell mdl-cell--6-col mdl-cell--2-col-phone"></div>
-        <div id="hl2" class="selectable mdl-cell mdl-cell--6-col mdl-cell--2-col-phone"></div>
+        <div id="hl1" class="selectable mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone"></div>
+        <div id="hl2" class="selectable mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone"></div>
         <img class="power" src="./img/HEAL.png" alt=""/>
     </div>
     <div class="relative mdl-grid mdl-grid--no-spacing">
-        <div id="sl1" class="selectable selected1 mdl-cell mdl-cell--6-col mdl-cell--2-col-phone"></div>
-        <div id="sl2" class="selectable selected2 mdl-cell mdl-cell--6-col mdl-cell--2-col-phone"></div>
+        <div id="sl1" class="selectable selected1 mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone"></div>
+        <div id="sl2" class="selectable selected2 mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone"></div>
         <img class="power" src="./img/SLOW_DOWN.png" alt=""/>
     </div>
     <div class="vote-zone mdl-grid mdl-grid--no-spacing">
-        <div class="other mdl-cell mdl-cell--6-col mdl-cell--2-col-phone">
+        <div class="other mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="player1">
                 <div class="player1 demo-card-event mdl-card mdl-shadow--2dp mdl-cell mdl-cell--2-col-phone">
                     <div class="mdl-card__title mdl-card--expand">
-                        <span>Votez Joueur 1</span>
+                        <div class="center">
+                            <span class="big">+1</span>
+                            <span class="under-big">power</span>
+                        </div>
                     </div>
                 </div>
             </button>
         </div>
-        <div class="other mdl-cell mdl-cell--6-col mdl-cell--2-col-phone">
+        <div class="other mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="player2">
                 <div class="player2 demo-card-event mdl-card mdl-shadow--2dp mdl-cell mdl-cell--2-col-phone">
                     <div class="mdl-card__title mdl-card--expand">
-                        <span>Votez Joueur 2</span>
+                        <div class="center">
+                            <span class="big">+1</span>
+                            <span class="under-big">power</span>
+                        </div>
                     </div>
                 </div>
             </button>
