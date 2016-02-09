@@ -22,6 +22,11 @@
         }
     });
 
+    socket.on('end', function (data) {
+            document.getElementById('info').innerHTML = "<div class='center'>Waiting for 2 players...</div>";
+            document.getElementById('info').style.display = 'block';
+    });
+
     document.getElementById('player1').addEventListener('touchstart', function () {
         if (players.length === 2) {
             var http = getAjax();
