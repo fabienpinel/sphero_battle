@@ -20,9 +20,6 @@
             document.getElementById('info').innerHTML = "<div class='center'>osef</div>";
             document.getElementById('info').style.display = 'none';
         }
-
-        document.getElementById('player2score').innerHTML = players[1].power;
-        document.getElementById('player1score').innerHTML = players[0].power;
     });
 
     document.getElementById('player1').addEventListener('touchstart', function () {
