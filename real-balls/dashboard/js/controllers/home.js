@@ -25,6 +25,7 @@ function ($scope, socket, $timeout, $window, ngAudio) {
 
     socket.on('dataChange', function (data) {
         vm.players = data.players;
+        if (vm.players.length == 2)console.log(vm.players[0]);
     });
 
     vm.replay = function() {
