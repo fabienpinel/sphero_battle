@@ -34,14 +34,11 @@
         <div id="score1" class="animated delay2" ng-class="{slideInLeft: home.init, wobble: home.collision1}">
             <div class="center res">
                 <md-progress-circular class="md-accent md-hue-2" md-diameter='180' md-mode="determinate" value="{{home.players[0].power}}" ng-click="home.up(0)"></md-progress-circular>
-                <span class="center">{{home.players[0].power}}</span>
+                <div class="player-spell center" >
+                    <img ng-src="img/{{home.players[0].spell}}.png"/>
+                </div>
             </div>
-            <div class="player-spell" ng-switch="home.power1" >
-                <img ng-switch-when="SLOW_DOWN" src="img/SLOW_DOWN.png"/>
-                <img ng-switch-when="CONTROL_REVERSAL" src="img/CONTROL_REVERSAL.png"/>
-                <img ng-switch-when="HEAL" src="img/HEAL.png"/>
-                <img ng-switch-when="IMMUNITY" src="img/IMMUNITY.png"/>
-            </div>
+
         </div>
 
         <!-- Canvas contenant les boules virtuels -->
@@ -54,13 +51,9 @@
         <div id="score2" class="animated delay2" ng-class="{slideInRight: home.init, wobble: home.collision2}">
             <div class="center res">
                 <md-progress-circular class="md-info md-hue-4" md-diameter='180' md-mode="determinate" value="{{home.players[1].power}}" ng-click="home.up(1)"></md-progress-circular>
-                <span class="center">{{home.players[1].power}}</span>
-            </div>
-            <div class="player-spell" ng-switch="home.power2">
-                <img ng-switch-when="SLOW_DOWN" src="img/SLOW_DOWN.png"/>
-                <img ng-switch-when="CONTROL_REVERSAL" src="img/CONTROL_REVERSAL.png"/>
-                <img ng-switch-when="HEAL" src="img/HEAL.png"/>
-                <img ng-switch-when="IMMUNITY" src="img/IMMUNITY.png"/>
+                <div class="player-spell center" >
+                    <img ng-src="img/{{home.players[1].spell}}.png"/>
+                </div>
             </div>
         </div>
     </div>

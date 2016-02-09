@@ -47,26 +47,20 @@
         var toRemove = document.getElementsByClassName("selected1");
         for(var i = 0; i < toRemove.length; i++) {
             toRemove[i].className = toRemove[i].className.replace(/\bselected1\b/,'');
-        };
+        }
         document.getElementById('im1').className += " selected1";
         if (players.length === 2) {
-            var http = getAjax();
-            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
-            http.setRequestHeader("Content-type","application/json");
-            http.send();
+            socket.emit("voteForPower", {"playerId" : players[0].id, "spellType": "IMMUNITY"});
         }
     });
     document.getElementById('im2').addEventListener("touchstart", function(){
         var toRemove = document.getElementsByClassName("selected2");
         for(var i = 0; i < toRemove.length; i++) {
             toRemove[i].className = toRemove[i].className.replace(/\bselected2\b/,'');
-        };
+        }
         document.getElementById('im2').className += " selected2";
         if (players.length === 2) {
-            var http = getAjax();
-            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
-            http.setRequestHeader("Content-type","application/json");
-            http.send();
+            socket.emit("voteForPower", {"playerId" : players[1].id, "spellType": "IMMUNITY"});
         }
     });
 
@@ -77,23 +71,17 @@
         };
         document.getElementById('hl1').className += " selected1";
         if (players.length === 2) {
-            var http = getAjax();
-            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
-            http.setRequestHeader("Content-type","application/json");
-            http.send();
+            socket.emit("voteForPower", {"playerId" : players[0].id, "spellType": "HEAL"});
         }
      });
     document.getElementById('hl2').addEventListener("touchstart", function(){
         var toRemove = document.getElementsByClassName("selected2");
         for(var i = 0; i < toRemove.length; i++) {
             toRemove[i].className = toRemove[i].className.replace(/\bselected2\b/,'');
-        };
+        }
         document.getElementById('hl2').className += " selected2";
         if (players.length === 2) {
-            var http = getAjax();
-            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
-            http.setRequestHeader("Content-type","application/json");
-            http.send();
+            socket.emit("voteForPower", {"playerId" : players[1].id, "spellType": "HEAL"});
         }
     });
 
@@ -101,13 +89,10 @@
         var toRemove = document.getElementsByClassName("selected1");
         for(var i = 0; i < toRemove.length; i++) {
             toRemove[i].className = toRemove[i].className.replace(/\bselected1\b/,'');
-        };
+        }
         document.getElementById('sl1').className += " selected1";
         if (players.length === 2) {
-            var http = getAjax();
-            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
-            http.setRequestHeader("Content-type","application/json");
-            http.send();
+            socket.emit("voteForPower", {"playerId" : players[0].id, "spellType": "SLOW_DOWN"});
         }
      });
     document.getElementById('sl2').addEventListener("touchstart", function(){
@@ -117,10 +102,7 @@
         };
         document.getElementById('sl2').className += " selected2";
         if (players.length === 2) {
-            var http = getAjax();
-            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
-            http.setRequestHeader("Content-type","application/json");
-            http.send();
+            socket.emit("voteForPower", {"playerId" : players[1].id, "spellType": "SLOW_DOWN"});
         }
     });
 
@@ -131,10 +113,7 @@
         }
         document.getElementById('cr1').className += " selected1";
         if (players.length === 2) {
-            var http = getAjax();
-            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
-            http.setRequestHeader("Content-type","application/json");
-            http.send();
+            socket.emit("voteForPower", {"playerId" : players[0].id, "spellType": "CONTROL_REVERSAL"});
         }
     });
     document.getElementById('cr2').addEventListener("touchstart", function(){
@@ -144,10 +123,7 @@
         }
         document.getElementById('cr2').className += " selected2";
         if (players.length === 2) {
-            var http = getAjax();
-            http.open('POST', 'http://localhost:3000/api/players/' + players[0].id + '/power', true);
-            http.setRequestHeader("Content-type","application/json");
-            http.send();
+            socket.emit("voteForPower", {"playerId" : players[1].id, "spellType": "CONTROL_REVERSAL"});
         }
     });
 
