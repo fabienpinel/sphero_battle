@@ -128,7 +128,7 @@
         var toRemove = document.getElementsByClassName("selected1");
         for(var i = 0; i < toRemove.length; i++) {
             toRemove[i].className = toRemove[i].className.replace(/\bselected1\b/,'');
-        };
+        }
         document.getElementById('cr1').className += " selected1";
         if (players.length === 2) {
             var http = getAjax();
@@ -141,7 +141,7 @@
         var toRemove = document.getElementsByClassName("selected2");
         for(var i = 0; i < toRemove.length; i++) {
             toRemove[i].className = toRemove[i].className.replace(/\bselected2\b/,'');
-        };
+        }
         document.getElementById('cr2').className += " selected2";
         if (players.length === 2) {
             var http = getAjax();
@@ -152,18 +152,3 @@
     });
 
 })();
-
-
-
-/*function fitHeight() {
- var divHeight = 0;
- var toGetSize = document.getElementsByClassName('power');
- for(var i = 0; i < toGetSize.length; i++) {
- divHeight = toGetSize[i].offsetHeight;
- };
-
- var toFitSize = document.getElementsByClassName('selectable');
- for(var i = 0; i < toFitSize.length; i++) {
- toFitSize[i].style.height = divHeight +"px";
- };
- };*/
