@@ -12,6 +12,8 @@ function ($scope, socket, $timeout, $window, ngAudio) {
     vm.power1 = vm.power2 = null;
     vm.timer = 120;
 
+    vm.imgSrc = 'http://192.168.1.16:8080/video';
+
     vm.collisionSound = ngAudio.load("./audio/collision.wav");
     vm.replaySound = ngAudio.load("./audio/replay.wav");
     vm.spellSound = ngAudio.load("./audio/spell.wav");
@@ -76,17 +78,5 @@ function ($scope, socket, $timeout, $window, ngAudio) {
             }, 3000);
         }
     });
-
-
-    var video = document.querySelector("#videoElement");
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
-
-    if (navigator.getUserMedia) {
-        navigator.getUserMedia({video: true}, handleVideo, videoError);
-    }
-
-    function handleVideo(stream) { video.src = window.URL.createObjectURL(stream); }
-    function videoError(e) {}
-
 
 }]);

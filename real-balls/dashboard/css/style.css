@@ -161,8 +161,12 @@ header {
 }
 
 .canvas-container .content {
-    background: #e1e1e1;
-    height: 480px;
+    background-repeat: no-repeat!important;
+    background-size: cover!important;
+    background-position: center center!important;
+    height: calc(100% - 40px);
+    top: 20px;
+    width: 100%;
     border: 2px solid #0099CC;
     display: inline-block;
 }
@@ -262,11 +266,11 @@ header {
 }
 #game-container > div{
     display: table-cell;
-    width: calc(50% - 320px);
+    width: 20%;
     text-align:center;
 }
 #game-container > div:nth-child(2){
-    width: 640px;
+    width: 60%;
     vertical-align: middle;
 }
 
