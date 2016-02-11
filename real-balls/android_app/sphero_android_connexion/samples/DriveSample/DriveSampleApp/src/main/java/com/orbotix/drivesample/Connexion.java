@@ -80,6 +80,7 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
         _currentDiscoveryAgent = DiscoveryAgentClassic.getInstance();
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        this.setCancelable(false);
         setContentView(R.layout.activity_connexion);
 
         WindowManager.LayoutParams params = getWindow().getAttributes();
