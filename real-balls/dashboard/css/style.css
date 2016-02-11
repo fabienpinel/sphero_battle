@@ -2,6 +2,14 @@
 /* ------------------ General ------------------- */
 /* ---------------------------------------------- */
 
+.center.mid-top {
+    top: 20%;
+}
+
+.center.mid-bottom {
+    top: 70%;
+}
+
 md-content {
     background-color: #ededed;
 }

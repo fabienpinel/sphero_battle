@@ -4,6 +4,10 @@
     min-height: 100%;
 }
 
+.center.mid-bottom {
+    top: 70%;
+}
+
 .head {
     font-size: 2em;
 }
