@@ -137,7 +137,10 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         });
         replay.setVisibility(View.INVISIBLE);
 
-
+        powerButton.setVisibility(View.INVISIBLE);
+        _joystick.setVisibility(View.INVISIBLE);
+        powerButton.setVisibility(View.INVISIBLE);
+        _calibrationButtonView.setVisibility(View.INVISIBLE);
 
 
         if (co == null) {
