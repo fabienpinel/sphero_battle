@@ -4,6 +4,10 @@
     min-height: 100%;
 }
 
+.other {
+    padding: 0 !important;
+}
+
 .center.mid-bottom {
     top: 57%;
 }
