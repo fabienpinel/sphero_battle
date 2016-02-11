@@ -1,11 +1,11 @@
 // IP de la machine qui héberge le serveur node + port
-var serverIp = 'localhost:3000';
+var serverIp = '192.168.43.128:3000';
 
 // IP du téléphone qui stream (fourni dans l'application) + port
-var phoneIp = '192.168.1.16:8080';
+var phoneIp = '192.168.43.90:8080';
 
 // IP de l'ordinateur qui lance le dashboard + le port
-var webstormServerIp = 'localhost:63345';
+var webstormServerIp = '192.168.43.128:63343';
 
 (function () {
 
