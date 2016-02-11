@@ -2,6 +2,14 @@
 /* ------------------ General ------------------- */
 /* ---------------------------------------------- */
 
+body {
+    background-image: url("../img/maxresdefault.jpg");
+    background-color: #000000;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
 .center.mid-top {
     top: 20%;
 }
@@ -132,10 +140,10 @@ header {
 #timer {
     width: calc(16% - 38px);
     display: inline-block;
-    background: #000000;
+    background: #FFFFFF;
     font-weight: 600;
     font-size: 3em;
-    color: #ffffff;
+    color: #000000;
     padding: 10px 5px;
     border-radius: 10px 10px 0 0;
     text-align: center;
@@ -162,7 +170,7 @@ header {
 }
 
 .opaque {
-    opacity: 0.2;
+    opacity: 0.7;
 }
 
 /* ---------------------------------------------- */

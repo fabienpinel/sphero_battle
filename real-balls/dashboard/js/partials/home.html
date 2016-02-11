@@ -7,7 +7,7 @@
             <md-card>
                 <md-card-title>
                     <md-card-title-text>
-                        <span class="md-headline">{{home.players[0].name}}{{home.resultats[0].name}}</span>
+                        <span class="md-headline">{{home.players[0].name}}</span>
                     </md-card-title-text>
                 </md-card-title>
             </md-card>
@@ -20,7 +20,7 @@
             <md-card>
                 <md-card-title>
                     <md-card-title-text>
-                        <span class="md-headline">{{home.players[1].name}}{{home.resultats[1].name}}</span>
+                        <span class="md-headline">{{home.players[1].name}}</span>
                     </md-card-title-text>
                 </md-card-title>
             </md-card>
@@ -34,8 +34,9 @@
         <div id="score1" class="animated delay2" ng-class="{slideInLeft: home.init, wobble: home.collision1}">
             <div class="center res">
                 <md-progress-circular class="md-accent md-hue-2" md-diameter='180' md-mode="determinate" value="{{home.players[0].power}}" ng-click="home.up(0)"></md-progress-circular>
-                <div ng-class="(home.power1) ? '' : 'opaque'" class="player-spell center" >
-                    <img ng-src="img/{{home.players[0].spell}}.png"/>
+                <div class="player-spell center" >
+                    <img ng-hide="!(home.power1)" ng-src="img/{{home.players[0].spell}}1.png"/>
+                    <img class="opaque" ng-hide="home.power1" ng-src="img/{{home.players[0].spell}}3.png"/>
                 </div>
             </div>
 
@@ -51,8 +52,9 @@
         <div id="score2" class="animated delay2" ng-class="{slideInRight: home.init, wobble: home.collision2}">
             <div class="center res">
                 <md-progress-circular class="md-info md-hue-4" md-diameter='180' md-mode="determinate" value="{{home.players[1].power}}" ng-click="home.up(1)"></md-progress-circular>
-                <div ng-class="(home.power1) ? '' : 'opaque'" class="player-spell center" >
-                    <img ng-src="img/{{home.players[1].spell}}.png"/>
+                <div class="player-spell center" >
+                    <img ng-hide="!(home.power2)" ng-src="img/{{home.players[1].spell}}2.png"/>
+                    <img class="opaque" ng-hide="home.power2" ng-src="img/{{home.players[1].spell}}3.png"/>
                 </div>
             </div>
         </div>
