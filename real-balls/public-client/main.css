@@ -8,6 +8,10 @@
     top: 70%;
 }
 
+#waiting {
+    white-space: nowrap;
+}
+
 .head {
     font-size: 2em;
 }
