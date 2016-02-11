@@ -11,6 +11,7 @@ function ($scope, socket, $timeout, $window, ngAudio) {
     vm.resultats = [];
     vm.power1 = vm.power2 = null;
     vm.timer = 120;
+    vm.urlPublic = "http://google.com";
 
     vm.imgSrc = 'http://192.168.1.16:8080/video';
 

@@ -71,7 +71,13 @@
 
     <!-- Div contenant les informations pour l'attente des joueurs en début de partie -->
     <div id="info" ng-class="(home.players.length == 2 || home.end) ? 'hide' : ''">
-        <div class="center">Waiting for {{2 - home.players.length}} player(s)</div>
+        <div class="center mid-top">
+            <img width="200px" ng-src="http://api.qrserver.com/v1/create-qr-code/?data={{home.urlPublic}}"/>
+        </div>
+        <img class="center" src="./img/logo.png" width="400px" />
+        <div class="center mid-bottom">
+            Waiting for {{2 - home.players.length}} player(s)
+        </div>
     </div>
 
     <!-- Div permettant de relancer une partie -->
