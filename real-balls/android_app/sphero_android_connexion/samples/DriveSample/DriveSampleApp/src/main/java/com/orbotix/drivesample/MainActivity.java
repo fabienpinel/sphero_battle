@@ -75,6 +75,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
     double myo_x, myo_y;
 
     private Button powerButton;
+    private Button replay;
 
     private Player player;
 
@@ -125,7 +126,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
         });
         powerButton.setEnabled(false);
 
-        Button replay = (Button) findViewById(R.id.replay);
+        replay = (Button) findViewById(R.id.replay);
         replay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,6 +135,7 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                 }
             }
         });
+        replay.setVisibility(View.INVISIBLE);
 
 
 
@@ -442,6 +444,13 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
                 @Override
                 public void run() {
                     try {
+                        replay.setVisibility(View.VISIBLE);
+                        _joystick.setVisibility(View.INVISIBLE);
+                        powerButton.setVisibility(View.INVISIBLE);
+                        _calibrationButtonView.setVisibility(View.INVISIBLE);
+
+                        mSocket.close();
+
                         JSONArray data = (JSONArray)args[0];
                         allThePlayers = data;
                         int myScore = 0;
@@ -528,6 +537,12 @@ public class MainActivity extends Activity implements Connexion.RobotPickerListe
     @Override
     public void onRobotPicked(ConvenienceRobot robotPicked, Hub myohub, Socket socket) {
         Log.d("onRobotPicked", "onRobotPicked");
+
+        replay.setVisibility(View.INVISIBLE);
+        _joystick.setVisibility(View.VISIBLE);
+        powerButton.setVisibility(View.VISIBLE);
+        _calibrationButtonView.setVisibility(View.VISIBLE);
+
         co.dismiss();
         _connectedRobot = robotPicked;
 
