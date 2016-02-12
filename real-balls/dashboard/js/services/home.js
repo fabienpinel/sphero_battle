@@ -6,7 +6,7 @@
     function socket(socketFactory) {
         return socketFactory({
             prefix: 'dp~',
-            ioSocket: io.connect('http://localhost:3000/')
+            ioSocket: io.connect('http://192.168.43.128:3000/')
         });
     }
 })();

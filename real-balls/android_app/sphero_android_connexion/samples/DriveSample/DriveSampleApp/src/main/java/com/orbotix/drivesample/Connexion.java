@@ -128,7 +128,7 @@ public class Connexion extends Dialog implements DiscoveryAgentEventListener , R
                 try {
                     Log.d("SOCKET", "Trying to create socket");
 
-                    mSocket = IO.socket("http://192.168.1.69:3000/");
+                    mSocket = IO.socket("http://192.168.43.128:3000/");
                     //mSocket.emit("spheroId", spheroId);
                     mSocket.connect();
                 } catch (URISyntaxException e) {
