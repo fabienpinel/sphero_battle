@@ -4,8 +4,16 @@
     min-height: 100%;
 }
 
+.other {
+    padding: 0 !important;
+}
+
 .center.mid-bottom {
-    top: 70%;
+    top: 57%;
+}
+
+.center.mid-top {
+    top: 43%;
 }
 
 #waiting {

@@ -17,13 +17,14 @@ function fitHeight() {
     for(i = 0; i < calcBodyHeight.length; i++) {
         totalHeight = calcBodyHeight[i].offsetHeight;
     }
-    console.log(totalHeight);
-    var otherWillFit = (totalHeight - (divHeight * 4) - 80);
 
-    console.log(otherWillFit - 30);
+    var calcHeadHeight = document.getElementById('head').offsetHeight;
+    console.log(calcHeadHeight);
+    var otherWillFit = totalHeight - calcHeadHeight;
+    console.log(otherWillFit);
 
     var toFitSizeOther = document.getElementsByClassName('other');
     for(i = 0; i < toFitSizeOther.length; i++) {
-        toFitSizeOther[i].style.height = otherWillFit - 30 +"px";
+        toFitSizeOther[i].style.height = otherWillFit +"px";
     }
 }
