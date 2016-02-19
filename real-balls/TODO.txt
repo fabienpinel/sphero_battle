@@ -1,3 +1,0 @@
-quand l'appli quitte -> déconnecter le player
-quand la partie est terminée -> revenir au début et register un nouveau player
-waiting for ...
