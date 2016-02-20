@@ -17,7 +17,7 @@
 
 
 # Pour deployer l'application Android
-- Ajouter les dépendances des librairies SDK pour le MYO (à télécharger sur le site : https://developer.thalmic.com/downloads)
+- Ajouter les dépendances des librairies SDK pour le MYO (à télécharger sur le site : https://developer.thalmic.com/downloads) et mettre à jour le fichier build.gradle avec le bon path du SDK.
 - Compiler l'application sur le téléphone (grâce à un IDE, Android Studio par exemple)
 - Pairer votre téléphone en bluetooth avec la Sphéro et le MYO
 - Lancer l'application et suivez les instructions afficher à l'écran
